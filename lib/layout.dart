@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jmpr_flutter/pointSetting.dart';
+import 'package:jmpr_flutter/setting.dart';
 
 class Layout extends StatefulWidget {
   Layout({Key key, this.title}) : super(key: key);
@@ -10,32 +11,55 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  Map<Position, Player> players = Map();
-  int initPoint = 25000;
+
   Position firstOya = Position.Bottom;
-  Color firstOyaColor = Colors.red;
-  Color nonFirstOyaColor = Colors.black;
-  static const List<String> kyokus = ["東一局", "東二局", "東三局", "東四局", "南一局", "南二局", "南三局", "南四局", "西一局", "西二局", "西三局", "西四局", "北一局", "北二局", "北三局", "北四局"];
-  int currentKyoku = 0;
-  int bomBa = 0;
-  int riichibou = 0;
-  int bonbaPoint = 300;
-  int umaSmall = 10;
-  int umaBig = 20;
-  bool kiriage = false;
+  final Color firstOyaColor = Colors.red;
+  final Color nonFirstOyaColor = Colors.black;
+  final List<String> kyokus = ["東一局", "東二局", "東三局", "東四局", "南一局", "南二局", "南三局", "南四局", "西一局", "西二局", "西三局", "西四局", "北一局", "北二局", "北三局", "北四局"];
+  SettingParameter currentSetting;
+  PointSettingParameter currentPointSetting;
 
   @override
   void initState() {
     super.initState();
-    players[Position.Bottom] = Player(position: Position.Bottom, point: initPoint);
-    players[Position.Right] = Player(position: Position.Right, point: initPoint);
-    players[Position.Top] = Player(position: Position.Top, point: initPoint);
-    players[Position.Left] = Player(position: Position.Left, point: initPoint);
+    currentSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 25000, riichibouPoint: 1000, bonbaPoint: 300, umaBig: 20, umaSmall: 10, kiriage: false, douten: false);
+    Map<Position, Player> players = Map();
+    players[Position.Bottom] = Player(position: Position.Bottom, point: currentSetting.givenStartingPoint);
+    players[Position.Right] = Player(position: Position.Right, point: currentSetting.givenStartingPoint);
+    players[Position.Top] = Player(position: Position.Top, point: currentSetting.givenStartingPoint);
+    players[Position.Left] = Player(position: Position.Left, point: currentSetting.givenStartingPoint);
+    currentPointSetting = PointSettingParameter(players: players, currentKyoku: 0, bonba: 0, riichibou: 0);
   }
 
   @override
   Widget build(BuildContext context) {
     List<String> choices = ["場況設定", "設定", "上一步"];
+
+    void reset() {
+      setState(() {
+        currentPointSetting.players[Position.Bottom].point = currentSetting.givenStartingPoint;
+        currentPointSetting.players[Position.Right].point = currentSetting.givenStartingPoint;
+        currentPointSetting.players[Position.Top].point = currentSetting.givenStartingPoint;
+        currentPointSetting.players[Position.Left].point = currentSetting.givenStartingPoint;
+        currentPointSetting.currentKyoku = 0;
+        currentPointSetting.bonba = 0;
+        currentPointSetting.riichibou = 0;
+      });
+    }
+
+    void saveSetting(SettingParameter setting) {
+      setState(() {
+        currentSetting = setting;
+        reset();
+      });
+    }
+
+    void savePointSetting(PointSettingParameter pointSetting) {
+      setState(() {
+        currentPointSetting = pointSetting;
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -56,7 +80,9 @@ class _LayoutState extends State<Layout> {
             ),
             onSelected: (string) {
               if (string == "場況設定") {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => PointSetting()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PointSetting(currentPointSetting: currentPointSetting, save: savePointSetting)));
+              } else if (string == "設定") {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Setting(currentSetting: currentSetting, save: saveSetting)));
               }
             },
           ),
@@ -72,7 +98,7 @@ class _LayoutState extends State<Layout> {
               child: RotatedBox(
                 quarterTurns: 2,
                 child: Text(
-                  players[Position.Top].point.toString(),
+                  "${currentPointSetting.players[Position.Top].point}",
                   style: TextStyle(
                     color: firstOya == Position.Top? firstOyaColor : nonFirstOyaColor,
                   ),
@@ -84,7 +110,7 @@ class _LayoutState extends State<Layout> {
               child: RotatedBox(
                 quarterTurns: 1,
                 child: Text(
-                  players[Position.Left].point.toString(),
+                  "${currentPointSetting.players[Position.Left].point}",
                   style: TextStyle(
                     color: firstOya == Position.Left? firstOyaColor : nonFirstOyaColor,
                   ),
@@ -95,9 +121,9 @@ class _LayoutState extends State<Layout> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(kyokus[currentKyoku]),
-                  Text("$bomBa 本場"),
-                  Text("供托: $riichibou"),
+                  Text(kyokus[currentPointSetting.currentKyoku]),
+                  Text("${currentPointSetting.bonba} 本場"),
+                  Text("供托: ${currentPointSetting.riichibou}"),
                 ],
               ),
             ),
@@ -105,7 +131,7 @@ class _LayoutState extends State<Layout> {
               child: RotatedBox(
                 quarterTurns: 3,
                 child: Text(
-                  players[Position.Right].point.toString(),
+                  "${currentPointSetting.players[Position.Right].point}",
                   style: TextStyle(
                     color: firstOya == Position.Right? firstOyaColor : nonFirstOyaColor,
                   ),
@@ -115,7 +141,7 @@ class _LayoutState extends State<Layout> {
             EmptyGrid(),
             Center(
               child: Text(
-                players[Position.Bottom].point.toString(),
+                "${currentPointSetting.players[Position.Bottom].point}",
                 style: TextStyle(
                   color: firstOya == Position.Bottom? firstOyaColor : nonFirstOyaColor,
                 ),
@@ -192,20 +218,6 @@ class _LayoutState extends State<Layout> {
       ),
     );
   }
-}
-
-enum Position {
-  Bottom,
-  Right,
-  Top,
-  Left,
-}
-
-class Player {
-  Position position;
-  int point;
-
-  Player({this.position, this.point});
 }
 
 class EmptyGrid extends StatelessWidget {

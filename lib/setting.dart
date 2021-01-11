@@ -66,6 +66,7 @@ class _SettingState extends State<Setting> {
       );
     }
 
+    // TODO: update validator function
     String _defaultValidator(String val) {
       if (int.tryParse(val) == null) {
         return "請輸入整數";
