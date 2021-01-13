@@ -34,7 +34,7 @@ class _RyokyokuState extends State<Ryukyoku> {
     Widget TenpaiCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _tenpai[position],
-        constant.positionText[position],
+        constant.positionTexts[position],
         (val) {
           setState(() {
             _tenpai[position] = val;
@@ -46,7 +46,7 @@ class _RyokyokuState extends State<Ryukyoku> {
     Widget NagashimanganCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _nagashimangan[position],
-        constant.positionText[position],
+        constant.positionTexts[position],
             (val) {
           setState(() {
             _nagashimangan[position] = val;

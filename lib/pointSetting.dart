@@ -127,10 +127,10 @@ class _PointSettingState extends State<PointSetting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  RowInput(constant.positionText[Position.Bottom], TextInput((val) => currentPointSetting.players[Position.Bottom].point = int.tryParse(val), _bottomController, _integerValidator)),
-                  RowInput(constant.positionText[Position.Right], TextInput((val) => currentPointSetting.players[Position.Right].point = int.tryParse(val), _rightController, _integerValidator)),
-                  RowInput(constant.positionText[Position.Top], TextInput((val) => currentPointSetting.players[Position.Top].point = int.tryParse(val), _topController, _integerValidator)),
-                  RowInput(constant.positionText[Position.Left], TextInput((val) => currentPointSetting.players[Position.Left].point = int.tryParse(val), _leftController, _integerValidator)),
+                  RowInput(constant.positionTexts[Position.Bottom], TextInput((val) => currentPointSetting.players[Position.Bottom].point = int.tryParse(val), _bottomController, _integerValidator)),
+                  RowInput(constant.positionTexts[Position.Right], TextInput((val) => currentPointSetting.players[Position.Right].point = int.tryParse(val), _rightController, _integerValidator)),
+                  RowInput(constant.positionTexts[Position.Top], TextInput((val) => currentPointSetting.players[Position.Top].point = int.tryParse(val), _topController, _integerValidator)),
+                  RowInput(constant.positionTexts[Position.Left], TextInput((val) => currentPointSetting.players[Position.Left].point = int.tryParse(val), _leftController, _integerValidator)),
                   RowInput("局", DropdownInput()),
                   RowInput("本場", TextInput((val) => currentPointSetting.bonba = int.tryParse(val), _bonbaController, _nonNegativeIntegerValidator)),
                   RowInput("供托", TextInput((val) => currentPointSetting.riichibou = int.tryParse(val), _riichibouController, _nonNegativeIntegerValidator)),
