@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'common.dart';
+
 class Setting extends StatefulWidget {
   SettingParameter currentSetting;
   Function save;
@@ -16,8 +18,8 @@ class Setting extends StatefulWidget {
 class _SettingState extends State<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
   SettingParameter currentSetting;
-  final SettingParameter _tenhouSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 25000, riichibouPoint: 1000, bonbaPoint: 300, umaBig: 20, umaSmall: 10, kiriage: false, douten: false);
-  final SettingParameter _RMUSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 30000, riichibouPoint: 1000, bonbaPoint: 300, umaBig: 30, umaSmall: 10, kiriage: true, douten: true);
+  final SettingParameter _tenhouSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 25000, riichibouPoint: 1000, bonbaPoint: 300, ryukyokuPoint: 3000, umaBig: 20, umaSmall: 10, kiriage: false, douten: false);
+  final SettingParameter _RMUSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 30000, riichibouPoint: 1000, bonbaPoint: 300, ryukyokuPoint: 3000, umaBig: 30, umaSmall: 10, kiriage: true, douten: true);
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
     contentPadding: EdgeInsets.all(8),
@@ -25,7 +27,7 @@ class _SettingState extends State<Setting> {
       borderRadius: BorderRadius.circular(8.0),
     ),
   );
-  TextEditingController _givenStartingPointController, _startingPointController, _riichibouPointController, _bonbaPointController, _umaBigController, _umaSmallController;
+  TextEditingController _givenStartingPointController, _startingPointController, _riichibouPointController, _bonbaPointController, _ryukyokuPointController, _umaBigController, _umaSmallController;
 
   static final ShapeBorder _shapeBorder = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(50.0),
@@ -41,6 +43,7 @@ class _SettingState extends State<Setting> {
     _startingPointController = TextEditingController(text: currentSetting.startingPoint.toString());
     _riichibouPointController = TextEditingController(text: currentSetting.riichibouPoint.toString());
     _bonbaPointController = TextEditingController(text: currentSetting.bonbaPoint.toString());
+    _ryukyokuPointController = TextEditingController(text: currentSetting.ryukyokuPoint.toString());
     _umaBigController = TextEditingController(text: currentSetting.umaBig.toString());
     _umaSmallController = TextEditingController(text: currentSetting.umaSmall.toString());
   }
@@ -94,24 +97,12 @@ class _SettingState extends State<Setting> {
       );
     }
 
-    Widget BaseBarButton(String name, Function pressed) {
-      return RaisedButton(
-        child: Text(
-          name,
-        ),
-        onPressed: pressed,
-        textColor: Colors.black,
-        color: Colors.white,
-        elevation: 0.0,
-        shape: _shapeBorder,
-      );
-    }
-
     void copySetting(SettingParameter setting) {
       _givenStartingPointController.text = setting.givenStartingPoint.toString();
       _startingPointController.text = setting.startingPoint.toString();
       _riichibouPointController.text = setting.riichibouPoint.toString();
       _bonbaPointController.text = setting.bonbaPoint.toString();
+      _ryukyokuPointController.text = setting.ryukyokuPoint.toString();
       _umaBigController.text = setting.umaBig.toString();
       _umaSmallController.text = setting.umaSmall.toString();
     }
@@ -135,6 +126,7 @@ class _SettingState extends State<Setting> {
                   RowInput("原點", TextInput((val) => currentSetting.givenStartingPoint = int.tryParse(val), _givenStartingPointController)),
                   RowInput("立直棒點", TextInput((val) => currentSetting.riichibouPoint = int.tryParse(val), _riichibouPointController)),
                   RowInput("本場棒點", TextInput((val) => currentSetting.bonbaPoint = int.tryParse(val), _bonbaPointController)),
+                  RowInput("流局罰符", TextInput((val) => currentSetting.ryukyokuPoint = int.tryParse(val), _ryukyokuPointController)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -158,32 +150,16 @@ class _SettingState extends State<Setting> {
                   ),
                   Row(
                     children: [
-                      Flexible(
-                        child: CheckboxListTile(
-                          value: currentSetting.kiriage,
-                          title: Text("切上滿貫"),
-                          onChanged: (val) {
-                            setState(() {
-                              currentSetting.kiriage = val;
-                            });
-                          },
-                          dense: true,
-                          controlAffinity: ListTileControlAffinity.leading,
-                        ),
-                      ),
-                      Flexible(
-                        child: CheckboxListTile(
-                          value: currentSetting.douten,
-                          title: Text("同點同順位"),
-                          onChanged: (val) {
-                            setState(() {
-                              currentSetting.douten = val;
-                            });
-                          },
-                          dense: true,
-                          controlAffinity: ListTileControlAffinity.leading,
-                        ),
-                      ),
+                      FlexibleCustomCheckBoxTile(currentSetting.kiriage, "切上滿貫", (val) {
+                        setState(() {
+                          currentSetting.kiriage = val;
+                        });
+                      }),
+                      FlexibleCustomCheckBoxTile(currentSetting.douten, "同點同順位", (val) {
+                        setState(() {
+                          currentSetting.douten = val;
+                        });
+                      }),
                     ],
                   ),
                 ],
@@ -260,10 +236,11 @@ class SettingParameter {
   int startingPoint;
   int riichibouPoint;
   int bonbaPoint;
+  int ryukyokuPoint;
   int umaSmall;
   int umaBig;
   bool kiriage;
   bool douten;
 
-  SettingParameter({this.givenStartingPoint, this.startingPoint, this.riichibouPoint, this.bonbaPoint, this.umaBig, this.umaSmall, this.kiriage, this.douten});
+  SettingParameter({this.givenStartingPoint, this.startingPoint, this.riichibouPoint, this.bonbaPoint, this.ryukyokuPoint, this.umaBig, this.umaSmall, this.kiriage, this.douten});
 }

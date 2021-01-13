@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'common.dart';
+
 class PointSetting extends StatefulWidget {
   PointSettingParameter currentPointSetting;
   Function save;
@@ -17,7 +19,6 @@ class PointSetting extends StatefulWidget {
 class _PointSettingState extends State<PointSetting> {
   final _pointSettingFormKey = GlobalKey<FormState>();
   PointSettingParameter currentPointSetting;
-  final List<String> kyokus = ["東一局", "東二局", "東三局", "東四局", "南一局", "南二局", "南三局", "南四局", "西一局", "西二局", "西三局", "西四局", "北一局", "北二局", "北三局", "北四局"];
   TextEditingController _bottomController, _rightController, _topController, _leftController, _bonbaController, _riichibouController;
 
   final InputDecoration _inputDecoration = InputDecoration(
@@ -26,10 +27,6 @@ class _PointSettingState extends State<PointSetting> {
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
     ),
-  );
-
-  static final ShapeBorder _shapeBorder = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(50.0),
   );
 
   @override
@@ -92,30 +89,17 @@ class _PointSettingState extends State<PointSetting> {
 
     Widget DropdownInput() {
       return DropdownButtonFormField<String>(
-        items: kyokus.map((value) => DropdownMenuItem<String>(child: Text(value), value: value)).toList(),
-        value: kyokus[currentPointSetting.currentKyoku],
+        items: constant.kyokus.map((value) => DropdownMenuItem<String>(child: Text(value), value: value)).toList(),
+        value: constant.kyokus[currentPointSetting.currentKyoku],
         decoration: _inputDecoration,
         onChanged: (val) {
           setState(() {
-            currentPointSetting.currentKyoku = kyokus.indexOf(val);
+            currentPointSetting.currentKyoku = constant.kyokus.indexOf(val);
           });
         },
         onSaved: (val) {
-          currentPointSetting.currentKyoku = kyokus.indexOf(val);
+          currentPointSetting.currentKyoku = constant.kyokus.indexOf(val);
         },
-      );
-    }
-
-    Widget BaseBarButton(String name, Function pressed) {
-      return RaisedButton(
-        child: Text(
-          name,
-        ),
-        onPressed: pressed,
-        textColor: Colors.black,
-        color: Colors.white,
-        elevation: 0.0,
-        shape: _shapeBorder,
       );
     }
 
@@ -143,10 +127,10 @@ class _PointSettingState extends State<PointSetting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  RowInput("下", TextInput((val) => currentPointSetting.players[Position.Bottom].point = int.tryParse(val), _bottomController, _integerValidator)),
-                  RowInput("右", TextInput((val) => currentPointSetting.players[Position.Right].point = int.tryParse(val), _rightController, _integerValidator)),
-                  RowInput("上", TextInput((val) => currentPointSetting.players[Position.Top].point = int.tryParse(val), _topController, _integerValidator)),
-                  RowInput("左", TextInput((val) => currentPointSetting.players[Position.Left].point = int.tryParse(val), _leftController, _integerValidator)),
+                  RowInput(constant.positionText[Position.Bottom], TextInput((val) => currentPointSetting.players[Position.Bottom].point = int.tryParse(val), _bottomController, _integerValidator)),
+                  RowInput(constant.positionText[Position.Right], TextInput((val) => currentPointSetting.players[Position.Right].point = int.tryParse(val), _rightController, _integerValidator)),
+                  RowInput(constant.positionText[Position.Top], TextInput((val) => currentPointSetting.players[Position.Top].point = int.tryParse(val), _topController, _integerValidator)),
+                  RowInput(constant.positionText[Position.Left], TextInput((val) => currentPointSetting.players[Position.Left].point = int.tryParse(val), _leftController, _integerValidator)),
                   RowInput("局", DropdownInput()),
                   RowInput("本場", TextInput((val) => currentPointSetting.bonba = int.tryParse(val), _bonbaController, _nonNegativeIntegerValidator)),
                   RowInput("供托", TextInput((val) => currentPointSetting.riichibou = int.tryParse(val), _riichibouController, _nonNegativeIntegerValidator)),
@@ -175,13 +159,6 @@ class _PointSettingState extends State<PointSetting> {
       ),
     );
   }
-}
-
-enum Position {
-  Bottom,
-  Right,
-  Top,
-  Left,
 }
 
 class Player {
