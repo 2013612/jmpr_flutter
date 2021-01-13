@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:jmpr_flutter/pointSetting.dart';
 import 'package:jmpr_flutter/ryukyoku.dart';
 import 'package:jmpr_flutter/setting.dart';
 import 'package:jmpr_flutter/common.dart';
+import 'package:jmpr_flutter/tsumo.dart';
 
 
 class Layout extends StatefulWidget {
@@ -69,16 +72,35 @@ class _LayoutState extends State<Layout> {
       currentPointSetting.players.forEach((key, value) {
         if (key == position) {
           if (key == oya) {
-            value.point += (point + 99) ~/ 100 * 100 * 3;
+            value.point += (point + 99) ~/ 100 * 100 * 3 + currentPointSetting.bonba * currentSetting.bonbaPoint + currentPointSetting.riichibou + currentSetting.riichibouPoint;
           } else {
-            value.point += (point + 99) ~/ 100 * 100 * 2 + (point * 2 + 99) ~/ 100 * 100;
+            value.point += (point + 99) ~/ 100 * 100 * 2 + (point * 2 + 99) ~/ 100 * 100 + currentPointSetting.bonba * currentSetting.bonbaPoint + currentPointSetting.riichibou + currentSetting.riichibouPoint;
           }
         } else {
           if (key == oya) {
-            value.point -= (point * 2 + 99) ~/ 100 * 100;
+            value.point -= (point * 2 + 99) ~/ 100 * 100 + currentPointSetting.bonba * currentSetting.bonbaPoint ~/ 3;
           } else {
-            value.point -= (point + 99) ~/ 100 * 100;
+            value.point -= (point + 99) ~/ 100 * 100 + currentPointSetting.bonba * currentSetting.bonbaPoint ~/ 3;
           }
+        }
+      });
+      currentPointSetting.bonba = 0;
+      currentPointSetting.riichibou = 0;
+    }
+
+    void saveTsumo(Position position, int han, int fu) {
+      int point = pow(2, han + 2) * fu;
+      if (point > 1920) {
+        point = constant.points[han];
+      } else if (point == 1920 && this.currentSetting.kiriage) {
+        point = 2000;
+      }
+      setState(() {
+        updatePlayerPointTsumo(point, position);
+        if (position == Position.values[(firstOya.index + currentPointSetting.currentKyoku) % 4]) {
+          currentPointSetting.bonba++;
+        } else {
+          currentPointSetting.currentKyoku++;
         }
       });
     }
@@ -211,7 +233,7 @@ class _LayoutState extends State<Layout> {
           children: [
             // TODO: fill function after finish page
             BaseBarButton("銃和", null),
-            BaseBarButton("自摸", null),
+            BaseBarButton("自摸", () {Navigator.push(context, MaterialPageRoute(builder: (context) => Tsumo(save: saveTsumo)));}),
             BaseBarButton("流局", () {Navigator.push(context, MaterialPageRoute(builder: (context) => Ryukyoku(save: calRyukyoku)));}),
             BaseBarButton("重置", reset),
           ],
