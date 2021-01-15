@@ -220,8 +220,9 @@ class _PointSettingState extends State<PointSetting> {
 class Player {
   Position position;
   int point;
+  bool riichi;
 
-  Player({this.position, this.point});
+  Player({this.position, this.point, this.riichi});
 }
 
 class PointSettingParameter {

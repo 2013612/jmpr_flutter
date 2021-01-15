@@ -18,15 +18,11 @@ class _RyokyokuState extends State<Ryukyoku> {
   void initState() {
     super.initState();
     _tenpai = Map();
-    _tenpai[Position.Bottom] = false;
-    _tenpai[Position.Right] = false;
-    _tenpai[Position.Top] = false;
-    _tenpai[Position.Left] = false;
     _nagashimangan = Map();
-    _nagashimangan[Position.Bottom] = false;
-    _nagashimangan[Position.Right] = false;
-    _nagashimangan[Position.Top] = false;
-    _nagashimangan[Position.Left] = false;
+    Position.values.forEach((element) {
+      _tenpai[element] = false;
+      _nagashimangan[element] = false;
+    });
   }
 
   @override

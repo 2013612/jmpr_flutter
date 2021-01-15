@@ -35,34 +35,32 @@ class _LayoutState extends State<Layout> {
         umaBig: 20,
         umaSmall: 10,
         kiriage: false,
-        douten: false);
+        douten: false,
+    );
     Map<Position, Player> players = Map();
-    players[Position.Bottom] = Player(
-        position: Position.Bottom, point: currentSetting.givenStartingPoint);
-    players[Position.Right] = Player(
-        position: Position.Right, point: currentSetting.givenStartingPoint);
-    players[Position.Top] = Player(
-        position: Position.Top, point: currentSetting.givenStartingPoint);
-    players[Position.Left] = Player(
-        position: Position.Left, point: currentSetting.givenStartingPoint);
+    Position.values.forEach((element) {
+      players[element] = Player(position: element, point: currentSetting.givenStartingPoint, riichi: false);
+    });
     currentPointSetting = PointSettingParameter(
-        players: players, currentKyoku: 0, bonba: 0, riichibou: 0);
+        players: players, currentKyoku: 0, bonba: 0, riichibou: 0,);
   }
 
   @override
   Widget build(BuildContext context) {
     List<String> choices = ["場況設定", "設定", "上一步"];
 
+    void setRiichiFalse() {
+      Position.values.forEach((element) {
+        currentPointSetting.players[element].riichi = false;
+      });
+    }
+
     void reset() {
       setState(() {
-        currentPointSetting.players[Position.Bottom].point =
-            currentSetting.givenStartingPoint;
-        currentPointSetting.players[Position.Right].point =
-            currentSetting.givenStartingPoint;
-        currentPointSetting.players[Position.Top].point =
-            currentSetting.givenStartingPoint;
-        currentPointSetting.players[Position.Left].point =
-            currentSetting.givenStartingPoint;
+        Position.values.forEach((element) {
+          currentPointSetting.players[element].riichi = false;
+          currentPointSetting.players[element].point = currentSetting.givenStartingPoint;
+        });
         currentPointSetting.currentKyoku = 0;
         currentPointSetting.bonba = 0;
         currentPointSetting.riichibou = 0;
@@ -79,6 +77,7 @@ class _LayoutState extends State<Layout> {
     void savePointSetting(PointSettingParameter pointSetting) {
       setState(() {
         currentPointSetting = pointSetting;
+        setRiichiFalse();
       });
     }
 
@@ -137,6 +136,7 @@ class _LayoutState extends State<Layout> {
           currentPointSetting.currentKyoku =
               (currentPointSetting.currentKyoku + 1) % 16;
         }
+        setRiichiFalse();
       });
     }
 
@@ -176,10 +176,11 @@ class _LayoutState extends State<Layout> {
           currentPointSetting.currentKyoku =
               (currentPointSetting.currentKyoku + 1) % 16;
         }
+        setRiichiFalse();
       });
     }
 
-    void calRyukyoku(
+    void saveRyukyoku(
         Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
       int numOfTenpai = 0;
       int numOfNagashimagan = 0;
@@ -216,7 +217,42 @@ class _LayoutState extends State<Layout> {
               (currentPointSetting.currentKyoku + 1) % 16;
         }
         currentPointSetting.bonba++;
+        setRiichiFalse();
       });
+    }
+
+    Widget PointAndRiichiSwitch(Position position) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: Switch(
+              value: currentPointSetting.players[position].riichi,
+              onChanged: (val) {
+                setState(() {
+                  if (val) {
+                    currentPointSetting.riichibou++;
+                    currentPointSetting.players[position].point -= 1000;
+                    currentPointSetting.players[position].riichi = true;
+                  } else {
+                    currentPointSetting.riichibou--;
+                    currentPointSetting.players[position].point += 1000;
+                    currentPointSetting.players[position].riichi = false;
+                  }
+                });
+              },
+            ),
+          ),
+          Text(
+            "${currentPointSetting.players[position].point}",
+            style: TextStyle(
+              color: firstOya == position
+                  ? firstOyaColor
+                  : nonFirstOyaColor,
+            ),
+          ),
+        ],
+      );
     }
 
     return Scaffold(
@@ -264,28 +300,14 @@ class _LayoutState extends State<Layout> {
             Center(
               child: RotatedBox(
                 quarterTurns: 2,
-                child: Text(
-                  "${currentPointSetting.players[Position.Top].point}",
-                  style: TextStyle(
-                    color: firstOya == Position.Top
-                        ? firstOyaColor
-                        : nonFirstOyaColor,
-                  ),
-                ),
+                child: PointAndRiichiSwitch(Position.Top),
               ),
             ),
             EmptyGrid(),
             Center(
               child: RotatedBox(
                 quarterTurns: 1,
-                child: Text(
-                  "${currentPointSetting.players[Position.Left].point}",
-                  style: TextStyle(
-                    color: firstOya == Position.Left
-                        ? firstOyaColor
-                        : nonFirstOyaColor,
-                  ),
-                ),
+                child: PointAndRiichiSwitch(Position.Left),
               ),
             ),
             Center(
@@ -301,26 +323,12 @@ class _LayoutState extends State<Layout> {
             Center(
               child: RotatedBox(
                 quarterTurns: 3,
-                child: Text(
-                  "${currentPointSetting.players[Position.Right].point}",
-                  style: TextStyle(
-                    color: firstOya == Position.Right
-                        ? firstOyaColor
-                        : nonFirstOyaColor,
-                  ),
-                ),
+                child: PointAndRiichiSwitch(Position.Right),
               ),
             ),
             EmptyGrid(),
             Center(
-              child: Text(
-                "${currentPointSetting.players[Position.Bottom].point}",
-                style: TextStyle(
-                  color: firstOya == Position.Bottom
-                      ? firstOyaColor
-                      : nonFirstOyaColor,
-                ),
-              ),
+              child: PointAndRiichiSwitch(Position.Bottom),
             ),
             EmptyGrid(),
           ],
@@ -330,7 +338,6 @@ class _LayoutState extends State<Layout> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // TODO: fill function after finish page
             BaseBarButton("銃和", () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
@@ -345,7 +352,7 @@ class _LayoutState extends State<Layout> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Ryukyoku(save: calRyukyoku)));
+                      builder: (context) => Ryukyoku(save: saveRyukyoku)));
             }),
             BaseBarButton("重置", reset),
           ],
