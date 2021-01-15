@@ -19,5 +19,3 @@ class JMPRAPP extends StatelessWidget {
     );
   }
 }
-
-
