@@ -222,6 +222,7 @@ class _LayoutState extends State<Layout> {
     }
 
     Widget PointAndRiichiSwitch(Position position) {
+      String sittingText = constant.sittingTexts[(position.index - (firstOya.index + currentPointSetting.currentKyoku) + 8) % 4];
       return Column(
         children: [
           SizedBox(
@@ -244,7 +245,7 @@ class _LayoutState extends State<Layout> {
             ),
           ),
           Text(
-            "${currentPointSetting.players[position].point}",
+            "$sittingText ${currentPointSetting.players[position].point}",
             style: TextStyle(
               color: firstOya == position
                   ? firstOyaColor

@@ -25,6 +25,12 @@ class constant {
     Position.Top: "上",
     Position.Left: "左"
   };
+  static final List<String> sittingTexts = [
+    "東",
+    "南",
+    "西",
+    "北",
+  ];
   static final List<int> hans = [
     1,
     2,
