@@ -4,7 +4,7 @@ import 'common.dart';
 class Ryukyoku extends StatefulWidget {
   Function save;
   Ryukyoku({
-      @required this.save,
+    @required this.save,
   });
 
   @override
@@ -47,7 +47,7 @@ class _RyokyokuState extends State<Ryukyoku> {
       return FlexibleCustomCheckBoxTile(
         _nagashimangan[position],
         constant.positionTexts[position],
-            (val) {
+        (val) {
           setState(() {
             _nagashimangan[position] = val;
           });

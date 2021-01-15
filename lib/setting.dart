@@ -18,8 +18,26 @@ class Setting extends StatefulWidget {
 class _SettingState extends State<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
   SettingParameter currentSetting;
-  final SettingParameter _tenhouSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 25000, riichibouPoint: 1000, bonbaPoint: 300, ryukyokuPoint: 3000, umaBig: 20, umaSmall: 10, kiriage: false, douten: false);
-  final SettingParameter _RMUSetting = SettingParameter(startingPoint: 30000, givenStartingPoint: 30000, riichibouPoint: 1000, bonbaPoint: 300, ryukyokuPoint: 3000, umaBig: 30, umaSmall: 10, kiriage: true, douten: true);
+  final SettingParameter _tenhouSetting = SettingParameter(
+      startingPoint: 30000,
+      givenStartingPoint: 25000,
+      riichibouPoint: 1000,
+      bonbaPoint: 300,
+      ryukyokuPoint: 3000,
+      umaBig: 20,
+      umaSmall: 10,
+      kiriage: false,
+      douten: false);
+  final SettingParameter _RMUSetting = SettingParameter(
+      startingPoint: 30000,
+      givenStartingPoint: 30000,
+      riichibouPoint: 1000,
+      bonbaPoint: 300,
+      ryukyokuPoint: 3000,
+      umaBig: 30,
+      umaSmall: 10,
+      kiriage: true,
+      douten: true);
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
     contentPadding: EdgeInsets.all(8),
@@ -27,7 +45,13 @@ class _SettingState extends State<Setting> {
       borderRadius: BorderRadius.circular(8.0),
     ),
   );
-  TextEditingController _givenStartingPointController, _startingPointController, _riichibouPointController, _bonbaPointController, _ryukyokuPointController, _umaBigController, _umaSmallController;
+  TextEditingController _givenStartingPointController,
+      _startingPointController,
+      _riichibouPointController,
+      _bonbaPointController,
+      _ryukyokuPointController,
+      _umaBigController,
+      _umaSmallController;
 
   static final ShapeBorder _shapeBorder = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(50.0),
@@ -39,13 +63,20 @@ class _SettingState extends State<Setting> {
   void initState() {
     super.initState();
     currentSetting = widget.currentSetting ?? _tenhouSetting;
-    _givenStartingPointController = TextEditingController(text: currentSetting.givenStartingPoint.toString());
-    _startingPointController = TextEditingController(text: currentSetting.startingPoint.toString());
-    _riichibouPointController = TextEditingController(text: currentSetting.riichibouPoint.toString());
-    _bonbaPointController = TextEditingController(text: currentSetting.bonbaPoint.toString());
-    _ryukyokuPointController = TextEditingController(text: currentSetting.ryukyokuPoint.toString());
-    _umaBigController = TextEditingController(text: currentSetting.umaBig.toString());
-    _umaSmallController = TextEditingController(text: currentSetting.umaSmall.toString());
+    _givenStartingPointController = TextEditingController(
+        text: currentSetting.givenStartingPoint.toString());
+    _startingPointController =
+        TextEditingController(text: currentSetting.startingPoint.toString());
+    _riichibouPointController =
+        TextEditingController(text: currentSetting.riichibouPoint.toString());
+    _bonbaPointController =
+        TextEditingController(text: currentSetting.bonbaPoint.toString());
+    _ryukyokuPointController =
+        TextEditingController(text: currentSetting.ryukyokuPoint.toString());
+    _umaBigController =
+        TextEditingController(text: currentSetting.umaBig.toString());
+    _umaSmallController =
+        TextEditingController(text: currentSetting.umaSmall.toString());
   }
 
   @override
@@ -78,15 +109,18 @@ class _SettingState extends State<Setting> {
     }
 
     String _umaValidator(String val) {
-      if (int.tryParse(_umaBigController.text) == null || int.tryParse(_umaSmallController.text) == null) {
+      if (int.tryParse(_umaBigController.text) == null ||
+          int.tryParse(_umaSmallController.text) == null) {
         return "請輸入整數";
-      } else if (int.tryParse(_umaBigController.text) < int.tryParse(_umaSmallController.text)) {
+      } else if (int.tryParse(_umaBigController.text) <
+          int.tryParse(_umaSmallController.text)) {
         return "請由大至小輸入馬點";
       }
       return null;
     }
 
-    Widget TextInput(Function save, TextEditingController controller, [Function validator]) {
+    Widget TextInput(Function save, TextEditingController controller,
+        [Function validator]) {
       validator ??= _defaultValidator;
       return TextFormField(
         keyboardType: TextInputType.numberWithOptions(signed: true),
@@ -98,7 +132,8 @@ class _SettingState extends State<Setting> {
     }
 
     void copySetting(SettingParameter setting) {
-      _givenStartingPointController.text = setting.givenStartingPoint.toString();
+      _givenStartingPointController.text =
+          setting.givenStartingPoint.toString();
       _startingPointController.text = setting.startingPoint.toString();
       _riichibouPointController.text = setting.riichibouPoint.toString();
       _bonbaPointController.text = setting.bonbaPoint.toString();
@@ -122,40 +157,74 @@ class _SettingState extends State<Setting> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  RowInput("起始點", TextInput((val) => currentSetting.startingPoint = int.tryParse(val), _startingPointController)),
-                  RowInput("原點", TextInput((val) => currentSetting.givenStartingPoint = int.tryParse(val), _givenStartingPointController)),
-                  RowInput("立直棒點", TextInput((val) => currentSetting.riichibouPoint = int.tryParse(val), _riichibouPointController)),
-                  RowInput("本場棒點", TextInput((val) => currentSetting.bonbaPoint = int.tryParse(val), _bonbaPointController)),
-                  RowInput("流局罰符", TextInput((val) => currentSetting.ryukyokuPoint = int.tryParse(val), _ryukyokuPointController)),
+                  RowInput(
+                      "起始點",
+                      TextInput(
+                          (val) =>
+                              currentSetting.startingPoint = int.tryParse(val),
+                          _startingPointController)),
+                  RowInput(
+                      "原點",
+                      TextInput(
+                          (val) => currentSetting.givenStartingPoint =
+                              int.tryParse(val),
+                          _givenStartingPointController)),
+                  RowInput(
+                      "立直棒點",
+                      TextInput(
+                          (val) =>
+                              currentSetting.riichibouPoint = int.tryParse(val),
+                          _riichibouPointController)),
+                  RowInput(
+                      "本場棒點",
+                      TextInput(
+                          (val) =>
+                              currentSetting.bonbaPoint = int.tryParse(val),
+                          _bonbaPointController)),
+                  RowInput(
+                      "流局罰符",
+                      TextInput(
+                          (val) =>
+                              currentSetting.ryukyokuPoint = int.tryParse(val),
+                          _ryukyokuPointController)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         width: 80,
                         child: Text(
-                            "馬點:",
+                          "馬點:",
                         ),
                       ),
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
-                        child: TextInput((val) => currentSetting.umaBig = int.tryParse(val), _umaBigController, _umaValidator),
+                        child: TextInput(
+                            (val) => currentSetting.umaBig = int.tryParse(val),
+                            _umaBigController,
+                            _umaValidator),
                       ),
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
-                        child: TextInput((val) => currentSetting.umaSmall = int.tryParse(val), _umaSmallController, _umaValidator),
+                        child: TextInput(
+                            (val) =>
+                                currentSetting.umaSmall = int.tryParse(val),
+                            _umaSmallController,
+                            _umaValidator),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      FlexibleCustomCheckBoxTile(currentSetting.kiriage, "切上滿貫", (val) {
+                      FlexibleCustomCheckBoxTile(currentSetting.kiriage, "切上滿貫",
+                          (val) {
                         setState(() {
                           currentSetting.kiriage = val;
                         });
                       }),
-                      FlexibleCustomCheckBoxTile(currentSetting.douten, "同點同順位", (val) {
+                      FlexibleCustomCheckBoxTile(currentSetting.douten, "同點同順位",
+                          (val) {
                         setState(() {
                           currentSetting.douten = val;
                         });
@@ -180,14 +249,12 @@ class _SettingState extends State<Setting> {
                 shape: _shapeBorder,
                 child: PopupMenuButton<String>(
                   itemBuilder: (BuildContext context) {
-                    return _usualSettings.map(
-                            (setting) {
-                          return PopupMenuItem<String>(
-                            value: setting,
-                            child: Text(setting),
-                          );
-                        }
-                    ).toList();
+                    return _usualSettings.map((setting) {
+                      return PopupMenuItem<String>(
+                        value: setting,
+                        child: Text(setting),
+                      );
+                    }).toList();
                   },
                   child: Text("常用設定"),
                   onSelected: (string) {
@@ -242,5 +309,14 @@ class SettingParameter {
   bool kiriage;
   bool douten;
 
-  SettingParameter({this.givenStartingPoint, this.startingPoint, this.riichibouPoint, this.bonbaPoint, this.ryukyokuPoint, this.umaBig, this.umaSmall, this.kiriage, this.douten});
+  SettingParameter(
+      {this.givenStartingPoint,
+      this.startingPoint,
+      this.riichibouPoint,
+      this.bonbaPoint,
+      this.ryukyokuPoint,
+      this.umaBig,
+      this.umaSmall,
+      this.kiriage,
+      this.douten});
 }

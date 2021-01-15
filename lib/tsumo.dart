@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'common.dart';
 
-class Tsumo extends StatefulWidget{
+class Tsumo extends StatefulWidget {
   Function save;
   Tsumo({
     @required this.save,
@@ -36,7 +36,7 @@ class _TsumoState extends State<Tsumo> {
       position,
       _tsumoPlayer,
       constant.positionTexts[position],
-          (val) {
+      (val) {
         setState(() {
           _tsumoPlayer = val;
         });
@@ -81,7 +81,12 @@ class _TsumoState extends State<Tsumo> {
                       decoration: _inputDecoration,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          items: constant.hans.map((e) => DropdownMenuItem(child: Text(e.toString()), value: e.toString(),)).toList(),
+                          items: constant.hans
+                              .map((e) => DropdownMenuItem(
+                                    child: Text(e.toString()),
+                                    value: e.toString(),
+                                  ))
+                              .toList(),
                           value: han.toString(),
                           isDense: true,
                           onChanged: (val) {
@@ -105,7 +110,12 @@ class _TsumoState extends State<Tsumo> {
                       decoration: _inputDecoration,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          items: constant.fus.map((e) => DropdownMenuItem(child: Text(e.toString()), value: e.toString(),)).toList(),
+                          items: constant.fus
+                              .map((e) => DropdownMenuItem(
+                                    child: Text(e.toString()),
+                                    value: e.toString(),
+                                  ))
+                              .toList(),
                           value: fu.toString(),
                           isDense: true,
                           onChanged: (val) {
@@ -134,7 +144,6 @@ class _TsumoState extends State<Tsumo> {
             children: [
               BaseBarButton("取消", () => Navigator.pop(context)),
               BaseBarButton("儲存", () {
-                print("run");
                 widget.save(_tsumoPlayer, han, fu);
                 Navigator.pop(context);
               }),
