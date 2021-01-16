@@ -319,4 +319,18 @@ class SettingParameter {
       this.umaSmall,
       this.kiriage,
       this.douten});
+
+  SettingParameter clone() {
+    return SettingParameter(
+      givenStartingPoint: givenStartingPoint,
+      startingPoint: startingPoint,
+      riichibouPoint: riichibouPoint,
+      bonbaPoint: bonbaPoint,
+      ryukyokuPoint: ryukyokuPoint,
+      umaBig: umaBig,
+      umaSmall: umaSmall,
+      kiriage: kiriage,
+      douten: douten,
+    );
+  }
 }

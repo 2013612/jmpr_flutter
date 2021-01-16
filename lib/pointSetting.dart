@@ -223,6 +223,14 @@ class Player {
   bool riichi;
 
   Player({this.position, this.point, this.riichi});
+
+  Player clone() {
+    return Player(
+      position: position,
+      point: point,
+      riichi: riichi,
+    );
+  }
 }
 
 class PointSettingParameter {
@@ -233,4 +241,17 @@ class PointSettingParameter {
 
   PointSettingParameter(
       {this.players, this.currentKyoku, this.bonba, this.riichibou});
+
+  PointSettingParameter clone() {
+    Map<Position, Player> newPlayers = Map();
+    players.forEach((key, value) {
+      newPlayers[key] = value.clone();
+    });
+    return PointSettingParameter(
+      players: newPlayers,
+      currentKyoku: currentKyoku,
+      bonba: bonba,
+      riichibou: riichibou,
+    );
+  }
 }

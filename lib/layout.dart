@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:jmpr_flutter/history.dart';
 import 'package:jmpr_flutter/pointSetting.dart';
 import 'package:jmpr_flutter/ron.dart';
 import 'package:jmpr_flutter/ryukyoku.dart';
@@ -22,32 +23,53 @@ class _LayoutState extends State<Layout> {
   final Color nonFirstOyaColor = Colors.black;
   SettingParameter currentSetting;
   PointSettingParameter currentPointSetting;
+  List<History> histories = [];
+  int currentHistoryIndex = 0;
+
+  void addHistory() {
+    if (currentHistoryIndex < histories.length) {
+      histories.removeRange(currentHistoryIndex, histories.length);
+    }
+    histories.add(History(
+        pointSetting: currentPointSetting.clone(),
+        setting: currentSetting.clone()));
+    currentHistoryIndex++;
+  }
 
   @override
   void initState() {
     super.initState();
     currentSetting = SettingParameter(
-        startingPoint: 30000,
-        givenStartingPoint: 25000,
-        riichibouPoint: 1000,
-        bonbaPoint: 300,
-        ryukyokuPoint: 3000,
-        umaBig: 20,
-        umaSmall: 10,
-        kiriage: false,
-        douten: false,
+      startingPoint: 30000,
+      givenStartingPoint: 25000,
+      riichibouPoint: 1000,
+      bonbaPoint: 300,
+      ryukyokuPoint: 3000,
+      umaBig: 20,
+      umaSmall: 10,
+      kiriage: false,
+      douten: false,
     );
     Map<Position, Player> players = Map();
     Position.values.forEach((element) {
-      players[element] = Player(position: element, point: currentSetting.givenStartingPoint, riichi: false);
+      players[element] = Player(
+          position: element,
+          point: currentSetting.givenStartingPoint,
+          riichi: false);
     });
     currentPointSetting = PointSettingParameter(
-        players: players, currentKyoku: 0, bonba: 0, riichibou: 0,);
+      players: players,
+      currentKyoku: 0,
+      bonba: 0,
+      riichibou: 0,
+    );
+    addHistory();
+    currentHistoryIndex = 1;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> choices = ["場況設定", "設定", "上一步"];
+    List<String> choices = ["場況設定", "設定", "歷史"];
 
     void setRiichiFalse() {
       Position.values.forEach((element) {
@@ -56,14 +78,22 @@ class _LayoutState extends State<Layout> {
     }
 
     void reset() {
+      Position.values.forEach((element) {
+        currentPointSetting.players[element].riichi = false;
+        currentPointSetting.players[element].point =
+            currentSetting.givenStartingPoint;
+      });
+      currentPointSetting.currentKyoku = 0;
+      currentPointSetting.bonba = 0;
+      currentPointSetting.riichibou = 0;
+      addHistory();
+    }
+
+    void saveHistory(History history) {
       setState(() {
-        Position.values.forEach((element) {
-          currentPointSetting.players[element].riichi = false;
-          currentPointSetting.players[element].point = currentSetting.givenStartingPoint;
-        });
-        currentPointSetting.currentKyoku = 0;
-        currentPointSetting.bonba = 0;
-        currentPointSetting.riichibou = 0;
+        currentPointSetting = history.pointSetting.clone();
+        currentSetting = history.setting.clone();
+        currentHistoryIndex = histories.indexOf(history) + 1;
       });
     }
 
@@ -78,6 +108,7 @@ class _LayoutState extends State<Layout> {
       setState(() {
         currentPointSetting = pointSetting;
         setRiichiFalse();
+        addHistory();
       });
     }
 
@@ -137,6 +168,7 @@ class _LayoutState extends State<Layout> {
               (currentPointSetting.currentKyoku + 1) % 16;
         }
         setRiichiFalse();
+        addHistory();
       });
     }
 
@@ -147,8 +179,6 @@ class _LayoutState extends State<Layout> {
       setState(() {
         int nearIndex = 100;
         ronPlayers.forEach((key, value) {
-          //print("$key ${currentPointSetting.players[key].point}");
-          //print("$ronedPlayer ${currentPointSetting.players[ronedPlayer].point}");
           if (value) {
             int point = calPoint(hans[key], fus[key]);
             if (key == oya) {
@@ -177,6 +207,7 @@ class _LayoutState extends State<Layout> {
               (currentPointSetting.currentKyoku + 1) % 16;
         }
         setRiichiFalse();
+        addHistory();
       });
     }
 
@@ -218,11 +249,14 @@ class _LayoutState extends State<Layout> {
         }
         currentPointSetting.bonba++;
         setRiichiFalse();
+        addHistory();
       });
     }
 
     Widget PointAndRiichiSwitch(Position position) {
-      String sittingText = constant.sittingTexts[(position.index - (firstOya.index + currentPointSetting.currentKyoku) + 8) % 4];
+      String sittingText = constant.sittingTexts[(position.index -
+              (firstOya.index + currentPointSetting.currentKyoku) +
+              8) % 4];
       return Column(
         children: [
           SizedBox(
@@ -247,9 +281,7 @@ class _LayoutState extends State<Layout> {
           Text(
             "$sittingText ${currentPointSetting.players[position].point}",
             style: TextStyle(
-              color: firstOya == position
-                  ? firstOyaColor
-                  : nonFirstOyaColor,
+              color: firstOya == position ? firstOyaColor : nonFirstOyaColor,
             ),
           ),
         ],
@@ -287,6 +319,14 @@ class _LayoutState extends State<Layout> {
                         builder: (context) => Setting(
                             currentSetting: currentSetting,
                             save: saveSetting)));
+              } else if (string == "歷史") {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HistoryPage(
+                              histories: histories,
+                              save: saveHistory,
+                            )));
               }
             },
           ),
@@ -355,7 +395,11 @@ class _LayoutState extends State<Layout> {
                   MaterialPageRoute(
                       builder: (context) => Ryukyoku(save: saveRyukyoku)));
             }),
-            BaseBarButton("重置", reset),
+            BaseBarButton("重置", () {
+              setState(() {
+                reset();
+              });
+            }),
           ],
         ),
         color: Colors.blue,
