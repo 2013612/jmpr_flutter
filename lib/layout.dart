@@ -8,6 +8,7 @@ import 'package:jmpr_flutter/ryukyoku.dart';
 import 'package:jmpr_flutter/setting.dart';
 import 'package:jmpr_flutter/common.dart';
 import 'package:jmpr_flutter/tsumo.dart';
+import 'package:jmpr_flutter/about.dart';
 
 class Layout extends StatefulWidget {
   Layout({Key key, this.title}) : super(key: key);
@@ -69,7 +70,7 @@ class _LayoutState extends State<Layout> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> choices = ["場況設定", "設定", "歷史"];
+    List<String> choices = ["場況設定", "設定", "歷史", "應用程式資訊"];
 
     void setRiichiFalse() {
       Position.values.forEach((element) {
@@ -256,7 +257,8 @@ class _LayoutState extends State<Layout> {
     Widget PointAndRiichiSwitch(Position position) {
       String sittingText = constant.sittingTexts[(position.index -
               (firstOya.index + currentPointSetting.currentKyoku) +
-              8) % 4];
+              8) %
+          4];
       return Column(
         children: [
           SizedBox(
@@ -305,28 +307,36 @@ class _LayoutState extends State<Layout> {
               Icons.menu,
             ),
             onSelected: (string) {
-              if (string == "場況設定") {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PointSetting(
-                            currentPointSetting: currentPointSetting,
-                            save: savePointSetting)));
-              } else if (string == "設定") {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Setting(
-                            currentSetting: currentSetting,
-                            save: saveSetting)));
-              } else if (string == "歷史") {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HistoryPage(
-                              histories: histories,
-                              save: saveHistory,
-                            )));
+              switch (string) {
+                case "場況設定":
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PointSetting(
+                              currentPointSetting: currentPointSetting,
+                              save: savePointSetting)));
+                  break;
+                case "設定":
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Setting(
+                              currentSetting: currentSetting,
+                              save: saveSetting)));
+                  break;
+                case "歷史":
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HistoryPage(
+                                histories: histories,
+                                save: saveHistory,
+                              )));
+                  break;
+                case "應用程式資訊":
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => About()));
+                  break;
               }
             },
           ),
