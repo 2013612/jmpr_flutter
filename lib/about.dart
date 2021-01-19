@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("應用程式資訊"),
+        title: Text(AppLocalizations.of(context).about),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -13,17 +14,17 @@ class About extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text("日本麻將點數記錄器"),
+            child: Text(AppLocalizations.of(context).appTitle),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text("1.0 版本"),
+            child: Text(AppLocalizations.of(context).version),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text("開發: 2013612"),
+            child: Text(AppLocalizations.of(context).develop + ": 2013612"),
           ),
           Container(
             padding: EdgeInsets.all(8.0),

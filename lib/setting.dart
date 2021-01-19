@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
 
@@ -57,8 +58,6 @@ class _SettingState extends State<Setting> {
     borderRadius: BorderRadius.circular(50.0),
   );
 
-  final List<String> _usualSettings = ["現在的設定", "RMU A/B RULE", "天鳳"];
-
   @override
   void initState() {
     super.initState();
@@ -81,12 +80,17 @@ class _SettingState extends State<Setting> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> _usualSettings = {
+      "currentSetting": AppLocalizations.of(context).currentSetting,
+      "RMU A/B RULE": AppLocalizations.of(context).rmu,
+      "tenhou": AppLocalizations.of(context).tenhou
+    };
     Widget RowInput(String name, Widget widget) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 80,
+            width: 100,
             child: Text(
               name + ":",
             ),
@@ -103,7 +107,7 @@ class _SettingState extends State<Setting> {
     // TODO: update validator function
     String _defaultValidator(String val) {
       if (int.tryParse(val) == null) {
-        return "請輸入整數";
+        return AppLocalizations.of(context).errorInteger;
       }
       return null;
     }
@@ -111,10 +115,10 @@ class _SettingState extends State<Setting> {
     String _umaValidator(String val) {
       if (int.tryParse(_umaBigController.text) == null ||
           int.tryParse(_umaSmallController.text) == null) {
-        return "請輸入整數";
+        return AppLocalizations.of(context).errorInteger;
       } else if (int.tryParse(_umaBigController.text) <
           int.tryParse(_umaSmallController.text)) {
-        return "請由大至小輸入馬點";
+        return AppLocalizations.of(context).errorDecreasing;
       }
       return null;
     }
@@ -146,7 +150,7 @@ class _SettingState extends State<Setting> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("設定"),
+          title: Text(AppLocalizations.of(context).setting),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -158,31 +162,31 @@ class _SettingState extends State<Setting> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RowInput(
-                      "起始點",
+                      AppLocalizations.of(context).startingPoint,
                       TextInput(
                           (val) =>
                               currentSetting.startingPoint = int.tryParse(val),
                           _startingPointController)),
                   RowInput(
-                      "原點",
+                      AppLocalizations.of(context).givenStartingPoint,
                       TextInput(
                           (val) => currentSetting.givenStartingPoint =
                               int.tryParse(val),
                           _givenStartingPointController)),
                   RowInput(
-                      "立直棒點",
+                      AppLocalizations.of(context).riichibouPoint,
                       TextInput(
                           (val) =>
                               currentSetting.riichibouPoint = int.tryParse(val),
                           _riichibouPointController)),
                   RowInput(
-                      "本場棒點",
+                      AppLocalizations.of(context).bonbaPoint,
                       TextInput(
                           (val) =>
                               currentSetting.bonbaPoint = int.tryParse(val),
                           _bonbaPointController)),
                   RowInput(
-                      "流局罰符",
+                      AppLocalizations.of(context).ryukyokuPoint,
                       TextInput(
                           (val) =>
                               currentSetting.ryukyokuPoint = int.tryParse(val),
@@ -191,16 +195,16 @@ class _SettingState extends State<Setting> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 80,
+                        width: 100,
                         child: Text(
-                          "馬點:",
+                          AppLocalizations.of(context).uma + ":",
                         ),
                       ),
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                            (val) => currentSetting.umaBig = int.tryParse(val),
+                                (val) => currentSetting.umaBig = int.tryParse(val),
                             _umaBigController,
                             _umaValidator),
                       ),
@@ -208,8 +212,8 @@ class _SettingState extends State<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                            (val) =>
-                                currentSetting.umaSmall = int.tryParse(val),
+                                (val) =>
+                            currentSetting.umaSmall = int.tryParse(val),
                             _umaSmallController,
                             _umaValidator),
                       ),
@@ -217,14 +221,17 @@ class _SettingState extends State<Setting> {
                   ),
                   Row(
                     children: [
-                      FlexibleCustomCheckBoxTile(currentSetting.kiriage, "切上滿貫",
-                          (val) {
-                        setState(() {
-                          currentSetting.kiriage = val;
-                        });
-                      }),
-                      FlexibleCustomCheckBoxTile(currentSetting.douten, "同點同順位",
-                          (val) {
+                      SizedBox(
+                        width: 167,
+                        child: CustomCheckBoxTile(currentSetting.kiriage,
+                            AppLocalizations.of(context).kiriage, (val) {
+                          setState(() {
+                            currentSetting.kiriage = val;
+                          });
+                        }),
+                      ),
+                      FlexibleCustomCheckBoxTile(currentSetting.douten,
+                          AppLocalizations.of(context).samePoint, (val) {
                         setState(() {
                           currentSetting.douten = val;
                         });
@@ -249,17 +256,17 @@ class _SettingState extends State<Setting> {
                 shape: _shapeBorder,
                 child: PopupMenuButton<String>(
                   itemBuilder: (BuildContext context) {
-                    return _usualSettings.map((setting) {
+                    return _usualSettings.entries.map((setting) {
                       return PopupMenuItem<String>(
-                        value: setting,
-                        child: Text(setting),
+                        value: setting.key,
+                        child: Text(setting.value),
                       );
                     }).toList();
                   },
-                  child: Text("常用設定"),
+                  child: Text(AppLocalizations.of(context).usualSetting),
                   onSelected: (string) {
                     switch (string) {
-                      case "現在的設定":
+                      case "currentSetting":
                         setState(() {
                           currentSetting = widget.currentSetting;
                           copySetting(widget.currentSetting);
@@ -271,7 +278,7 @@ class _SettingState extends State<Setting> {
                           copySetting(_RMUSetting);
                         });
                         break;
-                      case "天鳳":
+                      case "tenhou":
                         setState(() {
                           currentSetting = _tenhouSetting;
                           copySetting(_tenhouSetting);
@@ -281,8 +288,9 @@ class _SettingState extends State<Setting> {
                   },
                 ),
               ),
-              BaseBarButton("取消", () => Navigator.pop(context)),
-              BaseBarButton("儲存", () {
+              BaseBarButton(AppLocalizations.of(context).cancel,
+                  () => Navigator.pop(context)),
+              BaseBarButton(AppLocalizations.of(context).save, () {
                 if (_settingFormKey.currentState.validate()) {
                   _settingFormKey.currentState.save();
                   widget.save(currentSetting);

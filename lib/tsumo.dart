@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
 
@@ -35,7 +36,7 @@ class _TsumoState extends State<Tsumo> {
     return FlexibleCustomRadioTile(
       position,
       _tsumoPlayer,
-      constant.positionTexts[position],
+      Constant.positionTexts[position],
       (val) {
         setState(() {
           _tsumoPlayer = val;
@@ -46,11 +47,12 @@ class _TsumoState extends State<Tsumo> {
 
   @override
   Widget build(BuildContext context) {
+    Constant constant = Constant(context);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("自摸"),
+          title: Text(AppLocalizations.of(context).tsumo),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -60,7 +62,7 @@ class _TsumoState extends State<Tsumo> {
             ),
             shrinkWrap: true,
             children: [
-              Text("自摸"),
+              Text(AppLocalizations.of(context).tsumo),
               Row(
                 children: [
                   TsumoPlayerRadioListTile(Position.Bottom),
@@ -81,7 +83,7 @@ class _TsumoState extends State<Tsumo> {
                       decoration: _inputDecoration,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          items: constant.hans
+                          items: Constant.hans
                               .map((e) => DropdownMenuItem(
                                     child: Text(e.toString()),
                                     value: e.toString(),
@@ -101,7 +103,7 @@ class _TsumoState extends State<Tsumo> {
                   Container(
                     width: 40,
                     alignment: Alignment.center,
-                    child: Text("番"),
+                    child: Text(AppLocalizations.of(context).han),
                   ),
                   Spacer(),
                   Container(
@@ -110,7 +112,7 @@ class _TsumoState extends State<Tsumo> {
                       decoration: _inputDecoration,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          items: constant.fus
+                          items: Constant.fus
                               .map((e) => DropdownMenuItem(
                                     child: Text(e.toString()),
                                     value: e.toString(),
@@ -130,7 +132,7 @@ class _TsumoState extends State<Tsumo> {
                   Container(
                     width: 40,
                     alignment: Alignment.center,
-                    child: Text("符"),
+                    child: Text(AppLocalizations.of(context).fu),
                   ),
                   Spacer(),
                 ],
@@ -142,8 +144,9 @@ class _TsumoState extends State<Tsumo> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton("取消", () => Navigator.pop(context)),
-              BaseBarButton("儲存", () {
+              BaseBarButton(AppLocalizations.of(context).cancel,
+                  () => Navigator.pop(context)),
+              BaseBarButton(AppLocalizations.of(context).save, () {
                 widget.save(_tsumoPlayer, han, fu);
                 Navigator.pop(context);
               }),

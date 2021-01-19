@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class constant {
+class Constant {
+  BuildContext context;
+  static Map<Position, String> positionTexts;
+  static List<String> sittingTexts;
+
+  Constant(this.context) {
+    Constant.positionTexts = {
+      Position.Bottom: AppLocalizations.of(context).bottom,
+      Position.Right: AppLocalizations.of(context).right,
+      Position.Top: AppLocalizations.of(context).top,
+      Position.Left: AppLocalizations.of(context).left,
+    };
+    Constant.sittingTexts = [
+      AppLocalizations.of(context).east,
+      AppLocalizations.of(context).south,
+      AppLocalizations.of(context).west,
+      AppLocalizations.of(context).north
+    ];
+  }
+
   static final List<String> kyokus = [
     "東一局",
     "東二局",
@@ -19,18 +39,7 @@ class constant {
     "北三局",
     "北四局"
   ];
-  static final Map<Position, String> positionTexts = {
-    Position.Bottom: "下",
-    Position.Right: "右",
-    Position.Top: "上",
-    Position.Left: "左"
-  };
-  static final List<String> sittingTexts = [
-    "東",
-    "南",
-    "西",
-    "北",
-  ];
+
   static final List<int> hans = [
     1,
     2,

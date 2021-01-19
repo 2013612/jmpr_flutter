@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jmpr_flutter/ronPoint.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
 
@@ -30,7 +31,7 @@ class _RonState extends State<Ron> {
     return FlexibleCustomRadioTile(
       position,
       _ronedPlayer,
-      constant.positionTexts[position],
+      Constant.positionTexts[position],
       (val) {
         setState(() {
           _ronedPlayer = val;
@@ -42,7 +43,7 @@ class _RonState extends State<Ron> {
   Widget RonCheckboxListTile(Position position) {
     return FlexibleCustomCheckBoxTile(
       _ronPlayers[position],
-      constant.positionTexts[position],
+      Constant.positionTexts[position],
       (val) {
         setState(() {
           _ronPlayers[position] = val;
@@ -53,11 +54,12 @@ class _RonState extends State<Ron> {
 
   @override
   Widget build(BuildContext context) {
+    Constant constant = Constant(context);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("銃和"),
+          title: Text(AppLocalizations.of(context).ron),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -67,7 +69,7 @@ class _RonState extends State<Ron> {
             ),
             shrinkWrap: true,
             children: [
-              Text("放銃"),
+              Text(AppLocalizations.of(context).lose),
               Row(
                 children: [
                   RonedPlayerRadioListTile(Position.Bottom),
@@ -80,7 +82,7 @@ class _RonState extends State<Ron> {
                   RonedPlayerRadioListTile(Position.Left),
                 ],
               ),
-              Text("和了"),
+              Text(AppLocalizations.of(context).win),
               Row(
                 children: [
                   RonCheckboxListTile(Position.Bottom),
@@ -100,16 +102,18 @@ class _RonState extends State<Ron> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton("取消", () => Navigator.pop(context)),
-              BaseBarButton("下一步", () {
+              BaseBarButton(AppLocalizations.of(context).cancel,
+                  () => Navigator.pop(context)),
+              BaseBarButton(AppLocalizations.of(context).next, () {
                 if (!_ronPlayers.values
                     .reduce((value, element) => value || element)) {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("錯誤"),
-                          content: Text("至少選擇一名玩家和了"),
+                          title: Text(AppLocalizations.of(context).error),
+                          content: Text(
+                              AppLocalizations.of(context).errorAtLeastOneWin),
                         );
                       });
                   return;
@@ -118,8 +122,9 @@ class _RonState extends State<Ron> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("錯誤"),
-                          content: Text("同一名玩家不可同時和了和放銃"),
+                          title: Text(AppLocalizations.of(context).error),
+                          content: Text(
+                              AppLocalizations.of(context).errorSamePlayer),
                         );
                       });
                   return;

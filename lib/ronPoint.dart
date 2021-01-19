@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
 
@@ -44,7 +45,7 @@ class _RonPointState extends State<RonPoint> {
       child: Row(
         children: [
           Spacer(),
-          Text(constant.positionTexts[position]),
+          Text(Constant.positionTexts[position]),
           Spacer(),
           Container(
             width: 70,
@@ -52,7 +53,7 @@ class _RonPointState extends State<RonPoint> {
               decoration: _inputDecoration,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  items: constant.hans
+                  items: Constant.hans
                       .map((e) => DropdownMenuItem(
                             child: Text(e.toString()),
                             value: e.toString(),
@@ -72,7 +73,7 @@ class _RonPointState extends State<RonPoint> {
           Container(
             width: 40,
             alignment: Alignment.center,
-            child: Text("番"),
+            child: Text(AppLocalizations.of(context).han),
           ),
           Spacer(),
           Container(
@@ -81,7 +82,7 @@ class _RonPointState extends State<RonPoint> {
               decoration: _inputDecoration,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  items: constant.fus
+                  items: Constant.fus
                       .map((e) => DropdownMenuItem(
                             child: Text(e.toString()),
                             value: e.toString(),
@@ -101,7 +102,7 @@ class _RonPointState extends State<RonPoint> {
           Container(
             width: 40,
             alignment: Alignment.center,
-            child: Text("符"),
+            child: Text(AppLocalizations.of(context).fu),
           ),
           Spacer(),
         ],
@@ -111,11 +112,12 @@ class _RonPointState extends State<RonPoint> {
 
   @override
   Widget build(BuildContext context) {
+    Constant constant = Constant(context);
     return WillPopScope(
       onWillPop: null,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("和了點數"),
+          title: Text(AppLocalizations.of(context).point),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -123,10 +125,10 @@ class _RonPointState extends State<RonPoint> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: widget.ronPlayers.entries
                 .map((e) {
-                  if (e.value) {
-                    return PlayerPoint(e.key);
-                  }
-                })
+              if (e.value) {
+                return PlayerPoint(e.key);
+              }
+            })
                 .toList()
                 .where((item) => item != null)
                 .toList(),
@@ -136,8 +138,9 @@ class _RonPointState extends State<RonPoint> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton("取消", () => Navigator.pop(context)),
-              BaseBarButton("儲存", () {
+              BaseBarButton(AppLocalizations.of(context).cancel,
+                  () => Navigator.pop(context)),
+              BaseBarButton(AppLocalizations.of(context).save, () {
                 widget.save(hans, fus);
                 Navigator.pop(context);
               }),

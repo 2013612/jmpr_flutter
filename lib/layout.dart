@@ -1,7 +1,10 @@
 import 'dart:math';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:jmpr_flutter/history.dart';
+import 'package:jmpr_flutter/languageDialog.dart';
+import 'package:jmpr_flutter/locale.dart';
 import 'package:jmpr_flutter/pointSetting.dart';
 import 'package:jmpr_flutter/ron.dart';
 import 'package:jmpr_flutter/ryukyoku.dart';
@@ -11,8 +14,10 @@ import 'package:jmpr_flutter/tsumo.dart';
 import 'package:jmpr_flutter/about.dart';
 
 class Layout extends StatefulWidget {
-  Layout({Key key, this.title}) : super(key: key);
-  final String title;
+  final SetAppLocaleDelegate setAppLocaleDelegate;
+  final Locale locale;
+
+  Layout(this.locale, this.setAppLocaleDelegate);
 
   @override
   _LayoutState createState() => _LayoutState();
@@ -26,6 +31,7 @@ class _LayoutState extends State<Layout> {
   PointSettingParameter currentPointSetting;
   List<History> histories = [];
   int currentHistoryIndex = 0;
+  String language;
 
   void addHistory() {
     if (currentHistoryIndex < histories.length) {
@@ -66,11 +72,19 @@ class _LayoutState extends State<Layout> {
     );
     addHistory();
     currentHistoryIndex = 1;
+    language = widget.locale.languageCode;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> choices = ["場況設定", "設定", "歷史", "應用程式資訊"];
+    Constant constant = Constant(context);
+    Map<String, String> choices = {
+      "pointSetting": AppLocalizations.of(context).pointSetting,
+      "setting": AppLocalizations.of(context).setting,
+      "history": AppLocalizations.of(context).history,
+      "language": AppLocalizations.of(context).language,
+      "about": AppLocalizations.of(context).about
+    };
 
     void setRiichiFalse() {
       Position.values.forEach((element) {
@@ -148,7 +162,7 @@ class _LayoutState extends State<Layout> {
     int calPoint(int han, int fu) {
       int point = pow(2, han + 2) * fu;
       if (point > 1920) {
-        point = constant.points[han];
+        point = Constant.points[han];
       } else if (point == 1920 && this.currentSetting.kiriage) {
         point = 2000;
       }
@@ -255,7 +269,7 @@ class _LayoutState extends State<Layout> {
     }
 
     Widget PointAndRiichiSwitch(Position position) {
-      String sittingText = constant.sittingTexts[(position.index -
+      String sittingText = Constant.sittingTexts[(position.index -
               (firstOya.index + currentPointSetting.currentKyoku) +
               8) %
           4];
@@ -292,14 +306,16 @@ class _LayoutState extends State<Layout> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: FittedBox(
+          child: Text(AppLocalizations.of(context).appTitle),
+        ),
         actions: [
           PopupMenuButton<String>(
             itemBuilder: (BuildContext context) {
-              return choices.map((choice) {
+              return choices.entries.map((choice) {
                 return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
+                  value: choice.key,
+                  child: Text(choice.value),
                 );
               }).toList();
             },
@@ -308,7 +324,7 @@ class _LayoutState extends State<Layout> {
             ),
             onSelected: (string) {
               switch (string) {
-                case "場況設定":
+                case "pointSetting":
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -316,7 +332,7 @@ class _LayoutState extends State<Layout> {
                               currentPointSetting: currentPointSetting,
                               save: savePointSetting)));
                   break;
-                case "設定":
+                case "setting":
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -324,7 +340,23 @@ class _LayoutState extends State<Layout> {
                               currentSetting: currentSetting,
                               save: saveSetting)));
                   break;
-                case "歷史":
+                case "language":
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => LanguageDialog(
+                      onValueChange: (String lang) {
+                        setState(() {
+                          language = lang;
+                        });
+                        widget.setAppLocaleDelegate
+                            .setLocale(supportedLocales[language]);
+                      },
+                      initialValue: language,
+                    ),
+                  );
+                  break;
+                case "history":
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -333,7 +365,7 @@ class _LayoutState extends State<Layout> {
                                 save: saveHistory,
                               )));
                   break;
-                case "應用程式資訊":
+                case "about":
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => About()));
                   break;
@@ -365,7 +397,7 @@ class _LayoutState extends State<Layout> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(constant.kyokus[currentPointSetting.currentKyoku]),
+                  Text(Constant.kyokus[currentPointSetting.currentKyoku]),
                   Text("${currentPointSetting.bonba} 本場"),
                   Text("供托: ${currentPointSetting.riichibou}"),
                 ],
@@ -389,23 +421,23 @@ class _LayoutState extends State<Layout> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BaseBarButton("銃和", () {
+            BaseBarButton(AppLocalizations.of(context).ron, () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
             }),
-            BaseBarButton("自摸", () {
+            BaseBarButton(AppLocalizations.of(context).tsumo, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Tsumo(save: saveTsumo)));
             }),
-            BaseBarButton("流局", () {
+            BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Ryukyoku(save: saveRyukyoku)));
             }),
-            BaseBarButton("重置", () {
+            BaseBarButton(AppLocalizations.of(context).reset, () {
               setState(() {
                 reset();
               });

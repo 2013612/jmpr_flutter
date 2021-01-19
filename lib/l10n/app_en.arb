@@ -1,0 +1,218 @@
+{
+  "appTitle": "Japanese Mahjong Point Recorder",
+  "@appTitle": {
+    "type": "text"
+  },
+  "ron": "Ron",
+  "@ron": {
+    "type": "text"
+  },
+  "tsumo": "Tsumo",
+  "@tsumo": {
+    "type": "text"
+  },
+  "ryukyoku": "No Win",
+  "@ryukyoku": {
+    "type": "text"
+  },
+  "reset": "Reset",
+  "@reset": {
+    "type": "text"
+  },
+  "pointSetting": "Point Setting",
+  "@pointSetting": {
+    "type": "text"
+  },
+  "setting": "Setting",
+  "@setting": {
+    "type": "text"
+  },
+  "history": "History",
+  "@history": {
+    "type": "text"
+  },
+  "language": "Language",
+  "@language": {
+    "type": "text"
+  },
+  "chooseALanguage": "請選擇一種語言",
+  "@chooseALanguage": {
+    "type": "text"
+  },
+  "about": "About",
+  "@about": {
+    "type": "text"
+  },
+  "version": "Version 1.0",
+  "@version": {
+    "type": "text"
+  },
+  "develop": "Developed by",
+  "@develop": {
+    "type": "text"
+  },
+  "top": "Top",
+  "@top": {
+    "type": "text"
+  },
+  "bottom": "Bottom",
+  "@bottom": {
+    "type": "text"
+  },
+  "left": "Left",
+  "@left": {
+    "type": "text"
+  },
+  "right": "Right",
+  "@right": {
+    "type": "text"
+  },
+  "east": "East",
+  "@east": {
+    "type": "text"
+  },
+  "south": "South",
+  "@south": {
+    "type": "text"
+  },
+  "west": "West",
+  "@west": {
+    "type": "text"
+  },
+  "north": "North",
+  "@north": {
+    "type": "text"
+  },
+  "errorDivideByHundred": "Please enter an integer divisible by 100",
+  "@errorDivideByHundred": {
+    "type": "text"
+  },
+  "errorNonnegative": "Please enter a non-negative integer",
+  "@errorNonnegative": {
+    "type": "text"
+  },
+  "kyoku": "Kyoku",
+  "@kyoku": {
+    "type": "text"
+  },
+  "bonba": "Bonba",
+  "@bonba": {
+    "type": "text"
+  },
+  "riichibou": "Riichibou",
+  "@riichibou": {
+    "type": "text"
+  },
+  "currentPointSetting": "Current Point Setting",
+  "@currentPointSetting": {
+    "type": "text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "type": "text"
+  },
+  "save": "Save",
+  "@save": {
+    "type": "text"
+  },
+  "lose": "Lose",
+  "@lose": {
+    "type": "text"
+  },
+  "win": "Win",
+  "@win": {
+    "type": "text"
+  },
+  "next": "Next",
+  "@next": {
+    "type": "text"
+  },
+  "error": "Error",
+  "@error": {
+    "type": "text"
+  },
+  "errorAtLeastOneWin": "Please choose at least 1 player to win",
+  "@errorAtLeastOneWin": {
+    "type": "text"
+  },
+  "errorSamePlayer": "Same player cannot win and lose at the same time",
+  "@errorSamePlayer": {
+    "type": "text"
+  },
+  "han": "Han",
+  "@han": {
+    "type": "text"
+  },
+  "fu": "Fu",
+  "@fu": {
+    "type": "text"
+  },
+  "point": "Point",
+  "@point": {
+    "type": "text"
+  },
+  "tenpai": "Tenpai",
+  "@tenpai": {
+    "type": "text"
+  },
+  "nagashimangan": "Nagashimangan",
+  "@nagashimangan": {
+    "type": "text"
+  },
+  "currentSetting": "Current Setting",
+  "@currentSetting": {
+    "type": "text"
+  },
+  "rmu": "RMU A/B RULE",
+  "@rmu": {
+    "type": "text"
+  },
+  "tenhou": "Tenhou",
+  "@tenhou": {
+    "type": "text"
+  },
+  "errorInteger": "Please input an integer",
+  "@errorInteger": {
+    "type": "text"
+  },
+  "errorDecreasing": "Please input the big Uma at the left box",
+  "@errorDecreasing": {
+    "type": "text"
+  },
+  "startingPoint": "Starting Point",
+  "@startingPoint": {
+    "type": "text"
+  },
+  "givenStartingPoint": "Given Starting Point",
+  "@givenStartingPoint": {
+    "type": "text"
+  },
+  "riichibouPoint": "Riichibou Point",
+  "@riichibouPoint": {
+    "type": "text"
+  },
+  "bonbaPoint": "Bonba Point",
+  "@bonbaPoint": {
+    "type": "text"
+  },
+  "ryukyokuPoint": "No Win Penalty",
+  "@ryukyokuPoint": {
+    "type": "text"
+  },
+  "uma": "Uma",
+  "@uma": {
+    "type": "text"
+  },
+  "kiriage": "Kiriagemangan",
+  "@kiriage": {
+    "type": "text"
+  },
+  "samePoint": "Same Point Same Place",
+  "@samePoint": {
+    "type": "text"
+  },
+  "usualSetting": "Usual Setting",
+  "@usualSetting": {
+    "type": "text"
+  }
+}

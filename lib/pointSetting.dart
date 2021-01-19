@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
 
@@ -54,12 +55,13 @@ class _PointSettingState extends State<PointSetting> {
 
   @override
   Widget build(BuildContext context) {
+    Constant constant = Constant(context);
     Widget RowInput(String name, Widget widget) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 50,
+            width: 70,
             child: Text(
               name + ":",
             ),
@@ -76,20 +78,19 @@ class _PointSettingState extends State<PointSetting> {
     // TODO: update validator function
     String _integerValidator(String val) {
       if (int.tryParse(val) == null || int.tryParse(val) % 100 != 0) {
-        return "請輸入能被100整除的整數";
+        return AppLocalizations.of(context).errorDivideByHundred;
       }
       return null;
     }
 
     String _nonNegativeIntegerValidator(String val) {
       if (int.tryParse(val) == null || int.tryParse(val) < 0) {
-        return "請輸入非負整數";
+        return AppLocalizations.of(context).errorNonnegative;
       }
       return null;
     }
 
-    Widget TextInput(
-        Function save, TextEditingController controller, Function validator) {
+    Widget TextInput(Function save, TextEditingController controller, Function validator) {
       return TextFormField(
         keyboardType: TextInputType.numberWithOptions(signed: true),
         decoration: _inputDecoration,
@@ -101,19 +102,19 @@ class _PointSettingState extends State<PointSetting> {
 
     Widget DropdownInput() {
       return DropdownButtonFormField<String>(
-        items: constant.kyokus
+        items: Constant.kyokus
             .map((value) =>
                 DropdownMenuItem<String>(child: Text(value), value: value))
             .toList(),
-        value: constant.kyokus[currentPointSetting.currentKyoku],
+        value: Constant.kyokus[currentPointSetting.currentKyoku],
         decoration: _inputDecoration,
         onChanged: (val) {
           setState(() {
-            currentPointSetting.currentKyoku = constant.kyokus.indexOf(val);
+            currentPointSetting.currentKyoku = Constant.kyokus.indexOf(val);
           });
         },
         onSaved: (val) {
-          currentPointSetting.currentKyoku = constant.kyokus.indexOf(val);
+          currentPointSetting.currentKyoku = Constant.kyokus.indexOf(val);
         },
       );
     }
@@ -135,7 +136,7 @@ class _PointSettingState extends State<PointSetting> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("場況設定"),
+          title: Text(AppLocalizations.of(context).pointSetting),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -147,43 +148,43 @@ class _PointSettingState extends State<PointSetting> {
                 shrinkWrap: true,
                 children: [
                   RowInput(
-                      constant.positionTexts[Position.Bottom],
+                      Constant.positionTexts[Position.Bottom],
                       TextInput(
                           (val) => currentPointSetting.players[Position.Bottom]
                               .point = int.tryParse(val),
                           _bottomController,
                           _integerValidator)),
                   RowInput(
-                      constant.positionTexts[Position.Right],
+                      Constant.positionTexts[Position.Right],
                       TextInput(
                           (val) => currentPointSetting.players[Position.Right]
                               .point = int.tryParse(val),
                           _rightController,
                           _integerValidator)),
                   RowInput(
-                      constant.positionTexts[Position.Top],
+                      Constant.positionTexts[Position.Top],
                       TextInput(
                           (val) => currentPointSetting
                               .players[Position.Top].point = int.tryParse(val),
                           _topController,
                           _integerValidator)),
                   RowInput(
-                      constant.positionTexts[Position.Left],
+                      Constant.positionTexts[Position.Left],
                       TextInput(
                           (val) => currentPointSetting
                               .players[Position.Left].point = int.tryParse(val),
                           _leftController,
                           _integerValidator)),
-                  RowInput("局", DropdownInput()),
+                  RowInput(AppLocalizations.of(context).kyoku, DropdownInput()),
                   RowInput(
-                      "本場",
+                      AppLocalizations.of(context).bonba,
                       TextInput(
                           (val) =>
                               currentPointSetting.bonba = int.tryParse(val),
                           _bonbaController,
                           _nonNegativeIntegerValidator)),
                   RowInput(
-                      "供托",
+                      AppLocalizations.of(context).riichibou,
                       TextInput(
                           (val) =>
                               currentPointSetting.riichibou = int.tryParse(val),
@@ -198,10 +199,11 @@ class _PointSettingState extends State<PointSetting> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton(
-                  "現在的場況", () => copyPointSetting(widget.currentPointSetting)),
-              BaseBarButton("取消", () => Navigator.pop(context)),
-              BaseBarButton("儲存", () {
+              BaseBarButton(AppLocalizations.of(context).currentPointSetting,
+                  () => copyPointSetting(widget.currentPointSetting)),
+              BaseBarButton(AppLocalizations.of(context).cancel,
+                  () => Navigator.pop(context)),
+              BaseBarButton(AppLocalizations.of(context).save, () {
                 if (_pointSettingFormKey.currentState.validate()) {
                   _pointSettingFormKey.currentState.save();
                   widget.save(currentPointSetting);

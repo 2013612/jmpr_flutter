@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'common.dart';
 
 class Ryukyoku extends StatefulWidget {
@@ -27,10 +28,11 @@ class _RyokyokuState extends State<Ryukyoku> {
 
   @override
   Widget build(BuildContext context) {
+    Constant constant = Constant(context);
     Widget TenpaiCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _tenpai[position],
-        constant.positionTexts[position],
+        Constant.positionTexts[position],
         (val) {
           setState(() {
             _tenpai[position] = val;
@@ -42,7 +44,7 @@ class _RyokyokuState extends State<Ryukyoku> {
     Widget NagashimanganCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _nagashimangan[position],
-        constant.positionTexts[position],
+        Constant.positionTexts[position],
         (val) {
           setState(() {
             _nagashimangan[position] = val;
@@ -55,7 +57,7 @@ class _RyokyokuState extends State<Ryukyoku> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("流局"),
+          title: Text(AppLocalizations.of(context).ryukyoku),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -65,7 +67,7 @@ class _RyokyokuState extends State<Ryukyoku> {
             ),
             shrinkWrap: true,
             children: [
-              Text("聴牌"),
+              Text(AppLocalizations.of(context).tenpai),
               Row(
                 children: [
                   TenpaiCheckboxListTile(Position.Bottom),
@@ -78,7 +80,7 @@ class _RyokyokuState extends State<Ryukyoku> {
                   TenpaiCheckboxListTile(Position.Left),
                 ],
               ),
-              Text("流局滿貫"),
+              Text(AppLocalizations.of(context).nagashimangan),
               Row(
                 children: [
                   NagashimanganCheckboxListTile(Position.Bottom),
@@ -98,8 +100,9 @@ class _RyokyokuState extends State<Ryukyoku> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton("取消", () => Navigator.pop(context)),
-              BaseBarButton("儲存", () {
+              BaseBarButton(AppLocalizations.of(context).cancel,
+                  () => Navigator.pop(context)),
+              BaseBarButton(AppLocalizations.of(context).save, () {
                 widget.save(_tenpai, _nagashimangan);
                 Navigator.pop(context);
               }),
