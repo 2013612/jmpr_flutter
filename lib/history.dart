@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:jmpr_flutter/common.dart';
 import 'package:jmpr_flutter/pointSetting.dart';
 import 'package:jmpr_flutter/setting.dart';
@@ -20,7 +21,7 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("歷史"),
+        title: Text(AppLocalizations.of(context).history),
       ),
       body: ListView(
         children: histories.reversed
@@ -42,14 +43,15 @@ class HistoryPage extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("確認"),
-                          content: Text("確定要回到這一局嗎?"),
+                          title: Text(AppLocalizations.of(context).confirm),
+                          content:
+                              Text(AppLocalizations.of(context).confirmHistory),
                           actions: [
                             FlatButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text("取消"),
+                              child: Text(AppLocalizations.of(context).cancel),
                             ),
                             FlatButton(
                               onPressed: () {
@@ -57,7 +59,7 @@ class HistoryPage extends StatelessWidget {
                                 save(history);
                                 Navigator.of(context).pop();
                               },
-                              child: Text("確定"),
+                              child: Text("OK"),
                             ),
                           ],
                         );

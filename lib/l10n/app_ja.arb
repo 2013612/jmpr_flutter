@@ -56,5 +56,6 @@
   "abortiveDraw": "途中流局",
   "confirm": "確認",
   "confirmReset": "リセットはよろしいでしょうか。",
-  "confirmHistory": "この局に戻すのはよろしいでしょうか。"
+  "confirmHistory": "この局に戻すのはよろしいでしょうか。",
+  "firstOya": "起家"
 }

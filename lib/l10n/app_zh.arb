@@ -56,5 +56,6 @@
   "abortiveDraw": "途中流局",
   "confirm": "確認",
   "confirmReset": "確定要重置嗎?",
-  "confirmHistory": "確定要回到這一局嗎?"
+  "confirmHistory": "確定要回到這一局嗎?",
+  "firstOya": "起家"
 }

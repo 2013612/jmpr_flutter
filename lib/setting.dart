@@ -7,9 +7,12 @@ import 'common.dart';
 class Setting extends StatefulWidget {
   SettingParameter currentSetting;
   Function save;
+  Position firstOya;
+
   Setting({
     @required this.currentSetting,
     @required this.save,
+    @required this.firstOya,
   });
 
   @override
@@ -19,26 +22,29 @@ class Setting extends StatefulWidget {
 class _SettingState extends State<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
   SettingParameter currentSetting;
+  Position firstOya;
   final SettingParameter _tenhouSetting = SettingParameter(
-      startingPoint: 30000,
-      givenStartingPoint: 25000,
-      riichibouPoint: 1000,
-      bonbaPoint: 300,
-      ryukyokuPoint: 3000,
-      umaBig: 20,
-      umaSmall: 10,
-      kiriage: false,
-      douten: false);
+    startingPoint: 30000,
+    givenStartingPoint: 25000,
+    riichibouPoint: 1000,
+    bonbaPoint: 300,
+    ryukyokuPoint: 3000,
+    umaBig: 20,
+    umaSmall: 10,
+    kiriage: false,
+    douten: false,
+  );
   final SettingParameter _RMUSetting = SettingParameter(
-      startingPoint: 30000,
-      givenStartingPoint: 30000,
-      riichibouPoint: 1000,
-      bonbaPoint: 300,
-      ryukyokuPoint: 3000,
-      umaBig: 30,
-      umaSmall: 10,
-      kiriage: true,
-      douten: true);
+    startingPoint: 30000,
+    givenStartingPoint: 30000,
+    riichibouPoint: 1000,
+    bonbaPoint: 300,
+    ryukyokuPoint: 3000,
+    umaBig: 30,
+    umaSmall: 10,
+    kiriage: true,
+    douten: true,
+  );
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
     contentPadding: EdgeInsets.all(8),
@@ -62,6 +68,7 @@ class _SettingState extends State<Setting> {
   void initState() {
     super.initState();
     currentSetting = widget.currentSetting ?? _tenhouSetting;
+    firstOya = widget.firstOya;
     _givenStartingPointController = TextEditingController(
         text: currentSetting.givenStartingPoint.toString());
     _startingPointController =
@@ -158,8 +165,8 @@ class _SettingState extends State<Setting> {
             padding: EdgeInsets.all(20.0),
             child: Form(
               key: _settingFormKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              child: ListView(
+                shrinkWrap: true,
                 children: [
                   RowInput(
                       AppLocalizations.of(context).startingPoint,
@@ -216,6 +223,37 @@ class _SettingState extends State<Setting> {
                                 currentSetting.umaSmall = int.tryParse(val),
                             _umaSmallController,
                             _umaValidator),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 100,
+                        child:
+                            Text(AppLocalizations.of(context).firstOya + ":"),
+                      ),
+                      Container(
+                        width: 200,
+                        padding: EdgeInsets.all(8.0),
+                        child: DropdownButtonFormField<Position>(
+                          items: Constant.positionTexts.entries
+                              .map((positionText) => DropdownMenuItem<Position>(
+                                  child: Text(positionText.value),
+                                  value: positionText.key))
+                              .toList(),
+                          value: firstOya,
+                          decoration: _inputDecoration,
+                          onChanged: (val) {
+                            setState(() {
+                              firstOya = val;
+                            });
+                          },
+                          onSaved: (val) {
+                            firstOya = val;
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -286,7 +324,7 @@ class _SettingState extends State<Setting> {
               BaseBarButton(AppLocalizations.of(context).save, () {
                 if (_settingFormKey.currentState.validate()) {
                   _settingFormKey.currentState.save();
-                  widget.save(currentSetting);
+                  widget.save(currentSetting, firstOya);
                   Navigator.pop(context);
                 }
               }),

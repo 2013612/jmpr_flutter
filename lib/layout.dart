@@ -112,9 +112,10 @@ class _LayoutState extends State<Layout> {
       });
     }
 
-    void saveSetting(SettingParameter setting) {
+    void saveSetting(SettingParameter setting, Position newFirstOya) {
       setState(() {
         currentSetting = setting;
+        firstOya = newFirstOya;
         reset();
       });
     }
@@ -332,19 +333,24 @@ class _LayoutState extends State<Layout> {
               switch (string) {
                 case "pointSetting":
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PointSetting(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PointSetting(
                               currentPointSetting: currentPointSetting,
-                              save: savePointSetting)));
+                              save: savePointSetting,
+                            )),
+                  );
                   break;
                 case "setting":
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Setting(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Setting(
                               currentSetting: currentSetting,
-                              save: saveSetting)));
+                              save: saveSetting,
+                              firstOya: firstOya,
+                            )),
+                  );
                   break;
                 case "language":
                   showDialog(

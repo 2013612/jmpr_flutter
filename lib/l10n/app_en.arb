@@ -230,5 +230,9 @@
   "confirmHistory": "Are you sure to go back to this record?",
   "@confirmHistory": {
     "type": "text"
+  },
+  "firstOya": "First Oya",
+  "@firstOya": {
+    "type": "text"
   }
 }
