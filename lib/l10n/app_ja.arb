@@ -57,5 +57,6 @@
   "confirm": "確認",
   "confirmReset": "リセットはよろしいでしょうか。",
   "confirmHistory": "この局に戻すのはよろしいでしょうか。",
-  "firstOya": "起家"
+  "firstOya": "起家",
+  "result": "得点"
 }

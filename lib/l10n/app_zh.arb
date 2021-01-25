@@ -57,5 +57,6 @@
   "confirm": "確認",
   "confirmReset": "確定要重置嗎?",
   "confirmHistory": "確定要回到這一局嗎?",
-  "firstOya": "起家"
+  "firstOya": "起家",
+  "result": "得點"
 }

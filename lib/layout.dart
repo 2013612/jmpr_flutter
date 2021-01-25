@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -311,6 +312,150 @@ class _LayoutState extends State<Layout> {
       );
     }
 
+    void calResult() {
+      List<List<int>> cal = [];
+      Position.values.forEach((position) {
+        cal.add([
+          currentPointSetting.players[position].point -
+              currentSetting.startingPoint,
+          (Position.values.indexOf(position) -
+                  Position.values.indexOf(firstOya) +
+                  4) %
+              4
+        ]);
+      });
+      cal.sort((List<int> a, List<int> b) {
+        if (a[0] == b[0]) {
+          return a[1] - b[1];
+        } else {
+          return b[0] - a[0];
+        }
+      });
+      Map<Position, double> marks = Map();
+      double topBonus = 4 *
+          (currentSetting.startingPoint - currentSetting.givenStartingPoint) /
+          1000;
+      if (currentSetting.douten) {
+        if (cal[0][0] == cal[1][0] &&
+            cal[1][0] == cal[2][0] &&
+            cal[2][0] == cal[3][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+              cal[0][0] / 1000 + topBonus / 4;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+              cal[1][0] / 1000 + topBonus / 4;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 + topBonus / 4;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 + topBonus / 4;
+        } else if (cal[0][0] == cal[1][0] && cal[1][0] == cal[2][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+              cal[0][0] / 1000 + (topBonus + currentSetting.umaBig) / 3;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+              cal[1][0] / 1000 + (topBonus + currentSetting.umaBig) / 3;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 + (topBonus + currentSetting.umaBig) / 3;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 - currentSetting.umaBig;
+        } else if (cal[1][0] == cal[2][0] && cal[2][0] == cal[3][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+              cal[1][0] / 1000 - currentSetting.umaBig / 3;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 - currentSetting.umaBig / 3;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 - currentSetting.umaBig / 3;
+        } else if (cal[0][0] == cal[1][0] && cal[2][0] == cal[3][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] = cal[0][0] /
+                  1000 +
+              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] = cal[1][0] /
+                  1000 +
+              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 -
+                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 -
+                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
+        } else if (cal[0][0] == cal[1][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] = cal[0][0] /
+                  1000 +
+              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] = cal[1][0] /
+                  1000 +
+              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 - currentSetting.umaSmall;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 - currentSetting.umaBig;
+        } else if (cal[1][0] == cal[2][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+              cal[1][0] / 1000;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 - currentSetting.umaBig;
+        } else if (cal[2][0] == cal[3][0]) {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+              cal[1][0] / 1000 + currentSetting.umaSmall;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 -
+                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 -
+                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
+        } else {
+          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
+          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+              cal[1][0] / 1000 + currentSetting.umaSmall;
+          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+              cal[2][0] / 1000 - currentSetting.umaSmall;
+          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+              cal[3][0] / 1000 - currentSetting.umaBig;
+        }
+      } else {
+        marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
+            cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
+        marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
+            cal[1][0] / 1000 + currentSetting.umaSmall;
+        marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
+            cal[2][0] / 1000 - currentSetting.umaSmall;
+        marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
+            cal[3][0] / 1000 - currentSetting.umaBig;
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(AppLocalizations.of(context).result),
+          content: Column(
+            children: marks.entries
+                .map((mark) => Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            Constant.positionTexts[mark.key],
+                          ),
+                        ),
+                        Text(
+                          mark.value.toStringAsFixed(2),
+                        ),
+                      ],
+                    ))
+                .toList(),
+          ),
+          scrollable: true,
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: FittedBox(
@@ -426,7 +571,15 @@ class _LayoutState extends State<Layout> {
             Center(
               child: PointAndRiichiSwitch(Position.Bottom),
             ),
-            EmptyGrid(),
+            FractionallySizedBox(
+              heightFactor: 0.3,
+              widthFactor: 0.6,
+              child: RaisedButton(
+                child: Text(AppLocalizations.of(context).result),
+                onPressed: calResult,
+                elevation: 1.0,
+              ),
+            ),
           ],
         ),
       ),

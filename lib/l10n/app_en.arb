@@ -234,5 +234,9 @@
   "firstOya": "First Oya",
   "@firstOya": {
     "type": "text"
+  },
+  "result": "Result",
+  "@result": {
+    "type": "text"
   }
 }
