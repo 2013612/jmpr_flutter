@@ -240,11 +240,17 @@ class _LayoutState extends State<Layout> {
           .values[(firstOya.index + currentPointSetting.currentKyoku) % 4];
       setState(() {
         if (numOfNagashimagan > 0) {
+          int bonba = currentPointSetting.bonba;
+          int riichibou = currentPointSetting.riichibou;
+          currentPointSetting.bonba = 0;
+          currentPointSetting.riichibou = 0;
           nagashimangan.forEach((key, value) {
             if (value) {
               updatePlayerPointTsumo(2000, key);
             }
           });
+          currentPointSetting.bonba = bonba;
+          currentPointSetting.riichibou = riichibou;
         } else {
           if (numOfTenpai != 0 && numOfTenpai != 4) {
             tenpai.forEach((key, value) {
