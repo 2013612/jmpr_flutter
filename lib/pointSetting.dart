@@ -20,6 +20,7 @@ class PointSetting extends StatefulWidget {
 class _PointSettingState extends State<PointSetting> {
   final _pointSettingFormKey = GlobalKey<FormState>();
   PointSettingParameter currentPointSetting;
+  Map<Position, TextEditingController> _positionController;
   TextEditingController _bottomController,
       _rightController,
       _topController,
@@ -39,14 +40,11 @@ class _PointSettingState extends State<PointSetting> {
   void initState() {
     super.initState();
     currentPointSetting = widget.currentPointSetting;
-    _bottomController = TextEditingController(
-        text: currentPointSetting.players[Position.Bottom].point.toString());
-    _rightController = TextEditingController(
-        text: currentPointSetting.players[Position.Right].point.toString());
-    _topController = TextEditingController(
-        text: currentPointSetting.players[Position.Top].point.toString());
-    _leftController = TextEditingController(
-        text: currentPointSetting.players[Position.Left].point.toString());
+    _positionController = Map();
+    Position.values.forEach((position) {
+      _positionController[position] = TextEditingController(
+          text: currentPointSetting.players[position].point.toString());
+    });
     _bonbaController =
         TextEditingController(text: currentPointSetting.bonba.toString());
     _riichibouController =
@@ -55,16 +53,24 @@ class _PointSettingState extends State<PointSetting> {
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
-    Widget RowInput(String name, Widget widget) {
+    Widget RowInput(String name, Widget widget, [IconData icon]) {
+      Widget child;
+      if (icon != null) {
+        child = Row(
+          children: [
+            Text(name),
+            Icon(icon),
+          ],
+        );
+      } else {
+        child = Text(name);
+      }
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             width: 70,
-            child: Text(
-              name + ":",
-            ),
+            child: child,
           ),
           Container(
             width: 200,
@@ -90,7 +96,8 @@ class _PointSettingState extends State<PointSetting> {
       return null;
     }
 
-    Widget TextInput(Function save, TextEditingController controller, Function validator) {
+    Widget TextInput(
+        Function save, TextEditingController controller, Function validator) {
       return TextFormField(
         keyboardType: TextInputType.numberWithOptions(signed: true),
         decoration: _inputDecoration,
@@ -132,6 +139,17 @@ class _PointSettingState extends State<PointSetting> {
       _riichibouController.text = pointSettingParameter.riichibou.toString();
     }
 
+    Widget PositionPointSetting(Position position) {
+      return RowInput(
+          Constant.positionTexts[position],
+          TextInput(
+              (val) => currentPointSetting.players[position].point =
+                  int.tryParse(val),
+              _positionController[position],
+              _integerValidator),
+          Constant.arrows[position]);
+    }
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -147,34 +165,9 @@ class _PointSettingState extends State<PointSetting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  RowInput(
-                      Constant.positionTexts[Position.Bottom],
-                      TextInput(
-                          (val) => currentPointSetting.players[Position.Bottom]
-                              .point = int.tryParse(val),
-                          _bottomController,
-                          _integerValidator)),
-                  RowInput(
-                      Constant.positionTexts[Position.Right],
-                      TextInput(
-                          (val) => currentPointSetting.players[Position.Right]
-                              .point = int.tryParse(val),
-                          _rightController,
-                          _integerValidator)),
-                  RowInput(
-                      Constant.positionTexts[Position.Top],
-                      TextInput(
-                          (val) => currentPointSetting
-                              .players[Position.Top].point = int.tryParse(val),
-                          _topController,
-                          _integerValidator)),
-                  RowInput(
-                      Constant.positionTexts[Position.Left],
-                      TextInput(
-                          (val) => currentPointSetting
-                              .players[Position.Left].point = int.tryParse(val),
-                          _leftController,
-                          _integerValidator)),
+                  ...Position.values
+                      .map((position) => PositionPointSetting(position))
+                      .toList(),
                   RowInput(AppLocalizations.of(context).kyoku, DropdownInput()),
                   RowInput(
                       AppLocalizations.of(context).bonba,

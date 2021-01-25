@@ -28,7 +28,6 @@ class _RyokyokuState extends State<Ryukyoku> {
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
     Widget TenpaiCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _tenpai[position],
@@ -38,6 +37,7 @@ class _RyokyokuState extends State<Ryukyoku> {
             _tenpai[position] = val;
           });
         },
+        Constant.arrows[position],
       );
     }
 
@@ -50,6 +50,7 @@ class _RyokyokuState extends State<Ryukyoku> {
             _nagashimangan[position] = val;
           });
         },
+        Constant.arrows[position],
       );
     }
 

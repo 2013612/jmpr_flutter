@@ -18,7 +18,6 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("歷史"),
@@ -39,33 +38,33 @@ class HistoryPage extends StatelessWidget {
                   shape: _shapeBorder,
                   dense: true,
                   onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("確認"),
-                      content: Text("確定要回到這一局嗎?"),
-                      actions: [
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("取消"),
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            save(history);
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("確定"),
-                        ),
-                      ],
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("確認"),
+                          content: Text("確定要回到這一局嗎?"),
+                          actions: [
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("取消"),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                save(history);
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("確定"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ))
+                ))
             .toList(),
       ),
     );

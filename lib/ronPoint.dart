@@ -112,7 +112,6 @@ class _RonPointState extends State<RonPoint> {
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
     return WillPopScope(
       onWillPop: null,
       child: Scaffold(
@@ -125,10 +124,10 @@ class _RonPointState extends State<RonPoint> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: widget.ronPlayers.entries
                 .map((e) {
-              if (e.value) {
-                return PlayerPoint(e.key);
-              }
-            })
+                  if (e.value) {
+                    return PlayerPoint(e.key);
+                  }
+                })
                 .toList()
                 .where((item) => item != null)
                 .toList(),

@@ -204,7 +204,7 @@ class _SettingState extends State<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                                (val) => currentSetting.umaBig = int.tryParse(val),
+                            (val) => currentSetting.umaBig = int.tryParse(val),
                             _umaBigController,
                             _umaValidator),
                       ),
@@ -212,32 +212,25 @@ class _SettingState extends State<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                                (val) =>
-                            currentSetting.umaSmall = int.tryParse(val),
+                            (val) =>
+                                currentSetting.umaSmall = int.tryParse(val),
                             _umaSmallController,
                             _umaValidator),
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 167,
-                        child: CustomCheckBoxTile(currentSetting.kiriage,
-                            AppLocalizations.of(context).kiriage, (val) {
-                          setState(() {
-                            currentSetting.kiriage = val;
-                          });
-                        }),
-                      ),
-                      FlexibleCustomCheckBoxTile(currentSetting.douten,
-                          AppLocalizations.of(context).samePoint, (val) {
-                        setState(() {
-                          currentSetting.douten = val;
-                        });
-                      }),
-                    ],
-                  ),
+                  CustomCheckBoxTile(currentSetting.kiriage,
+                      AppLocalizations.of(context).kiriage, (val) {
+                    setState(() {
+                      currentSetting.kiriage = val;
+                    });
+                  }),
+                  CustomCheckBoxTile(currentSetting.douten,
+                      AppLocalizations.of(context).samePoint, (val) {
+                    setState(() {
+                      currentSetting.douten = val;
+                    });
+                  }),
                 ],
               ),
             ),

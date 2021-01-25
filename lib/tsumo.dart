@@ -42,12 +42,12 @@ class _TsumoState extends State<Tsumo> {
           _tsumoPlayer = val;
         });
       },
+      Constant.arrows[position],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

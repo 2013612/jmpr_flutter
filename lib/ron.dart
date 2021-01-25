@@ -37,6 +37,7 @@ class _RonState extends State<Ron> {
           _ronedPlayer = val;
         });
       },
+      Constant.arrows[position],
     );
   }
 
@@ -49,12 +50,12 @@ class _RonState extends State<Ron> {
           _ronPlayers[position] = val;
         });
       },
+      Constant.arrows[position],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

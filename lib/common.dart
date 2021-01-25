@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Constant {
-  BuildContext context;
   static Map<Position, String> positionTexts;
   static List<String> sittingTexts;
 
-  Constant(this.context) {
+  static void languageChange(BuildContext context) {
     Constant.positionTexts = {
       Position.Bottom: AppLocalizations.of(context).bottom,
       Position.Right: AppLocalizations.of(context).right,
@@ -72,6 +71,13 @@ class Constant {
     26: 16000,
     39: 24000
   };
+
+  static final Map<Position, IconData> arrows = {
+    Position.Bottom: Icons.arrow_downward,
+    Position.Right: Icons.arrow_forward,
+    Position.Top: Icons.arrow_upward,
+    Position.Left: Icons.arrow_back
+  };
 }
 
 enum Position {
@@ -98,25 +104,27 @@ Widget BaseBarButton(String name, Function pressed, [ShapeBorder shapeBorder]) {
   );
 }
 
-Widget CustomCheckBoxTile(bool value, String title, Function onChanged) {
+Widget CustomCheckBoxTile(bool value, String title, Function onChanged,
+    [IconData icon]) {
   return CheckboxListTile(
     value: value,
     title: Text(title),
     onChanged: onChanged,
     dense: true,
     controlAffinity: ListTileControlAffinity.leading,
+    secondary: Icon(icon) ?? null,
   );
 }
 
-Widget FlexibleCustomCheckBoxTile(
-    bool value, String title, Function onChanged) {
+Widget FlexibleCustomCheckBoxTile(bool value, String title, Function onChanged,
+    [IconData icon]) {
   return Flexible(
-    child: CustomCheckBoxTile(value, title, onChanged),
+    child: CustomCheckBoxTile(value, title, onChanged, icon),
   );
 }
 
-Widget CustomRadioTile(
-    Position value, Position cur, String title, Function onChanged) {
+Widget CustomRadioTile(Position value, Position cur, String title,
+    Function onChanged, IconData icon) {
   return RadioListTile<Position>(
     value: value,
     title: Text(title),
@@ -124,12 +132,13 @@ Widget CustomRadioTile(
     dense: true,
     controlAffinity: ListTileControlAffinity.leading,
     groupValue: cur,
+    secondary: Icon(icon),
   );
 }
 
-Widget FlexibleCustomRadioTile(
-    Position value, Position cur, String title, Function onChanged) {
+Widget FlexibleCustomRadioTile(Position value, Position cur, String title,
+    Function onChanged, IconData icon) {
   return Flexible(
-    child: CustomRadioTile(value, cur, title, onChanged),
+    child: CustomRadioTile(value, cur, title, onChanged, icon),
   );
 }

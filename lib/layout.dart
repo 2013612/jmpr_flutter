@@ -77,7 +77,7 @@ class _LayoutState extends State<Layout> {
 
   @override
   Widget build(BuildContext context) {
-    Constant constant = Constant(context);
+    Constant.languageChange(context);
     Map<String, String> choices = {
       "pointSetting": AppLocalizations.of(context).pointSetting,
       "setting": AppLocalizations.of(context).setting,
@@ -351,6 +351,7 @@ class _LayoutState extends State<Layout> {
                         });
                         widget.setAppLocaleDelegate
                             .setLocale(supportedLocales[language]);
+                        Constant.languageChange(context);
                       },
                       initialValue: language,
                     ),
