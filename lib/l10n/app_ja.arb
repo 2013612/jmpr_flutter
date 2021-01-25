@@ -52,5 +52,6 @@
   "uma": "ウマ",
   "kiriage": "切り上げ満貫",
   "samePoint": "同点同順位",
-  "usualSetting": "通常設定"
+  "usualSetting": "通常設定",
+  "abortiveDraw": "途中流局"
 }

@@ -214,5 +214,9 @@
   "usualSetting": "Usual Setting",
   "@usualSetting": {
     "type": "text"
+  },
+  "abortiveDraw": "Abortive Draw",
+  "@abortiveDraw": {
+    "type": "text"
   }
 }

@@ -101,6 +101,11 @@ class _RyokyokuState extends State<Ryukyoku> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              BaseBarButton(AppLocalizations.of(context).abortiveDraw, () {
+                setState(() {
+                  _tenpai.updateAll((key, value) => _tenpai[key] = true);
+                });
+              }),
               BaseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
               BaseBarButton(AppLocalizations.of(context).save, () {
