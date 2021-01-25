@@ -445,9 +445,31 @@ class _LayoutState extends State<Layout> {
                       builder: (context) => Ryukyoku(save: saveRyukyoku)));
             }),
             BaseBarButton(AppLocalizations.of(context).reset, () {
-              setState(() {
-                reset();
-              });
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                  title: Text(AppLocalizations.of(context).confirm),
+                  content: Text(AppLocalizations.of(context).confirmReset),
+                  actions: [
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(AppLocalizations.of(context).cancel),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          reset();
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                ),
+              );
             }),
           ],
         ),

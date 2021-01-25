@@ -218,5 +218,17 @@
   "abortiveDraw": "Abortive Draw",
   "@abortiveDraw": {
     "type": "text"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "type": "text"
+  },
+  "confirmReset": "Are you sure to reset?",
+  "@confirmReset": {
+    "type": "text"
+  },
+  "confirmHistory": "Are you sure to go back to this record?",
+  "@confirmHistory": {
+    "type": "text"
   }
 }

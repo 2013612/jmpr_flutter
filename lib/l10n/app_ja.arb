@@ -53,5 +53,8 @@
   "kiriage": "切り上げ満貫",
   "samePoint": "同点同順位",
   "usualSetting": "通常設定",
-  "abortiveDraw": "途中流局"
+  "abortiveDraw": "途中流局",
+  "confirm": "確認",
+  "confirmReset": "リセットはよろしいでしょうか。",
+  "confirmHistory": "この局に戻すのはよろしいでしょうか。"
 }
