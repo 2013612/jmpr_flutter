@@ -62,6 +62,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
           child: Text(AppLocalizations.of(context).save),
         ),
       ],
+      scrollable: true,
     );
   }
 }

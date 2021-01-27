@@ -257,18 +257,28 @@ class _SettingState extends State<Setting> {
                       ),
                     ],
                   ),
-                  CustomCheckBoxTile(currentSetting.kiriage,
-                      AppLocalizations.of(context).kiriage, (val) {
-                    setState(() {
-                      currentSetting.kiriage = val;
-                    });
-                  }),
-                  CustomCheckBoxTile(currentSetting.douten,
-                      AppLocalizations.of(context).samePoint, (val) {
-                    setState(() {
-                      currentSetting.douten = val;
-                    });
-                  }),
+                  Center(
+                    child: SizedBox(
+                      width: 350.0,
+                      child: CustomCheckBoxTile(currentSetting.kiriage,
+                          AppLocalizations.of(context).kiriage, (val) {
+                        setState(() {
+                          currentSetting.kiriage = val;
+                        });
+                      }),
+                    ),
+                  ),
+                  Center(
+                    child: SizedBox(
+                      width: 350.0,
+                      child: CustomCheckBoxTile(currentSetting.douten,
+                          AppLocalizations.of(context).samePoint, (val) {
+                        setState(() {
+                          currentSetting.douten = val;
+                        });
+                      }),
+                    ),
+                  ),
                 ],
               ),
             ),

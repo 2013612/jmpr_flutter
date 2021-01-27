@@ -456,185 +456,412 @@ class _LayoutState extends State<Layout> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: FittedBox(
-          child: Text(AppLocalizations.of(context).appTitle),
-        ),
-        actions: [
-          PopupMenuButton<String>(
-            itemBuilder: (BuildContext context) {
-              return choices.entries.map((choice) {
-                return PopupMenuItem<String>(
-                  value: choice.key,
-                  child: Text(choice.value),
-                );
-              }).toList();
-            },
-            icon: Icon(
-              Icons.menu,
-            ),
-            onSelected: (string) {
-              switch (string) {
-                case "pointSetting":
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PointSetting(
-                              currentPointSetting: currentPointSetting,
-                              save: savePointSetting,
-                            )),
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+      return Scaffold(
+        appBar: AppBar(
+          title: FittedBox(
+            child: Text(AppLocalizations.of(context).appTitle),
+          ),
+          actions: [
+            PopupMenuButton<String>(
+              itemBuilder: (BuildContext context) {
+                return choices.entries.map((choice) {
+                  return PopupMenuItem<String>(
+                    value: choice.key,
+                    child: Text(choice.value),
                   );
-                  break;
-                case "setting":
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Setting(
-                              currentSetting: currentSetting,
-                              save: saveSetting,
-                              firstOya: firstOya,
-                            )),
-                  );
-                  break;
-                case "language":
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => LanguageDialog(
-                      onValueChange: (String lang) {
-                        setState(() {
-                          language = lang;
-                        });
-                        widget.setAppLocaleDelegate
-                            .setLocale(supportedLocales[language]);
-                        Constant.languageChange(context);
-                      },
-                      initialValue: language,
-                    ),
-                  );
-                  break;
-                case "history":
-                  Navigator.push(
+                }).toList();
+              },
+              icon: Icon(
+                Icons.menu,
+              ),
+              onSelected: (string) {
+                switch (string) {
+                  case "pointSetting":
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HistoryPage(
-                                histories: histories,
-                                save: saveHistory,
-                              )));
-                  break;
-                case "about":
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => About()));
-                  break;
-              }
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 3,
-          children: [
-            EmptyGrid(),
-            Center(
-              child: RotatedBox(
-                quarterTurns: 2,
-                child: PointAndRiichiSwitch(Position.Top),
-              ),
-            ),
-            EmptyGrid(),
-            Center(
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: PointAndRiichiSwitch(Position.Left),
-              ),
-            ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(Constant.kyokus[currentPointSetting.currentKyoku]),
-                  Text("${currentPointSetting.bonba} 本場"),
-                  Text("供托: ${currentPointSetting.riichibou}"),
-                ],
-              ),
-            ),
-            Center(
-              child: RotatedBox(
-                quarterTurns: 3,
-                child: PointAndRiichiSwitch(Position.Right),
-              ),
-            ),
-            EmptyGrid(),
-            Center(
-              child: PointAndRiichiSwitch(Position.Bottom),
-            ),
-            FractionallySizedBox(
-              heightFactor: 0.3,
-              widthFactor: 0.6,
-              child: RaisedButton(
-                child: Text(AppLocalizations.of(context).result),
-                onPressed: calResult,
-                elevation: 1.0,
-              ),
+                          builder: (context) => PointSetting(
+                                currentPointSetting: currentPointSetting,
+                                save: savePointSetting,
+                              )),
+                    );
+                    break;
+                  case "setting":
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Setting(
+                                currentSetting: currentSetting,
+                                save: saveSetting,
+                                firstOya: firstOya,
+                              )),
+                    );
+                    break;
+                  case "language":
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => LanguageDialog(
+                        onValueChange: (String lang) {
+                          setState(() {
+                            language = lang;
+                          });
+                          widget.setAppLocaleDelegate
+                              .setLocale(supportedLocales[language]);
+                          Constant.languageChange(context);
+                        },
+                        initialValue: language,
+                      ),
+                    );
+                    break;
+                  case "history":
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HistoryPage(
+                                  histories: histories,
+                                  save: saveHistory,
+                                )));
+                    break;
+                  case "about":
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => About()));
+                    break;
+                }
+              },
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            BaseBarButton(AppLocalizations.of(context).ron, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
-            }),
-            BaseBarButton(AppLocalizations.of(context).tsumo, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Tsumo(save: saveTsumo)));
-            }),
-            BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Ryukyoku(save: saveRyukyoku)));
-            }),
-            BaseBarButton(AppLocalizations.of(context).reset, () {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => AlertDialog(
-                  title: Text(AppLocalizations.of(context).confirm),
-                  content: Text(AppLocalizations.of(context).confirmReset),
-                  actions: [
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(AppLocalizations.of(context).cancel),
-                    ),
-                    FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          reset();
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text("OK"),
-                    ),
+        body: Center(
+          child: GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              EmptyGrid(),
+              Center(
+                child: RotatedBox(
+                  quarterTurns: 2,
+                  child: PointAndRiichiSwitch(Position.Top),
+                ),
+              ),
+              EmptyGrid(),
+              Center(
+                child: RotatedBox(
+                  quarterTurns: 1,
+                  child: PointAndRiichiSwitch(Position.Left),
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(Constant.kyokus[currentPointSetting.currentKyoku]),
+                    Text("${currentPointSetting.bonba} 本場"),
+                    Text("供托: ${currentPointSetting.riichibou}"),
                   ],
                 ),
-              );
-            }),
+              ),
+              Center(
+                child: RotatedBox(
+                  quarterTurns: 3,
+                  child: PointAndRiichiSwitch(Position.Right),
+                ),
+              ),
+              EmptyGrid(),
+              Center(
+                child: PointAndRiichiSwitch(Position.Bottom),
+              ),
+              FractionallySizedBox(
+                heightFactor: 0.3,
+                widthFactor: 0.6,
+                child: RaisedButton(
+                  child: Text(AppLocalizations.of(context).result),
+                  onPressed: calResult,
+                  elevation: 1.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              BaseBarButton(AppLocalizations.of(context).ron, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Ron(next: saveRon)));
+              }),
+              BaseBarButton(AppLocalizations.of(context).tsumo, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Tsumo(save: saveTsumo)));
+              }),
+              BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Ryukyoku(save: saveRyukyoku)));
+              }),
+              BaseBarButton(AppLocalizations.of(context).reset, () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => AlertDialog(
+                    title: Text(AppLocalizations.of(context).confirm),
+                    content: Text(AppLocalizations.of(context).confirmReset),
+                    actions: [
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(AppLocalizations.of(context).cancel),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            reset();
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+          color: Colors.blue,
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: FittedBox(
+            child: Text(AppLocalizations.of(context).appTitle),
+          ),
+          actions: [
+            PopupMenuButton<String>(
+              itemBuilder: (BuildContext context) {
+                return choices.entries.map((choice) {
+                  return PopupMenuItem<String>(
+                    value: choice.key,
+                    child: Text(choice.value),
+                  );
+                }).toList();
+              },
+              icon: Icon(
+                Icons.menu,
+              ),
+              onSelected: (string) {
+                switch (string) {
+                  case "pointSetting":
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PointSetting(
+                                currentPointSetting: currentPointSetting,
+                                save: savePointSetting,
+                              )),
+                    );
+                    break;
+                  case "setting":
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Setting(
+                                currentSetting: currentSetting,
+                                save: saveSetting,
+                                firstOya: firstOya,
+                              )),
+                    );
+                    break;
+                  case "language":
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => LanguageDialog(
+                        onValueChange: (String lang) {
+                          setState(() {
+                            language = lang;
+                          });
+                          widget.setAppLocaleDelegate
+                              .setLocale(supportedLocales[language]);
+                          Constant.languageChange(context);
+                        },
+                        initialValue: language,
+                      ),
+                    );
+                    break;
+                  case "history":
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HistoryPage(
+                                  histories: histories,
+                                  save: saveHistory,
+                                )));
+                    break;
+                  case "about":
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => About()));
+                    break;
+                }
+              },
+            ),
           ],
         ),
-        color: Colors.blue,
-      ),
-    );
+        body: Row(
+          children: [
+            Spacer(),
+            RotatedBox(
+              quarterTurns: 1,
+              child: PointAndRiichiSwitch(Position.Left),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RotatedBox(
+                  quarterTurns: 2,
+                  child: PointAndRiichiSwitch(Position.Top),
+                ),
+                PointAndRiichiSwitch(Position.Bottom),
+              ],
+            ),
+            RotatedBox(
+              quarterTurns: 3,
+              child: PointAndRiichiSwitch(Position.Right),
+            ),
+            Spacer(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(Constant.kyokus[currentPointSetting.currentKyoku]),
+                Text("${currentPointSetting.bonba} 本場"),
+                Text("供托: ${currentPointSetting.riichibou}"),
+              ],
+            ),
+            Spacer(),
+            RaisedButton(
+              child: Text(AppLocalizations.of(context).result),
+              onPressed: calResult,
+              elevation: 1.0,
+            ),
+            Spacer(
+              flex: 2,
+            ),
+          ],
+        ),
+        // body: Center(
+        //   child: GridView.count(
+        //     shrinkWrap: true,
+        //     crossAxisCount: 3,
+        //     children: [
+        //       EmptyGrid(),
+        //       Center(
+        //         child: RotatedBox(
+        //           quarterTurns: 2,
+        //           child: PointAndRiichiSwitch(Position.Top),
+        //         ),
+        //       ),
+        //       EmptyGrid(),
+        //       Center(
+        //         child: RotatedBox(
+        //           quarterTurns: 1,
+        //           child: PointAndRiichiSwitch(Position.Left),
+        //         ),
+        //       ),
+        //       Center(
+        //         child: Column(
+        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //           children: [
+        //             Text(Constant.kyokus[currentPointSetting.currentKyoku]),
+        //             Text("${currentPointSetting.bonba} 本場"),
+        //             Text("供托: ${currentPointSetting.riichibou}"),
+        //           ],
+        //         ),
+        //       ),
+        //       Center(
+        //         child: RotatedBox(
+        //           quarterTurns: 3,
+        //           child: PointAndRiichiSwitch(Position.Right),
+        //         ),
+        //       ),
+        //       EmptyGrid(),
+        //       Center(
+        //         child: PointAndRiichiSwitch(Position.Bottom),
+        //       ),
+        //       FractionallySizedBox(
+        //         heightFactor: 0.3,
+        //         widthFactor: 0.6,
+        //         child: RaisedButton(
+        //           child: Text(AppLocalizations.of(context).result),
+        //           onPressed: calResult,
+        //           elevation: 1.0,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              BaseBarButton(AppLocalizations.of(context).ron, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Ron(next: saveRon)));
+              }),
+              BaseBarButton(AppLocalizations.of(context).tsumo, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Tsumo(save: saveTsumo)));
+              }),
+              BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Ryukyoku(save: saveRyukyoku)));
+              }),
+              BaseBarButton(AppLocalizations.of(context).reset, () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => AlertDialog(
+                    title: Text(AppLocalizations.of(context).confirm),
+                    content: Text(AppLocalizations.of(context).confirmReset),
+                    actions: [
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(AppLocalizations.of(context).cancel),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            reset();
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+          color: Colors.blue,
+        ),
+      );
+    }
   }
 }
 
