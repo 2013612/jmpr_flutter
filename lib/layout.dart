@@ -26,8 +26,8 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   Position firstOya = Position.Bottom;
-  final Color firstOyaColor = Colors.red;
-  final Color nonFirstOyaColor = Colors.black;
+  final Color firstOyaColor = Colors.red[300];
+  final Color nonFirstOyaColor = Colors.white;
   SettingParameter currentSetting;
   PointSettingParameter currentPointSetting;
   List<History> histories = [];
@@ -281,34 +281,39 @@ class _LayoutState extends State<Layout> {
               (firstOya.index + currentPointSetting.currentKyoku) +
               8) %
           4];
-      return Column(
-        children: [
-          SizedBox(
-            height: 50,
-            child: Switch(
-              value: currentPointSetting.players[position].riichi,
-              onChanged: (val) {
-                setState(() {
-                  if (val) {
-                    currentPointSetting.riichibou++;
-                    currentPointSetting.players[position].point -= 1000;
-                    currentPointSetting.players[position].riichi = true;
-                  } else {
-                    currentPointSetting.riichibou--;
-                    currentPointSetting.players[position].point += 1000;
-                    currentPointSetting.players[position].riichi = false;
-                  }
-                });
-              },
+      return GestureDetector(
+        child: Column(
+          children: [
+            Spacer(),
+            Container(
+              child: Image.asset(currentPointSetting.players[position].riichi
+                  ? "assets/riichibou.png"
+                  : "assets/no_riichibou.png"),
             ),
-          ),
-          Text(
-            "$sittingText ${currentPointSetting.players[position].point}",
-            style: TextStyle(
-              color: firstOya == position ? firstOyaColor : nonFirstOyaColor,
+            Text(
+              "$sittingText ${currentPointSetting.players[position].point}",
+              style: TextStyle(
+                color: firstOya == position ? firstOyaColor : nonFirstOyaColor,
+              ),
             ),
-          ),
-        ],
+            Spacer(
+              flex: 2,
+            ),
+          ],
+        ),
+        onTap: () {
+          setState(() {
+            if (!currentPointSetting.players[position].riichi) {
+              currentPointSetting.riichibou++;
+              currentPointSetting.players[position].point -= 1000;
+              currentPointSetting.players[position].riichi = true;
+            } else {
+              currentPointSetting.riichibou--;
+              currentPointSetting.players[position].point += 1000;
+              currentPointSetting.players[position].riichi = false;
+            }
+          });
+        },
       );
     }
 
@@ -458,6 +463,7 @@ class _LayoutState extends State<Layout> {
 
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return Scaffold(
+        backgroundColor: Colors.green,
         appBar: AppBar(
           title: FittedBox(
             child: Text(AppLocalizations.of(context).appTitle),
@@ -482,9 +488,9 @@ class _LayoutState extends State<Layout> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => PointSetting(
-                                currentPointSetting: currentPointSetting,
-                                save: savePointSetting,
-                              )),
+                            currentPointSetting: currentPointSetting,
+                            save: savePointSetting,
+                          )),
                     );
                     break;
                   case "setting":
@@ -492,10 +498,10 @@ class _LayoutState extends State<Layout> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Setting(
-                                currentSetting: currentSetting,
-                                save: saveSetting,
-                                firstOya: firstOya,
-                              )),
+                            currentSetting: currentSetting,
+                            save: saveSetting,
+                            firstOya: firstOya,
+                          )),
                     );
                     break;
                   case "language":
@@ -520,9 +526,9 @@ class _LayoutState extends State<Layout> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => HistoryPage(
-                                  histories: histories,
-                                  save: saveHistory,
-                                )));
+                              histories: histories,
+                              save: saveHistory,
+                            )));
                     break;
                   case "about":
                     Navigator.push(context,
@@ -556,9 +562,24 @@ class _LayoutState extends State<Layout> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(Constant.kyokus[currentPointSetting.currentKyoku]),
-                    Text("${currentPointSetting.bonba} 本場"),
-                    Text("供托: ${currentPointSetting.riichibou}"),
+                    Text(
+                      Constant.kyokus[currentPointSetting.currentKyoku],
+                      style: TextStyle(
+                        color: nonFirstOyaColor,
+                      ),
+                    ),
+                    Text(
+                      "${currentPointSetting.bonba} 本場",
+                      style: TextStyle(
+                        color: nonFirstOyaColor,
+                      ),
+                    ),
+                    Text(
+                      "供托: ${currentPointSetting.riichibou}",
+                      style: TextStyle(
+                        color: nonFirstOyaColor,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -640,6 +661,7 @@ class _LayoutState extends State<Layout> {
       );
     } else {
       return Scaffold(
+        backgroundColor: Colors.green,
         appBar: AppBar(
           title: FittedBox(
             child: Text(AppLocalizations.of(context).appTitle),
@@ -664,9 +686,9 @@ class _LayoutState extends State<Layout> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => PointSetting(
-                                currentPointSetting: currentPointSetting,
-                                save: savePointSetting,
-                              )),
+                            currentPointSetting: currentPointSetting,
+                            save: savePointSetting,
+                          )),
                     );
                     break;
                   case "setting":
@@ -674,10 +696,10 @@ class _LayoutState extends State<Layout> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Setting(
-                                currentSetting: currentSetting,
-                                save: saveSetting,
-                                firstOya: firstOya,
-                              )),
+                            currentSetting: currentSetting,
+                            save: saveSetting,
+                            firstOya: firstOya,
+                          )),
                     );
                     break;
                   case "language":
@@ -702,9 +724,9 @@ class _LayoutState extends State<Layout> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => HistoryPage(
-                                  histories: histories,
-                                  save: saveHistory,
-                                )));
+                              histories: histories,
+                              save: saveHistory,
+                            )));
                     break;
                   case "about":
                     Navigator.push(context,
@@ -718,32 +740,66 @@ class _LayoutState extends State<Layout> {
         body: Row(
           children: [
             Spacer(),
-            RotatedBox(
-              quarterTurns: 1,
-              child: PointAndRiichiSwitch(Position.Left),
+            Flexible(
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: PointAndRiichiSwitch(Position.Left),
+              ),
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: PointAndRiichiSwitch(Position.Top),
+                Flexible(
+                  child: RotatedBox(
+                    quarterTurns: 2,
+                    child: PointAndRiichiSwitch(Position.Top),
+                  ),
                 ),
-                PointAndRiichiSwitch(Position.Bottom),
+                Spacer(
+                  flex: 3,
+                ),
+                Flexible(child: PointAndRiichiSwitch(Position.Bottom)),
               ],
             ),
-            RotatedBox(
-              quarterTurns: 3,
-              child: PointAndRiichiSwitch(Position.Right),
+            Flexible(
+              child: RotatedBox(
+                quarterTurns: 3,
+                child: PointAndRiichiSwitch(Position.Right),
+              ),
             ),
             Spacer(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(Constant.kyokus[currentPointSetting.currentKyoku]),
-                Text("${currentPointSetting.bonba} 本場"),
-                Text("供托: ${currentPointSetting.riichibou}"),
-              ],
+            Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Spacer(
+                    flex: 3,
+                  ),
+                  Text(
+                    Constant.kyokus[currentPointSetting.currentKyoku],
+                    style: TextStyle(
+                      color: nonFirstOyaColor,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    "${currentPointSetting.bonba} 本場",
+                    style: TextStyle(
+                      color: nonFirstOyaColor,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    "供托: ${currentPointSetting.riichibou}",
+                    style: TextStyle(
+                      color: nonFirstOyaColor,
+                    ),
+                  ),
+                  Spacer(
+                    flex: 3,
+                  ),
+                ],
+              ),
             ),
             Spacer(),
             RaisedButton(
@@ -756,57 +812,6 @@ class _LayoutState extends State<Layout> {
             ),
           ],
         ),
-        // body: Center(
-        //   child: GridView.count(
-        //     shrinkWrap: true,
-        //     crossAxisCount: 3,
-        //     children: [
-        //       EmptyGrid(),
-        //       Center(
-        //         child: RotatedBox(
-        //           quarterTurns: 2,
-        //           child: PointAndRiichiSwitch(Position.Top),
-        //         ),
-        //       ),
-        //       EmptyGrid(),
-        //       Center(
-        //         child: RotatedBox(
-        //           quarterTurns: 1,
-        //           child: PointAndRiichiSwitch(Position.Left),
-        //         ),
-        //       ),
-        //       Center(
-        //         child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //           children: [
-        //             Text(Constant.kyokus[currentPointSetting.currentKyoku]),
-        //             Text("${currentPointSetting.bonba} 本場"),
-        //             Text("供托: ${currentPointSetting.riichibou}"),
-        //           ],
-        //         ),
-        //       ),
-        //       Center(
-        //         child: RotatedBox(
-        //           quarterTurns: 3,
-        //           child: PointAndRiichiSwitch(Position.Right),
-        //         ),
-        //       ),
-        //       EmptyGrid(),
-        //       Center(
-        //         child: PointAndRiichiSwitch(Position.Bottom),
-        //       ),
-        //       FractionallySizedBox(
-        //         heightFactor: 0.3,
-        //         widthFactor: 0.6,
-        //         child: RaisedButton(
-        //           child: Text(AppLocalizations.of(context).result),
-        //           onPressed: calResult,
-        //           elevation: 1.0,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         bottomNavigationBar: BottomAppBar(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
