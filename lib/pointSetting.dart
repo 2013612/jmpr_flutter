@@ -177,7 +177,7 @@ class _PointSettingState extends State<PointSetting> {
                           _bonbaController,
                           _nonNegativeIntegerValidator)),
                   RowInput(
-                      AppLocalizations.of(context).riichibou,
+                      AppLocalizations.of(context).kyoutaku,
                       TextInput(
                           (val) =>
                               currentPointSetting.riichibou = int.tryParse(val),

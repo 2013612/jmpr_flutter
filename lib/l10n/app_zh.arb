@@ -24,7 +24,7 @@
   "errorNonnegative": "請輸入非負整數",
   "kyoku": "局",
   "bonba": "本場",
-  "riichibou": "供托",
+  "kyoutaku": "供托",
   "currentPointSetting": "現在的場況",
   "cancel": "取消",
   "save": "儲存",
@@ -44,8 +44,8 @@
   "tenhou": "天鳳",
   "errorInteger": "請輸入整數",
   "errorDecreasing": "請由大至小輸入馬點",
-  "startingPoint": "起始點",
-  "givenStartingPoint": "原點",
+  "startingPoint": "原點",
+  "givenStartingPoint": "起始點",
   "riichibouPoint": "立直棒點",
   "bonbaPoint": "本場棒點",
   "ryukyokuPoint": "流局罰符",
@@ -58,5 +58,9 @@
   "confirmReset": "確定要重置嗎?",
   "confirmHistory": "確定要回到這一局嗎?",
   "firstOya": "起家",
-  "result": "得點"
+  "result": "得點",
+  "oya": "親",
+  "riichi": "立直",
+  "pointVariation": "點數變動",
+  "currentPoint": "所持點數"
 }

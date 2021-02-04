@@ -1,6 +1,12 @@
+import 'dart:io';
 import 'dart:math';
+import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
+import 'package:ext_storage/ext_storage.dart';
+import 'package:jmpr_flutter/exportExcel.dart';
+import 'package:path_provider_ex/path_provider_ex.dart';
 
 import 'package:flutter/material.dart';
 import 'package:jmpr_flutter/history.dart';
@@ -13,6 +19,9 @@ import 'package:jmpr_flutter/setting.dart';
 import 'package:jmpr_flutter/common.dart';
 import 'package:jmpr_flutter/tsumo.dart';
 import 'package:jmpr_flutter/about.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Layout extends StatefulWidget {
   final SetAppLocaleDelegate setAppLocaleDelegate;
@@ -25,7 +34,6 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  Position firstOya = Position.Bottom;
   final Color firstOyaColor = Colors.red[300];
   final Color nonFirstOyaColor = Colors.white;
   SettingParameter currentSetting;
@@ -57,6 +65,7 @@ class _LayoutState extends State<Layout> {
       umaSmall: 10,
       kiriage: false,
       douten: false,
+      firstOya: Position.Bottom,
     );
     Map<Position, Player> players = Map();
     Position.values.forEach((element) {
@@ -113,10 +122,9 @@ class _LayoutState extends State<Layout> {
       });
     }
 
-    void saveSetting(SettingParameter setting, Position newFirstOya) {
+    void saveSetting(SettingParameter setting) {
       setState(() {
         currentSetting = setting;
-        firstOya = newFirstOya;
         reset();
       });
     }
@@ -124,14 +132,15 @@ class _LayoutState extends State<Layout> {
     void savePointSetting(PointSettingParameter pointSetting) {
       setState(() {
         currentPointSetting = pointSetting;
-        setRiichiFalse();
         addHistory();
+        setRiichiFalse();
       });
     }
 
     void updatePlayerPointTsumo(int point, Position position) {
-      Position oya = Position
-          .values[(firstOya.index + currentPointSetting.currentKyoku) % 4];
+      Position oya = Position.values[
+          (currentSetting.firstOya.index + currentPointSetting.currentKyoku) %
+              4];
       if (position == oya) {
         point *= 2;
       }
@@ -176,23 +185,25 @@ class _LayoutState extends State<Layout> {
       setState(() {
         updatePlayerPointTsumo(point, tsumoPlayer);
         if (tsumoPlayer ==
-            Position.values[
-                (firstOya.index + currentPointSetting.currentKyoku) % 4]) {
+            Position.values[(currentSetting.firstOya.index +
+                    currentPointSetting.currentKyoku) %
+                4]) {
           currentPointSetting.bonba++;
         } else {
           currentPointSetting.bonba = 0;
           currentPointSetting.currentKyoku =
               (currentPointSetting.currentKyoku + 1) % 16;
         }
-        setRiichiFalse();
         addHistory();
+        setRiichiFalse();
       });
     }
 
     void saveRon(Position ronedPlayer, Map<Position, bool> ronPlayers,
         Map<Position, int> hans, Map<Position, int> fus) {
-      Position oya = Position
-          .values[(firstOya.index + currentPointSetting.currentKyoku) % 4];
+      Position oya = Position.values[
+          (currentSetting.firstOya.index + currentPointSetting.currentKyoku) %
+              4];
       setState(() {
         int nearIndex = 100;
         ronPlayers.forEach((key, value) {
@@ -223,13 +234,12 @@ class _LayoutState extends State<Layout> {
           currentPointSetting.currentKyoku =
               (currentPointSetting.currentKyoku + 1) % 16;
         }
-        setRiichiFalse();
         addHistory();
+        setRiichiFalse();
       });
     }
 
-    void saveRyukyoku(
-        Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
+    void saveRyukyoku(Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
       int numOfTenpai = 0;
       int numOfNagashimagan = 0;
       tenpai.forEach((key, value) {
@@ -238,8 +248,9 @@ class _LayoutState extends State<Layout> {
       nagashimangan.forEach((key, value) {
         if (value) numOfNagashimagan++;
       });
-      Position oya = Position
-          .values[(firstOya.index + currentPointSetting.currentKyoku) % 4];
+      Position oya = Position.values[
+          (currentSetting.firstOya.index + currentPointSetting.currentKyoku) %
+              4];
       setState(() {
         if (numOfNagashimagan > 0) {
           int bonba = currentPointSetting.bonba;
@@ -271,14 +282,15 @@ class _LayoutState extends State<Layout> {
               (currentPointSetting.currentKyoku + 1) % 16;
         }
         currentPointSetting.bonba++;
-        setRiichiFalse();
         addHistory();
+        setRiichiFalse();
       });
     }
 
     Widget PointAndRiichiSwitch(Position position) {
       String sittingText = Constant.sittingTexts[(position.index -
-              (firstOya.index + currentPointSetting.currentKyoku) +
+              (currentSetting.firstOya.index +
+                  currentPointSetting.currentKyoku) +
               8) %
           4];
       return GestureDetector(
@@ -293,7 +305,9 @@ class _LayoutState extends State<Layout> {
             Text(
               "$sittingText ${currentPointSetting.players[position].point}",
               style: TextStyle(
-                color: firstOya == position ? firstOyaColor : nonFirstOyaColor,
+                color: currentSetting.firstOya == position
+                    ? firstOyaColor
+                    : nonFirstOyaColor,
               ),
             ),
             Spacer(
@@ -317,18 +331,24 @@ class _LayoutState extends State<Layout> {
       );
     }
 
-    void calResult() {
+    Map<Position, double> calResult(History history) {
+      final PointSettingParameter _pointSetting = history.pointSetting;
+      final SettingParameter _setting = history.setting;
       List<List<int>> cal = [];
+      Position position(int index) {
+        return Position.values[(_setting.firstOya.index + cal[index][1]) % 4];
+      }
+
       Position.values.forEach((position) {
         cal.add([
-          currentPointSetting.players[position].point -
-              currentSetting.startingPoint,
+          _pointSetting.players[position].point - _setting.startingPoint,
           (Position.values.indexOf(position) -
-                  Position.values.indexOf(firstOya) +
+                  Position.values.indexOf(_setting.firstOya) +
                   4) %
-              4
+              4,
         ]);
       });
+
       cal.sort((List<int> a, List<int> b) {
         if (a[0] == b[0]) {
           return a[1] - b[1];
@@ -336,104 +356,76 @@ class _LayoutState extends State<Layout> {
           return b[0] - a[0];
         }
       });
+
       Map<Position, double> marks = Map();
-      double topBonus = 4 *
-          (currentSetting.startingPoint - currentSetting.givenStartingPoint) /
-          1000;
-      if (currentSetting.douten) {
+      double topBonus =
+          4 * (_setting.startingPoint - _setting.givenStartingPoint) / 1000;
+      if (_setting.douten) {
         if (cal[0][0] == cal[1][0] &&
             cal[1][0] == cal[2][0] &&
             cal[2][0] == cal[3][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-              cal[0][0] / 1000 + topBonus / 4;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-              cal[1][0] / 1000 + topBonus / 4;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 + topBonus / 4;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 + topBonus / 4;
+          marks[position(0)] = cal[0][0] / 1000 + topBonus / 4;
+          marks[position(1)] = cal[1][0] / 1000 + topBonus / 4;
+          marks[position(2)] = cal[2][0] / 1000 + topBonus / 4;
+          marks[position(3)] = cal[3][0] / 1000 + topBonus / 4;
         } else if (cal[0][0] == cal[1][0] && cal[1][0] == cal[2][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-              cal[0][0] / 1000 + (topBonus + currentSetting.umaBig) / 3;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-              cal[1][0] / 1000 + (topBonus + currentSetting.umaBig) / 3;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 + (topBonus + currentSetting.umaBig) / 3;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 - currentSetting.umaBig;
+          marks[position(0)] =
+              cal[0][0] / 1000 + (topBonus + _setting.umaBig) / 3;
+          marks[position(1)] =
+              cal[1][0] / 1000 + (topBonus + _setting.umaBig) / 3;
+          marks[position(2)] =
+              cal[2][0] / 1000 + (topBonus + _setting.umaBig) / 3;
+          marks[position(3)] = cal[3][0] / 1000 - _setting.umaBig;
         } else if (cal[1][0] == cal[2][0] && cal[2][0] == cal[3][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-              cal[1][0] / 1000 - currentSetting.umaBig / 3;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 - currentSetting.umaBig / 3;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 - currentSetting.umaBig / 3;
+          marks[position(0)] = cal[0][0] / 1000 + topBonus + _setting.umaBig;
+          marks[position(1)] = cal[1][0] / 1000 - _setting.umaBig / 3;
+          marks[position(2)] = cal[2][0] / 1000 - _setting.umaBig / 3;
+          marks[position(3)] = cal[3][0] / 1000 - _setting.umaBig / 3;
         } else if (cal[0][0] == cal[1][0] && cal[2][0] == cal[3][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] = cal[0][0] /
-                  1000 +
-              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] = cal[1][0] /
-                  1000 +
-              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 -
-                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 -
-                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[position(0)] = cal[0][0] / 1000 +
+              (topBonus + _setting.umaBig + _setting.umaSmall) / 2;
+          marks[position(1)] = cal[1][0] / 1000 +
+              (topBonus + _setting.umaBig + _setting.umaSmall) / 2;
+          marks[position(2)] =
+              cal[2][0] / 1000 - (_setting.umaBig + _setting.umaSmall) / 2;
+          marks[position(3)] =
+              cal[3][0] / 1000 - (_setting.umaBig + _setting.umaSmall) / 2;
         } else if (cal[0][0] == cal[1][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] = cal[0][0] /
-                  1000 +
-              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] = cal[1][0] /
-                  1000 +
-              (topBonus + currentSetting.umaBig + currentSetting.umaSmall) / 2;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 - currentSetting.umaSmall;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 - currentSetting.umaBig;
+          marks[position(0)] = cal[0][0] / 1000 +
+              (topBonus + _setting.umaBig + _setting.umaSmall) / 2;
+          marks[position(1)] = cal[1][0] / 1000 +
+              (topBonus + _setting.umaBig + _setting.umaSmall) / 2;
+          marks[position(2)] = cal[2][0] / 1000 - _setting.umaSmall;
+          marks[position(3)] = cal[3][0] / 1000 - _setting.umaBig;
         } else if (cal[1][0] == cal[2][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-              cal[1][0] / 1000;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 - currentSetting.umaBig;
+          marks[position(0)] = cal[0][0] / 1000 + topBonus + _setting.umaBig;
+          marks[position(1)] = cal[1][0] / 1000;
+          marks[position(2)] = cal[2][0] / 1000;
+          marks[position(3)] = cal[3][0] / 1000 - _setting.umaBig;
         } else if (cal[2][0] == cal[3][0]) {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-              cal[1][0] / 1000 + currentSetting.umaSmall;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 -
-                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 -
-                  (currentSetting.umaBig + currentSetting.umaSmall) / 2;
+          marks[position(0)] = cal[0][0] / 1000 + topBonus + _setting.umaBig;
+          marks[position(1)] = cal[1][0] / 1000 + _setting.umaSmall;
+          marks[position(2)] =
+              cal[2][0] / 1000 - (_setting.umaBig + _setting.umaSmall) / 2;
+          marks[position(3)] =
+              cal[3][0] / 1000 - (_setting.umaBig + _setting.umaSmall) / 2;
         } else {
-          marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-              cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
-          marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-              cal[1][0] / 1000 + currentSetting.umaSmall;
-          marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-              cal[2][0] / 1000 - currentSetting.umaSmall;
-          marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-              cal[3][0] / 1000 - currentSetting.umaBig;
+          marks[position(0)] = cal[0][0] / 1000 + topBonus + _setting.umaBig;
+          marks[position(1)] = cal[1][0] / 1000 + _setting.umaSmall;
+          marks[position(2)] = cal[2][0] / 1000 - _setting.umaSmall;
+          marks[position(3)] = cal[3][0] / 1000 - _setting.umaBig;
         }
       } else {
-        marks[Position.values[(firstOya.index + cal[0][1]) % 4]] =
-            cal[0][0] / 1000 + topBonus + currentSetting.umaBig;
-        marks[Position.values[(firstOya.index + cal[1][1]) % 4]] =
-            cal[1][0] / 1000 + currentSetting.umaSmall;
-        marks[Position.values[(firstOya.index + cal[2][1]) % 4]] =
-            cal[2][0] / 1000 - currentSetting.umaSmall;
-        marks[Position.values[(firstOya.index + cal[3][1]) % 4]] =
-            cal[3][0] / 1000 - currentSetting.umaBig;
+        marks[position(0)] = cal[0][0] / 1000 + topBonus + _setting.umaBig;
+        marks[position(1)] = cal[1][0] / 1000 + _setting.umaSmall;
+        marks[position(2)] = cal[2][0] / 1000 - _setting.umaSmall;
+        marks[position(3)] = cal[3][0] / 1000 - _setting.umaBig;
       }
+      return marks;
+    }
+
+    void showResult() {
+      Map<Position, double> marks = calResult(histories.last);
 
       showDialog(
         context: context,
@@ -460,6 +452,220 @@ class _LayoutState extends State<Layout> {
         ),
       );
     }
+
+    void generateExcel(int startIndex, int endIndex, String folder,
+        String fileName, String sheetName, Map<Position, String> playerNames) {
+      Excel excel;
+      try {
+        final bytes = File(join(folder, fileName + ".xlsx")).readAsBytesSync();
+        excel = Excel.decodeBytes(bytes);
+      } catch (exception) {
+        // showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return AlertDialog(
+        //       content: Text("ERROR: cannot find excel"),
+        //     );
+        //   }
+        // );
+        print(exception);
+      }
+      if (excel == null) {
+        excel = Excel.createExcel();
+        excel.rename("Sheet1", sheetName);
+      }
+      final int topRow = 2;
+      final SettingParameter _setting = histories[endIndex].setting;
+
+      CellIndex cell(int col, int row) {
+        return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
+      }
+
+      Position position(int index) {
+        return Position.values[(_setting.firstOya.index + index) % 4];
+      }
+
+      Map<Position, double> marks = calResult(histories[endIndex]);
+
+      excel.updateCell(
+          sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
+      excel.updateCell(sheetName, cell(1, 1), AppLocalizations.of(context).oya);
+      List.generate(4, (index) {
+        excel.merge(sheetName, cell(2 + 3 * index, 0), cell(4 + 3 * index, 0),
+            customValue: playerNames[position(index)]);
+        excel.updateCell(sheetName, cell(2 + 3 * index, 1),
+            AppLocalizations.of(context).riichi);
+        excel.updateCell(sheetName, cell(3 + 3 * index, 1),
+            AppLocalizations.of(context).pointVariation);
+        excel.updateCell(sheetName, cell(4 + 3 * index, 1),
+            AppLocalizations.of(context).currentPoint);
+        excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow),
+            histories[endIndex].pointSetting.players[position(index)].point);
+        excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow),
+            marks[position(index)]);
+      });
+      excel.updateCell(
+          sheetName, cell(14, 1), AppLocalizations.of(context).kyoutaku);
+
+      void updateExcelKyoku(int row, int pos) {
+        excel.updateCell(
+            sheetName,
+            cell(2 + pos * 3, row + topRow),
+            histories[row + 1]
+                .pointSetting
+                .players[position(pos)]
+                .riichi
+                .toString()
+                .toUpperCase());
+        excel.updateCell(
+            sheetName,
+            cell(3 + pos * 3, row + topRow),
+            histories[row + 1].pointSetting.players[position(pos)].point -
+                histories[row].pointSetting.players[position(pos)].point);
+        excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow),
+            histories[row].pointSetting.players[position(pos)].point);
+      }
+
+      for (int i = startIndex; i < endIndex; i++) {
+        excel.updateCell(sheetName, cell(0, i + topRow),
+            "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
+        excel.updateCell(
+            sheetName,
+            cell(1, i + topRow),
+            playerNames[Position.values[(_setting.firstOya.index +
+                    histories[i].pointSetting.currentKyoku) %
+                4]]);
+        List.generate(4, (index) => updateExcelKyoku(i, index));
+        excel.updateCell(sheetName, cell(14, i + topRow),
+            histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
+      }
+
+      excel.encode().then((onValue) {
+        File(join(folder, fileName + ".xlsx"))
+          ..createSync(recursive: true)
+          ..writeAsBytesSync(onValue);
+      });
+    }
+
+    // void writeOnExistingExcel(int startIndex, int endIndex, {String sheetName = "jpmr3"}) async {
+    //   final extDirPath = Directory(await ExtStorage.getExternalStorageDirectory());
+    //   final String path = await FilesystemPicker.open(
+    //     title: "Open file",
+    //     context: context,
+    //     rootDirectory: Directory(extDirPath.path),
+    //     fsType: FilesystemType.file,
+    //     allowedExtensions: [".xlsx"],
+    //     fileTileSelectMode: FileTileSelectMode.wholeTile,
+    //   );
+    //
+    //   if (path == null || path.isEmpty) return;
+    //
+    //   final bytes = File(path).readAsBytesSync();
+    //   Excel excel = Excel.decodeBytes(bytes);
+    //   final Map<Position, String> playerNames = {Position.Bottom: "A", Position.Right: "B", Position.Top: "C", Position.Left: "D"};
+    //   final int topRow = 2;
+    //   final SettingParameter _setting = histories[endIndex].setting;
+    //
+    //   CellIndex cell(int col, int row) {
+    //     return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
+    //   }
+    //
+    //   Position position(int index) {
+    //     return Position.values[(_setting.firstOya.index + index) % 4];
+    //   }
+    //
+    //   Map<Position, double> marks = calResult(histories[endIndex]);
+    //
+    //   excel.updateCell(sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
+    //   excel.updateCell(sheetName, cell(1, 1), AppLocalizations.of(context).oya);
+    //   List.generate(4, (index) {
+    //     excel.merge(sheetName, cell(2 + 3 * index, 0), cell(4 + 3 * index, 0), customValue: playerNames[position(index)]);
+    //     excel.updateCell(sheetName, cell(2 + 3 * index, 1), AppLocalizations.of(context).riichi);
+    //     excel.updateCell(sheetName, cell(3 + 3 * index, 1), AppLocalizations.of(context).pointVariation);
+    //     excel.updateCell(sheetName, cell(4 + 3 * index, 1), AppLocalizations.of(context).currentPoint);
+    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow), histories[endIndex].pointSetting.players[position(index)].point);
+    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow), marks[position(index)]);
+    //   });
+    //   excel.updateCell(sheetName, cell(14, 1), AppLocalizations.of(context).kyoutaku);
+    //
+    //   void updateExcelKyoku(int row, int pos) {
+    //     excel.updateCell(sheetName, cell(2 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].riichi.toString().toUpperCase());
+    //     excel.updateCell(sheetName, cell(3 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].point - histories[row].pointSetting.players[position(pos)].point);
+    //     excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow), histories[row].pointSetting.players[position(pos)].point);
+    //   }
+    //
+    //   for (int i = startIndex; i < endIndex; i++) {
+    //     excel.updateCell(sheetName, cell(0, i + topRow), "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
+    //     excel.updateCell(sheetName, cell(1, i + topRow), playerNames[Position.values[(_setting.firstOya.index + histories[i].pointSetting.currentKyoku) % 4]]);
+    //     List.generate(4, (index) => updateExcelKyoku(i, index));
+    //     excel.updateCell(sheetName, cell(14, i + topRow), histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
+    //   }
+    //
+    //   excel.encode().then((onValue) {
+    //     File(path)..createSync(recursive: true)..writeAsBytesSync(onValue);
+    //   });
+    // }
+    //
+    // void generateExcel(int startIndex, int endIndex, {String sheetName = "jpmr"}) {
+    //   Excel excel = Excel.createExcel();
+    //   excel.rename("Sheet1", sheetName);
+    //   final String fileName = "test";
+    //   final Map<Position, String> playerNames = {Position.Bottom: "A", Position.Right: "B", Position.Top: "C", Position.Left: "D"};
+    //   final int topRow = 2;
+    //   final SettingParameter _setting = histories[endIndex].setting;
+    //
+    //   CellIndex cell(int col, int row) {
+    //     return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
+    //   }
+    //
+    //   Position position(int index) {
+    //     return Position.values[(_setting.firstOya.index + index) % 4];
+    //   }
+    //
+    //   Map<Position, double> marks = calResult(histories[endIndex]);
+    //
+    //   excel.updateCell(sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
+    //   excel.updateCell(sheetName, cell(1, 1), AppLocalizations.of(context).oya);
+    //   List.generate(4, (index) {
+    //     excel.merge(sheetName, cell(2 + 3 * index, 0), cell(4 + 3 * index, 0), customValue: playerNames[position(index)]);
+    //     excel.updateCell(sheetName, cell(2 + 3 * index, 1), AppLocalizations.of(context).riichi);
+    //     excel.updateCell(sheetName, cell(3 + 3 * index, 1), AppLocalizations.of(context).pointVariation);
+    //     excel.updateCell(sheetName, cell(4 + 3 * index, 1), AppLocalizations.of(context).currentPoint);
+    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow), histories[endIndex].pointSetting.players[position(index)].point);
+    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow), marks[position(index)]);
+    //   });
+    //   excel.updateCell(sheetName, cell(14, 1), AppLocalizations.of(context).kyoutaku);
+    //
+    //   void updateExcelKyoku(int row, int pos) {
+    //     excel.updateCell(sheetName, cell(2 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].riichi.toString().toUpperCase());
+    //     excel.updateCell(sheetName, cell(3 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].point - histories[row].pointSetting.players[position(pos)].point);
+    //     excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow), histories[row].pointSetting.players[position(pos)].point);
+    //   }
+    //
+    //   for (int i = startIndex; i < endIndex; i++) {
+    //     excel.updateCell(sheetName, cell(0, i + topRow), "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
+    //     excel.updateCell(sheetName, cell(1, i + topRow), playerNames[Position.values[(_setting.firstOya.index + histories[i].pointSetting.currentKyoku) % 4]]);
+    //     List.generate(4, (index) => updateExcelKyoku(i, index));
+    //     excel.updateCell(sheetName, cell(14, i + topRow), histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
+    //   }
+    //
+    //   excel.encode().then((onValue) async {
+    //     final extDirPath = Directory(await ExtStorage.getExternalStorageDirectory());
+    //     final String path = await FilesystemPicker.open(
+    //       title: "Save to folder",
+    //       context: context,
+    //       rootDirectory: Directory(extDirPath.path),
+    //       fsType: FilesystemType.folder,
+    //       pickText: "Save file to this folder",
+    //       requestPermission: () async => await Permission.storage.request().isGranted,
+    //     );
+    //     if (path != null && path.isNotEmpty) {
+    //       File(join(path, fileName + ".xlsx"))
+    //         ..createSync(recursive: true)
+    //         ..writeAsBytesSync(onValue);
+    //     }
+    //   });
+    // }
 
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return Scaffold(
@@ -500,7 +706,6 @@ class _LayoutState extends State<Layout> {
                           builder: (context) => Setting(
                             currentSetting: currentSetting,
                             save: saveSetting,
-                            firstOya: firstOya,
                           )),
                     );
                     break;
@@ -589,7 +794,24 @@ class _LayoutState extends State<Layout> {
                   child: PointAndRiichiSwitch(Position.Right),
                 ),
               ),
-              EmptyGrid(),
+              FractionallySizedBox(
+                heightFactor: 0.3,
+                widthFactor: 0.6,
+                child: RaisedButton(
+                  child: Text("Excel"),
+                  onPressed: () {
+                    if (histories.length < 2) return;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => chooseHistory(
+                                  histories: histories,
+                                  save: generateExcel,
+                                )));
+                  },
+                  elevation: 1.0,
+                ),
+              ),
               Center(
                 child: PointAndRiichiSwitch(Position.Bottom),
               ),
@@ -598,7 +820,7 @@ class _LayoutState extends State<Layout> {
                 widthFactor: 0.6,
                 child: RaisedButton(
                   child: Text(AppLocalizations.of(context).result),
-                  onPressed: calResult,
+                  onPressed: showResult,
                   elevation: 1.0,
                 ),
               ),
@@ -698,7 +920,6 @@ class _LayoutState extends State<Layout> {
                           builder: (context) => Setting(
                             currentSetting: currentSetting,
                             save: saveSetting,
-                            firstOya: firstOya,
                           )),
                     );
                     break;
@@ -804,7 +1025,7 @@ class _LayoutState extends State<Layout> {
             Spacer(),
             RaisedButton(
               child: Text(AppLocalizations.of(context).result),
-              onPressed: calResult,
+              onPressed: showResult,
               elevation: 1.0,
             ),
             Spacer(

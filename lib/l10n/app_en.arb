@@ -99,8 +99,8 @@
   "@bonba": {
     "type": "text"
   },
-  "riichibou": "Riichibou",
-  "@riichibou": {
+  "kyoutaku": "Kyoutaku",
+  "@kyoutaku": {
     "type": "text"
   },
   "currentPointSetting": "Current Point Setting",
@@ -237,6 +237,22 @@
   },
   "result": "Result",
   "@result": {
+    "type": "text"
+  },
+  "oya": "Oya",
+  "@oya": {
+    "type": "text"
+  },
+  "riichi": "Riichi",
+  "@riichi": {
+    "type": "text"
+  },
+  "pointVariation": "Point Variation",
+  "@pointVariation": {
+    "type": "text"
+  },
+  "currentPoint": "Current Point",
+  "@currentPoint": {
     "type": "text"
   }
 }

@@ -24,7 +24,7 @@
   "errorNonnegative": "非負整数を入力してください",
   "kyoku": "局",
   "bonba": "本場",
-  "riichibou": "リーチ棒",
+  "kyoutaku": "供托",
   "currentPointSetting": "今の場況",
   "cancel": "キャンセル",
   "save": "セーブ",
@@ -58,5 +58,9 @@
   "confirmReset": "リセットはよろしいでしょうか。",
   "confirmHistory": "この局に戻すのはよろしいでしょうか。",
   "firstOya": "起家",
-  "result": "得点"
+  "result": "得点",
+  "oya": "親",
+  "riichi": "リーチ",
+  "pointVariation": "局収支",
+  "currentPoint": "持ち点"
 }
