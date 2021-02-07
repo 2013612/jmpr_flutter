@@ -384,4 +384,17 @@ class SettingParameter {
       firstOya: firstOya,
     );
   }
+
+  bool equal(SettingParameter other) {
+    return givenStartingPoint == other.givenStartingPoint &&
+        startingPoint == other.startingPoint &&
+        riichibouPoint == other.riichibouPoint &&
+        bonbaPoint == other.bonbaPoint &&
+        ryukyokuPoint == other.ryukyokuPoint &&
+        umaBig == other.umaBig &&
+        umaSmall == other.umaSmall &&
+        kiriage == other.kiriage &&
+        douten == other.douten &&
+        firstOya == other.firstOya;
+  }
 }

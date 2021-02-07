@@ -6,6 +6,7 @@ import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jmpr_flutter/history.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'common.dart';
@@ -73,7 +74,6 @@ class _chooseHistoryState extends State<chooseHistory> {
                   });
                 }
               }
-              print(chosen);
             },
           );
         },
@@ -86,6 +86,16 @@ class _chooseHistoryState extends State<chooseHistory> {
                 () => Navigator.pop(context)),
             BaseBarButton(AppLocalizations.of(context).next, () {
               if (chosen.length < 2) {
+                Fluttertoast.showToast(
+                    msg: AppLocalizations.of(context).errorExactTwoRecords,
+                    backgroundColor: Colors.red);
+                return;
+              } else if (!reversedHistories[chosen[0]]
+                  .setting
+                  .equal(reversedHistories[chosen[1]].setting)) {
+                Fluttertoast.showToast(
+                    msg: AppLocalizations.of(context).errorSettingsAreDifferent,
+                    backgroundColor: Colors.red);
                 return;
               } else {
                 chosen[0] = reversedHistories.length - 1 - chosen[0];
@@ -93,19 +103,20 @@ class _chooseHistoryState extends State<chooseHistory> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => userInput(
-                            (String folder, String fileName, String sheetName,
-                                Map<Position, String> playerNames) {
-                              widget.save(
-                                  min(chosen[0], chosen[1]),
-                                  max(chosen[0], chosen[1]),
-                                  folder,
-                                  fileName,
-                                  sheetName,
-                                  playerNames);
-                              Navigator.pop(context);
-                            },
-                          )),
+                    builder: (context) => userInput(
+                      (String folder, String fileName, String sheetName,
+                          Map<Position, String> playerNames) {
+                        widget.save(
+                            min(chosen[0], chosen[1]),
+                            max(chosen[0], chosen[1]),
+                            folder,
+                            fileName,
+                            sheetName,
+                            playerNames);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
                 );
               }
             }),
@@ -215,7 +226,7 @@ class _userInputState extends State<userInput> {
                     .map((position) => PositionPointSetting(position))
                     .toList(),
                 RowInput(
-                    "Folder",
+                    AppLocalizations.of(context).folder,
                     TextFormField(
                       readOnly: true,
                       controller: _folderController,
@@ -238,22 +249,25 @@ class _userInputState extends State<userInput> {
                           path != null && path != "" ? null : "",
                       decoration: _inputDecoration,
                     )),
-                Row(
-                  children: [
-                    RowInput(
-                        "File Name",
-                        TextInput(
-                            "",
+                RowInput(
+                  AppLocalizations.of(context).file,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: TextInput(
+                            AppLocalizations.of(context).spreadsheet + "1",
                             (String name) => fileName = name,
                             (String name) =>
-                                name != null && name != "" ? null : "")),
-                    Text(".xlsx"),
-                  ],
+                                name != null && name != "" ? null : ""),
+                      ),
+                      Text(".xlsx"),
+                    ],
+                  ),
                 ),
                 RowInput(
-                    "Sheet Name",
+                    AppLocalizations.of(context).sheet,
                     TextInput(
-                        "Sheet1",
+                        AppLocalizations.of(context).sheet + "1",
                         (String name) => sheetName = name,
                         (String name) =>
                             name != null && name != "" ? null : "")),

@@ -62,5 +62,14 @@
   "oya": "親",
   "riichi": "リーチ",
   "pointVariation": "局収支",
-  "currentPoint": "持ち点"
+  "currentPoint": "持ち点",
+  "folder": "フォルダ",
+  "file": "ファイル",
+  "sheet": "シート",
+  "generateSuccess": "{fileName}.xlsxを作成しました。",
+  "spreadsheet": "スプレッドシート",
+  "exportToSpreadsheet": "スプレッドシートへの書き出し",
+  "errorAtLeastTwoRecords": "スプレッドシートへの書き出すは二つレコードが必要です。",
+  "errorExactTwoRecords": "ちょうど二つレコードを選択してください",
+  "errorSettingsAreDifferent": "同じ設定のレコードを選択してください"
 }

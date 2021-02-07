@@ -254,5 +254,44 @@
   "currentPoint": "Current Point",
   "@currentPoint": {
     "type": "text"
+  },
+  "folder": "Folder",
+  "@folder": {
+    "type": "text"
+  },
+  "file": "File",
+  "@file": {
+    "type": "text"
+  },
+  "sheet": "Sheet",
+  "@sheet": {
+    "type": "text"
+  },
+  "generateSuccess": "{fileName}.xlsx is generated successfully",
+  "@generateSuccess": {
+    "type": "text",
+    "placeholders": {
+      "fileName": {}
+    }
+  },
+  "spreadsheet": "spreadsheet",
+  "@spreadsheet": {
+    "type": "text"
+  },
+  "exportToSpreadsheet": "Export To Spreadsheet",
+  "@exportToSpreadsheet": {
+    "type": "text"
+  },
+  "errorAtLeastTwoRecords": "At least two records are needed to export to a spreadsheet",
+  "@errorAtLeastTwoRecords": {
+    "type": "text"
+  },
+  "errorExactTwoRecords": "You need to choose exactly two records",
+  "@errorExactTwoRecords": {
+    "type": "text"
+  },
+  "errorSettingsAreDifferent": "You need to choose records with same setting",
+  "@errorSettingsAreDifferent": {
+    "type": "text"
   }
 }

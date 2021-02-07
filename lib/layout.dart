@@ -3,12 +3,11 @@ import 'dart:math';
 import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
-import 'package:ext_storage/ext_storage.dart';
-import 'package:jmpr_flutter/exportExcel.dart';
-import 'package:path_provider_ex/path_provider_ex.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+
+import 'package:jmpr_flutter/exportExcel.dart';
 import 'package:jmpr_flutter/history.dart';
 import 'package:jmpr_flutter/languageDialog.dart';
 import 'package:jmpr_flutter/locale.dart';
@@ -19,9 +18,6 @@ import 'package:jmpr_flutter/setting.dart';
 import 'package:jmpr_flutter/common.dart';
 import 'package:jmpr_flutter/tsumo.dart';
 import 'package:jmpr_flutter/about.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class Layout extends StatefulWidget {
   final SetAppLocaleDelegate setAppLocaleDelegate;
@@ -92,6 +88,7 @@ class _LayoutState extends State<Layout> {
       "pointSetting": AppLocalizations.of(context).pointSetting,
       "setting": AppLocalizations.of(context).setting,
       "history": AppLocalizations.of(context).history,
+      "exportToSpreadsheet": AppLocalizations.of(context).exportToSpreadsheet,
       "language": AppLocalizations.of(context).language,
       "about": AppLocalizations.of(context).about
     };
@@ -115,11 +112,9 @@ class _LayoutState extends State<Layout> {
     }
 
     void saveHistory(History history) {
-      setState(() {
-        currentPointSetting = history.pointSetting.clone();
-        currentSetting = history.setting.clone();
-        currentHistoryIndex = histories.indexOf(history) + 1;
-      });
+      currentPointSetting = history.pointSetting.clone();
+      currentSetting = history.setting.clone();
+      currentHistoryIndex = histories.indexOf(history) + 1;
     }
 
     void saveSetting(SettingParameter setting) {
@@ -460,14 +455,6 @@ class _LayoutState extends State<Layout> {
         final bytes = File(join(folder, fileName + ".xlsx")).readAsBytesSync();
         excel = Excel.decodeBytes(bytes);
       } catch (exception) {
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       content: Text("ERROR: cannot find excel"),
-        //     );
-        //   }
-        // );
         print(exception);
       }
       if (excel == null) {
@@ -544,128 +531,13 @@ class _LayoutState extends State<Layout> {
         File(join(folder, fileName + ".xlsx"))
           ..createSync(recursive: true)
           ..writeAsBytesSync(onValue);
-      });
+        Fluttertoast.showToast(
+            msg: AppLocalizations.of(context).generateSuccess(fileName),
+            backgroundColor: Colors.blue);
+      }).catchError((error) => Fluttertoast.showToast(
+          msg: AppLocalizations.of(context).error + ": $error",
+          backgroundColor: Colors.red));
     }
-
-    // void writeOnExistingExcel(int startIndex, int endIndex, {String sheetName = "jpmr3"}) async {
-    //   final extDirPath = Directory(await ExtStorage.getExternalStorageDirectory());
-    //   final String path = await FilesystemPicker.open(
-    //     title: "Open file",
-    //     context: context,
-    //     rootDirectory: Directory(extDirPath.path),
-    //     fsType: FilesystemType.file,
-    //     allowedExtensions: [".xlsx"],
-    //     fileTileSelectMode: FileTileSelectMode.wholeTile,
-    //   );
-    //
-    //   if (path == null || path.isEmpty) return;
-    //
-    //   final bytes = File(path).readAsBytesSync();
-    //   Excel excel = Excel.decodeBytes(bytes);
-    //   final Map<Position, String> playerNames = {Position.Bottom: "A", Position.Right: "B", Position.Top: "C", Position.Left: "D"};
-    //   final int topRow = 2;
-    //   final SettingParameter _setting = histories[endIndex].setting;
-    //
-    //   CellIndex cell(int col, int row) {
-    //     return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
-    //   }
-    //
-    //   Position position(int index) {
-    //     return Position.values[(_setting.firstOya.index + index) % 4];
-    //   }
-    //
-    //   Map<Position, double> marks = calResult(histories[endIndex]);
-    //
-    //   excel.updateCell(sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
-    //   excel.updateCell(sheetName, cell(1, 1), AppLocalizations.of(context).oya);
-    //   List.generate(4, (index) {
-    //     excel.merge(sheetName, cell(2 + 3 * index, 0), cell(4 + 3 * index, 0), customValue: playerNames[position(index)]);
-    //     excel.updateCell(sheetName, cell(2 + 3 * index, 1), AppLocalizations.of(context).riichi);
-    //     excel.updateCell(sheetName, cell(3 + 3 * index, 1), AppLocalizations.of(context).pointVariation);
-    //     excel.updateCell(sheetName, cell(4 + 3 * index, 1), AppLocalizations.of(context).currentPoint);
-    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow), histories[endIndex].pointSetting.players[position(index)].point);
-    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow), marks[position(index)]);
-    //   });
-    //   excel.updateCell(sheetName, cell(14, 1), AppLocalizations.of(context).kyoutaku);
-    //
-    //   void updateExcelKyoku(int row, int pos) {
-    //     excel.updateCell(sheetName, cell(2 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].riichi.toString().toUpperCase());
-    //     excel.updateCell(sheetName, cell(3 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].point - histories[row].pointSetting.players[position(pos)].point);
-    //     excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow), histories[row].pointSetting.players[position(pos)].point);
-    //   }
-    //
-    //   for (int i = startIndex; i < endIndex; i++) {
-    //     excel.updateCell(sheetName, cell(0, i + topRow), "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
-    //     excel.updateCell(sheetName, cell(1, i + topRow), playerNames[Position.values[(_setting.firstOya.index + histories[i].pointSetting.currentKyoku) % 4]]);
-    //     List.generate(4, (index) => updateExcelKyoku(i, index));
-    //     excel.updateCell(sheetName, cell(14, i + topRow), histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
-    //   }
-    //
-    //   excel.encode().then((onValue) {
-    //     File(path)..createSync(recursive: true)..writeAsBytesSync(onValue);
-    //   });
-    // }
-    //
-    // void generateExcel(int startIndex, int endIndex, {String sheetName = "jpmr"}) {
-    //   Excel excel = Excel.createExcel();
-    //   excel.rename("Sheet1", sheetName);
-    //   final String fileName = "test";
-    //   final Map<Position, String> playerNames = {Position.Bottom: "A", Position.Right: "B", Position.Top: "C", Position.Left: "D"};
-    //   final int topRow = 2;
-    //   final SettingParameter _setting = histories[endIndex].setting;
-    //
-    //   CellIndex cell(int col, int row) {
-    //     return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
-    //   }
-    //
-    //   Position position(int index) {
-    //     return Position.values[(_setting.firstOya.index + index) % 4];
-    //   }
-    //
-    //   Map<Position, double> marks = calResult(histories[endIndex]);
-    //
-    //   excel.updateCell(sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
-    //   excel.updateCell(sheetName, cell(1, 1), AppLocalizations.of(context).oya);
-    //   List.generate(4, (index) {
-    //     excel.merge(sheetName, cell(2 + 3 * index, 0), cell(4 + 3 * index, 0), customValue: playerNames[position(index)]);
-    //     excel.updateCell(sheetName, cell(2 + 3 * index, 1), AppLocalizations.of(context).riichi);
-    //     excel.updateCell(sheetName, cell(3 + 3 * index, 1), AppLocalizations.of(context).pointVariation);
-    //     excel.updateCell(sheetName, cell(4 + 3 * index, 1), AppLocalizations.of(context).currentPoint);
-    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow), histories[endIndex].pointSetting.players[position(index)].point);
-    //     excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow), marks[position(index)]);
-    //   });
-    //   excel.updateCell(sheetName, cell(14, 1), AppLocalizations.of(context).kyoutaku);
-    //
-    //   void updateExcelKyoku(int row, int pos) {
-    //     excel.updateCell(sheetName, cell(2 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].riichi.toString().toUpperCase());
-    //     excel.updateCell(sheetName, cell(3 + pos * 3, row + topRow), histories[row + 1].pointSetting.players[position(pos)].point - histories[row].pointSetting.players[position(pos)].point);
-    //     excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow), histories[row].pointSetting.players[position(pos)].point);
-    //   }
-    //
-    //   for (int i = startIndex; i < endIndex; i++) {
-    //     excel.updateCell(sheetName, cell(0, i + topRow), "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
-    //     excel.updateCell(sheetName, cell(1, i + topRow), playerNames[Position.values[(_setting.firstOya.index + histories[i].pointSetting.currentKyoku) % 4]]);
-    //     List.generate(4, (index) => updateExcelKyoku(i, index));
-    //     excel.updateCell(sheetName, cell(14, i + topRow), histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
-    //   }
-    //
-    //   excel.encode().then((onValue) async {
-    //     final extDirPath = Directory(await ExtStorage.getExternalStorageDirectory());
-    //     final String path = await FilesystemPicker.open(
-    //       title: "Save to folder",
-    //       context: context,
-    //       rootDirectory: Directory(extDirPath.path),
-    //       fsType: FilesystemType.folder,
-    //       pickText: "Save file to this folder",
-    //       requestPermission: () async => await Permission.storage.request().isGranted,
-    //     );
-    //     if (path != null && path.isNotEmpty) {
-    //       File(join(path, fileName + ".xlsx"))
-    //         ..createSync(recursive: true)
-    //         ..writeAsBytesSync(onValue);
-    //     }
-    //   });
-    // }
 
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return Scaffold(
@@ -726,14 +598,31 @@ class _LayoutState extends State<Layout> {
                       ),
                     );
                     break;
+                  case "exportToSpreadsheet":
+                    if (histories.length < 2) {
+                      Fluttertoast.showToast(
+                          msg: AppLocalizations.of(context)
+                              .errorAtLeastTwoRecords,
+                          backgroundColor: Colors.red);
+                      return;
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => chooseHistory(
+                                histories: histories,
+                                save: generateExcel,
+                              )),
+                    );
+                    break;
                   case "history":
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => HistoryPage(
-                              histories: histories,
-                              save: saveHistory,
-                            )));
+                                  histories: histories,
+                                  save: saveHistory,
+                                )));
                     break;
                   case "about":
                     Navigator.push(context,
@@ -794,24 +683,7 @@ class _LayoutState extends State<Layout> {
                   child: PointAndRiichiSwitch(Position.Right),
                 ),
               ),
-              FractionallySizedBox(
-                heightFactor: 0.3,
-                widthFactor: 0.6,
-                child: RaisedButton(
-                  child: Text("Excel"),
-                  onPressed: () {
-                    if (histories.length < 2) return;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => chooseHistory(
-                                  histories: histories,
-                                  save: generateExcel,
-                                )));
-                  },
-                  elevation: 1.0,
-                ),
-              ),
+              EmptyGrid(),
               Center(
                 child: PointAndRiichiSwitch(Position.Bottom),
               ),

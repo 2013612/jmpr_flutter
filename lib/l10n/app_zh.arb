@@ -62,5 +62,14 @@
   "oya": "親",
   "riichi": "立直",
   "pointVariation": "點數變動",
-  "currentPoint": "所持點數"
+  "currentPoint": "所持點數",
+  "folder": "資料夾",
+  "file": "檔案",
+  "sheet": "工作表",
+  "generateSuccess": "成功建立{fileName}.xlsx",
+  "spreadsheet": "試算表",
+  "exportToSpreadsheet": "匯出到試算表",
+  "errorAtLeastTwoRecords": "需要至少2項記錄才能匯出到試算表",
+  "errorExactTwoRecords": "您需要選擇2項記錄",
+  "errorSettingsAreDifferent": "您需要選擇有同一設定的記錄"
 }
