@@ -10,7 +10,7 @@
   "language": "語言",
   "chooseALanguage": "請選擇一種語言",
   "about": "應用程式資訊",
-  "version": "1.0 版本",
+  "version": "{version} 版本",
   "develop": "開發",
   "top": "對家",
   "bottom": "自家",

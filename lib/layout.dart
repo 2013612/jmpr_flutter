@@ -30,28 +30,28 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  final Color firstOyaColor = Colors.red[300];
-  final Color nonFirstOyaColor = Colors.white;
-  SettingParameter currentSetting;
-  PointSettingParameter currentPointSetting;
-  List<History> histories = [];
-  int currentHistoryIndex = 0;
-  String language;
+  final Color _firstOyaColor = Colors.red[300];
+  final Color _nonFirstOyaColor = Colors.white;
+  SettingParameter _currentSetting;
+  PointSettingParameter _currentPointSetting;
+  List<History> _histories = [];
+  int _currentHistoryIndex = 0;
+  String _language;
 
   void addHistory() {
-    if (currentHistoryIndex < histories.length) {
-      histories.removeRange(currentHistoryIndex, histories.length);
+    if (_currentHistoryIndex < _histories.length) {
+      _histories.removeRange(_currentHistoryIndex, _histories.length);
     }
-    histories.add(History(
-        pointSetting: currentPointSetting.clone(),
-        setting: currentSetting.clone()));
-    currentHistoryIndex++;
+    _histories.add(History(
+        pointSetting: _currentPointSetting.clone(),
+        setting: _currentSetting.clone()));
+    _currentHistoryIndex++;
   }
 
   @override
   void initState() {
     super.initState();
-    currentSetting = SettingParameter(
+    _currentSetting = SettingParameter(
       startingPoint: 30000,
       givenStartingPoint: 25000,
       riichibouPoint: 1000,
@@ -59,26 +59,27 @@ class _LayoutState extends State<Layout> {
       ryukyokuPoint: 3000,
       umaBig: 20,
       umaSmall: 10,
-      kiriage: false,
-      douten: false,
+      isKiriage: false,
+      isDouten: false,
       firstOya: Position.Bottom,
     );
     Map<Position, Player> players = Map();
     Position.values.forEach((element) {
       players[element] = Player(
-          position: element,
-          point: currentSetting.givenStartingPoint,
-          riichi: false);
+        position: element,
+        point: _currentSetting.givenStartingPoint,
+        riichi: false,
+      );
     });
-    currentPointSetting = PointSettingParameter(
+    _currentPointSetting = PointSettingParameter(
       players: players,
       currentKyoku: 0,
       bonba: 0,
       riichibou: 0,
     );
     addHistory();
-    currentHistoryIndex = 1;
-    language = widget.locale.languageCode;
+    _currentHistoryIndex = 1;
+    _language = widget.locale.languageCode;
   }
 
   @override
@@ -95,38 +96,38 @@ class _LayoutState extends State<Layout> {
 
     void setRiichiFalse() {
       Position.values.forEach((element) {
-        currentPointSetting.players[element].riichi = false;
+        _currentPointSetting.players[element].riichi = false;
       });
     }
 
     void reset() {
       Position.values.forEach((element) {
-        currentPointSetting.players[element].riichi = false;
-        currentPointSetting.players[element].point =
-            currentSetting.givenStartingPoint;
+        _currentPointSetting.players[element].riichi = false;
+        _currentPointSetting.players[element].point =
+            _currentSetting.givenStartingPoint;
       });
-      currentPointSetting.currentKyoku = 0;
-      currentPointSetting.bonba = 0;
-      currentPointSetting.riichibou = 0;
+      _currentPointSetting.currentKyoku = 0;
+      _currentPointSetting.bonba = 0;
+      _currentPointSetting.riichibou = 0;
       addHistory();
     }
 
-    void saveHistory(History history) {
-      currentPointSetting = history.pointSetting.clone();
-      currentSetting = history.setting.clone();
-      currentHistoryIndex = histories.indexOf(history) + 1;
+    void goToHistory(History history) {
+      _currentPointSetting = history.pointSetting.clone();
+      _currentSetting = history.setting.clone();
+      _currentHistoryIndex = _histories.indexOf(history) + 1;
     }
 
     void saveSetting(SettingParameter setting) {
       setState(() {
-        currentSetting = setting;
+        _currentSetting = setting;
         reset();
       });
     }
 
     void savePointSetting(PointSettingParameter pointSetting) {
       setState(() {
-        currentPointSetting = pointSetting;
+        _currentPointSetting = pointSetting;
         addHistory();
         setRiichiFalse();
       });
@@ -134,42 +135,42 @@ class _LayoutState extends State<Layout> {
 
     void updatePlayerPointTsumo(int point, Position position) {
       Position oya = Position.values[
-          (currentSetting.firstOya.index + currentPointSetting.currentKyoku) %
+          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
               4];
       if (position == oya) {
         point *= 2;
       }
-      currentPointSetting.players.forEach((key, value) {
+      _currentPointSetting.players.forEach((key, value) {
         if (key == position) {
           if (key == oya) {
             value.point += (point + 99) ~/ 100 * 100 * 3 +
-                currentPointSetting.bonba * currentSetting.bonbaPoint +
-                currentPointSetting.riichibou * currentSetting.riichibouPoint;
+                _currentPointSetting.bonba * _currentSetting.bonbaPoint +
+                _currentPointSetting.riichibou * _currentSetting.riichibouPoint;
           } else {
             value.point += (point + 99) ~/ 100 * 100 * 2 +
                 (point * 2 + 99) ~/ 100 * 100 +
-                currentPointSetting.bonba * currentSetting.bonbaPoint +
-                currentPointSetting.riichibou * currentSetting.riichibouPoint;
+                _currentPointSetting.bonba * _currentSetting.bonbaPoint +
+                _currentPointSetting.riichibou * _currentSetting.riichibouPoint;
           }
         } else {
           if (key == oya) {
             value.point -= (point * 2 + 99) ~/ 100 * 100 +
-                currentPointSetting.bonba * currentSetting.bonbaPoint ~/ 3;
+                _currentPointSetting.bonba * _currentSetting.bonbaPoint ~/ 3;
           } else {
             value.point -= (point + 99) ~/ 100 * 100 +
-                currentPointSetting.bonba * currentSetting.bonbaPoint ~/ 3;
+                _currentPointSetting.bonba * _currentSetting.bonbaPoint ~/ 3;
           }
         }
       });
-      currentPointSetting.bonba = 0;
-      currentPointSetting.riichibou = 0;
+      _currentPointSetting.bonba = 0;
+      _currentPointSetting.riichibou = 0;
     }
 
     int calPoint(int han, int fu) {
       int point = pow(2, han + 2) * fu;
       if (point > 1920) {
         point = Constant.points[han];
-      } else if (point == 1920 && this.currentSetting.kiriage) {
+      } else if (point == 1920 && this._currentSetting.isKiriage) {
         point = 2000;
       }
       return point;
@@ -177,17 +178,17 @@ class _LayoutState extends State<Layout> {
 
     void saveTsumo(Position tsumoPlayer, int han, int fu) {
       int point = calPoint(han, fu);
+      Position oya = Position.values[
+          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
+              4];
       setState(() {
         updatePlayerPointTsumo(point, tsumoPlayer);
-        if (tsumoPlayer ==
-            Position.values[(currentSetting.firstOya.index +
-                    currentPointSetting.currentKyoku) %
-                4]) {
-          currentPointSetting.bonba++;
+        if (tsumoPlayer == oya) {
+          _currentPointSetting.bonba++;
         } else {
-          currentPointSetting.bonba = 0;
-          currentPointSetting.currentKyoku =
-              (currentPointSetting.currentKyoku + 1) % 16;
+          _currentPointSetting.bonba = 0;
+          _currentPointSetting.currentKyoku =
+              (_currentPointSetting.currentKyoku + 1) % 16;
         }
         addHistory();
         setRiichiFalse();
@@ -197,7 +198,7 @@ class _LayoutState extends State<Layout> {
     void saveRon(Position ronedPlayer, Map<Position, bool> ronPlayers,
         Map<Position, int> hans, Map<Position, int> fus) {
       Position oya = Position.values[
-          (currentSetting.firstOya.index + currentPointSetting.currentKyoku) %
+          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
               4];
       setState(() {
         int nearIndex = 100;
@@ -209,25 +210,25 @@ class _LayoutState extends State<Layout> {
             } else {
               point = (point * 4 + 99) ~/ 100 * 100;
             }
-            currentPointSetting.players[key].point += point;
-            currentPointSetting.players[ronedPlayer].point -= point;
+            _currentPointSetting.players[key].point += point;
+            _currentPointSetting.players[ronedPlayer].point -= point;
             nearIndex =
                 min(nearIndex, ((key.index - ronedPlayer.index) + 4) % 4);
           }
         });
         nearIndex = (nearIndex + ronedPlayer.index) % 4;
-        currentPointSetting.players[ronedPlayer].point -=
-            currentPointSetting.bonba * currentSetting.bonbaPoint;
-        currentPointSetting.players[Position.values[nearIndex]].point +=
-            currentPointSetting.bonba * currentSetting.bonbaPoint +
-                currentPointSetting.riichibou * currentSetting.riichibouPoint;
-        currentPointSetting.riichibou = 0;
+        _currentPointSetting.players[ronedPlayer].point -=
+            _currentPointSetting.bonba * _currentSetting.bonbaPoint;
+        _currentPointSetting.players[Position.values[nearIndex]].point +=
+            _currentPointSetting.bonba * _currentSetting.bonbaPoint +
+                _currentPointSetting.riichibou * _currentSetting.riichibouPoint;
+        _currentPointSetting.riichibou = 0;
         if (ronPlayers[oya]) {
-          currentPointSetting.bonba++;
+          _currentPointSetting.bonba++;
         } else {
-          currentPointSetting.bonba = 0;
-          currentPointSetting.currentKyoku =
-              (currentPointSetting.currentKyoku + 1) % 16;
+          _currentPointSetting.bonba = 0;
+          _currentPointSetting.currentKyoku =
+              (_currentPointSetting.currentKyoku + 1) % 16;
         }
         addHistory();
         setRiichiFalse();
@@ -244,86 +245,42 @@ class _LayoutState extends State<Layout> {
         if (value) numOfNagashimagan++;
       });
       Position oya = Position.values[
-          (currentSetting.firstOya.index + currentPointSetting.currentKyoku) %
+          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
               4];
       setState(() {
         if (numOfNagashimagan > 0) {
-          int bonba = currentPointSetting.bonba;
-          int riichibou = currentPointSetting.riichibou;
-          currentPointSetting.bonba = 0;
-          currentPointSetting.riichibou = 0;
+          int bonba = _currentPointSetting.bonba;
+          int riichibou = _currentPointSetting.riichibou;
+          _currentPointSetting.bonba = 0;
+          _currentPointSetting.riichibou = 0;
           nagashimangan.forEach((key, value) {
             if (value) {
               updatePlayerPointTsumo(2000, key);
             }
           });
-          currentPointSetting.bonba = bonba;
-          currentPointSetting.riichibou = riichibou;
+          _currentPointSetting.bonba = bonba;
+          _currentPointSetting.riichibou = riichibou;
         } else {
           if (numOfTenpai != 0 && numOfTenpai != 4) {
             tenpai.forEach((key, value) {
               if (value) {
-                currentPointSetting.players[key].point +=
-                    currentSetting.ryukyokuPoint ~/ numOfTenpai;
+                _currentPointSetting.players[key].point +=
+                    _currentSetting.ryukyokuPoint ~/ numOfTenpai;
               } else {
-                currentPointSetting.players[key].point -=
-                    currentSetting.ryukyokuPoint ~/ (4 - numOfTenpai);
+                _currentPointSetting.players[key].point -=
+                    _currentSetting.ryukyokuPoint ~/ (4 - numOfTenpai);
               }
             });
           }
         }
         if (!tenpai[oya]) {
-          currentPointSetting.currentKyoku =
-              (currentPointSetting.currentKyoku + 1) % 16;
+          _currentPointSetting.currentKyoku =
+              (_currentPointSetting.currentKyoku + 1) % 16;
         }
-        currentPointSetting.bonba++;
+        _currentPointSetting.bonba++;
         addHistory();
         setRiichiFalse();
       });
-    }
-
-    Widget PointAndRiichiSwitch(Position position) {
-      String sittingText = Constant.sittingTexts[(position.index -
-              (currentSetting.firstOya.index +
-                  currentPointSetting.currentKyoku) +
-              8) %
-          4];
-      return GestureDetector(
-        child: Column(
-          children: [
-            Spacer(),
-            Container(
-              child: Image.asset(currentPointSetting.players[position].riichi
-                  ? "assets/riichibou.png"
-                  : "assets/no_riichibou.png"),
-            ),
-            Text(
-              "$sittingText ${currentPointSetting.players[position].point}",
-              style: TextStyle(
-                color: currentSetting.firstOya == position
-                    ? firstOyaColor
-                    : nonFirstOyaColor,
-              ),
-            ),
-            Spacer(
-              flex: 2,
-            ),
-          ],
-        ),
-        onTap: () {
-          setState(() {
-            if (!currentPointSetting.players[position].riichi) {
-              currentPointSetting.riichibou++;
-              currentPointSetting.players[position].point -= 1000;
-              currentPointSetting.players[position].riichi = true;
-            } else {
-              currentPointSetting.riichibou--;
-              currentPointSetting.players[position].point += 1000;
-              currentPointSetting.players[position].riichi = false;
-            }
-          });
-        },
-      );
     }
 
     Map<Position, double> calResult(History history) {
@@ -355,7 +312,7 @@ class _LayoutState extends State<Layout> {
       Map<Position, double> marks = Map();
       double topBonus =
           4 * (_setting.startingPoint - _setting.givenStartingPoint) / 1000;
-      if (_setting.douten) {
+      if (_setting.isDouten) {
         if (cal[0][0] == cal[1][0] &&
             cal[1][0] == cal[2][0] &&
             cal[2][0] == cal[3][0]) {
@@ -420,7 +377,7 @@ class _LayoutState extends State<Layout> {
     }
 
     void showResult() {
-      Map<Position, double> marks = calResult(histories.last);
+      Map<Position, double> marks = calResult(_histories.last);
 
       showDialog(
         context: context,
@@ -462,7 +419,7 @@ class _LayoutState extends State<Layout> {
         excel.rename("Sheet1", sheetName);
       }
       final int topRow = 2;
-      final SettingParameter _setting = histories[endIndex].setting;
+      final SettingParameter _setting = _histories[endIndex].setting;
 
       CellIndex cell(int col, int row) {
         return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
@@ -472,7 +429,7 @@ class _LayoutState extends State<Layout> {
         return Position.values[(_setting.firstOya.index + index) % 4];
       }
 
-      Map<Position, double> marks = calResult(histories[endIndex]);
+      Map<Position, double> marks = calResult(_histories[endIndex]);
 
       excel.updateCell(
           sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
@@ -487,7 +444,7 @@ class _LayoutState extends State<Layout> {
         excel.updateCell(sheetName, cell(4 + 3 * index, 1),
             AppLocalizations.of(context).currentPoint);
         excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow),
-            histories[endIndex].pointSetting.players[position(index)].point);
+            _histories[endIndex].pointSetting.players[position(index)].point);
         excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow),
             marks[position(index)]);
       });
@@ -498,7 +455,7 @@ class _LayoutState extends State<Layout> {
         excel.updateCell(
             sheetName,
             cell(2 + pos * 3, row + topRow),
-            histories[row + 1]
+            _histories[row + 1]
                 .pointSetting
                 .players[position(pos)]
                 .riichi
@@ -507,24 +464,24 @@ class _LayoutState extends State<Layout> {
         excel.updateCell(
             sheetName,
             cell(3 + pos * 3, row + topRow),
-            histories[row + 1].pointSetting.players[position(pos)].point -
-                histories[row].pointSetting.players[position(pos)].point);
+            _histories[row + 1].pointSetting.players[position(pos)].point -
+                _histories[row].pointSetting.players[position(pos)].point);
         excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow),
-            histories[row].pointSetting.players[position(pos)].point);
+            _histories[row].pointSetting.players[position(pos)].point);
       }
 
       for (int i = startIndex; i < endIndex; i++) {
         excel.updateCell(sheetName, cell(0, i + topRow),
-            "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
+            "${Constant.kyokus[_histories[i].pointSetting.currentKyoku]} ${_histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
         excel.updateCell(
             sheetName,
             cell(1, i + topRow),
             playerNames[Position.values[(_setting.firstOya.index +
-                    histories[i].pointSetting.currentKyoku) %
+                    _histories[i].pointSetting.currentKyoku) %
                 4]]);
         List.generate(4, (index) => updateExcelKyoku(i, index));
         excel.updateCell(sheetName, cell(14, i + topRow),
-            histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
+            _histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
       }
 
       excel.encode().then((onValue) {
@@ -539,100 +496,201 @@ class _LayoutState extends State<Layout> {
           backgroundColor: Colors.red));
     }
 
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
-      return Scaffold(
-        backgroundColor: Colors.green,
-        appBar: AppBar(
-          title: FittedBox(
-            child: Text(AppLocalizations.of(context).appTitle),
-          ),
-          actions: [
-            PopupMenuButton<String>(
-              itemBuilder: (BuildContext context) {
-                return choices.entries.map((choice) {
-                  return PopupMenuItem<String>(
-                    value: choice.key,
-                    child: Text(choice.value),
-                  );
-                }).toList();
-              },
-              icon: Icon(
-                Icons.menu,
+    Widget PointAndRiichiSwitch(Position position) {
+      String sittingText = Constant.sittingTexts[(position.index -
+              (_currentSetting.firstOya.index +
+                  _currentPointSetting.currentKyoku) +
+              8) %
+          4];
+      return GestureDetector(
+        child: Column(
+          children: [
+            Spacer(),
+            Container(
+              child: Image.asset(_currentPointSetting.players[position].riichi
+                  ? "assets/riichibou.png"
+                  : "assets/no_riichibou.png"),
+            ),
+            Text(
+              "$sittingText ${_currentPointSetting.players[position].point}",
+              style: TextStyle(
+                color: _currentSetting.firstOya == position
+                    ? _firstOyaColor
+                    : _nonFirstOyaColor,
               ),
-              onSelected: (string) {
-                switch (string) {
-                  case "pointSetting":
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PointSetting(
-                            currentPointSetting: currentPointSetting,
-                            save: savePointSetting,
-                          )),
-                    );
-                    break;
-                  case "setting":
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Setting(
-                            currentSetting: currentSetting,
-                            save: saveSetting,
-                          )),
-                    );
-                    break;
-                  case "language":
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => LanguageDialog(
-                        onValueChange: (String lang) {
-                          setState(() {
-                            language = lang;
-                          });
-                          widget.setAppLocaleDelegate
-                              .setLocale(supportedLocales[language]);
-                          Constant.languageChange(context);
-                        },
-                        initialValue: language,
-                      ),
-                    );
-                    break;
-                  case "exportToSpreadsheet":
-                    if (histories.length < 2) {
-                      Fluttertoast.showToast(
-                          msg: AppLocalizations.of(context)
-                              .errorAtLeastTwoRecords,
-                          backgroundColor: Colors.red);
-                      return;
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => chooseHistory(
-                                histories: histories,
-                                save: generateExcel,
-                              )),
-                    );
-                    break;
-                  case "history":
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryPage(
-                                  histories: histories,
-                                  save: saveHistory,
-                                )));
-                    break;
-                  case "about":
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => About()));
-                    break;
-                }
-              },
+            ),
+            Spacer(
+              flex: 2,
             ),
           ],
         ),
+        onTap: () {
+          setState(() {
+            if (!_currentPointSetting.players[position].riichi) {
+              _currentPointSetting.riichibou++;
+              _currentPointSetting.players[position].point -= 1000;
+              _currentPointSetting.players[position].riichi = true;
+            } else {
+              _currentPointSetting.riichibou--;
+              _currentPointSetting.players[position].point += 1000;
+              _currentPointSetting.players[position].riichi = false;
+            }
+          });
+        },
+      );
+    }
+
+    Widget MyAppBar() {
+      return AppBar(
+        title: FittedBox(
+          child: Text(AppLocalizations.of(context).appTitle),
+        ),
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              return choices.entries.map((choice) {
+                return PopupMenuItem<String>(
+                  value: choice.key,
+                  child: Text(choice.value),
+                );
+              }).toList();
+            },
+            icon: Icon(
+              Icons.menu,
+            ),
+            onSelected: (string) {
+              switch (string) {
+                case "pointSetting":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PointSetting(
+                              currentPointSetting: _currentPointSetting,
+                              save: savePointSetting,
+                            )),
+                  );
+                  break;
+                case "setting":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Setting(
+                              currentSetting: _currentSetting,
+                              save: saveSetting,
+                            )),
+                  );
+                  break;
+                case "language":
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => LanguageDialog(
+                      changeLanguageTo: (String lang) {
+                        setState(() {
+                          _language = lang;
+                        });
+                        widget.setAppLocaleDelegate
+                            .setLocale(supportedLocales[_language]);
+                        Constant.languageChange(context);
+                      },
+                      initialValue: _language,
+                    ),
+                  );
+                  break;
+                case "exportToSpreadsheet":
+                  if (_histories.length < 2) {
+                    Fluttertoast.showToast(
+                        msg:
+                            AppLocalizations.of(context).errorAtLeastTwoRecords,
+                        backgroundColor: Colors.red);
+                    return;
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChooseHistory(
+                              histories: _histories,
+                              next: generateExcel,
+                            )),
+                  );
+                  break;
+                case "history":
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HistoryPage(
+                                histories: _histories,
+                                goTo: goToHistory,
+                              )));
+                  break;
+                case "about":
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => About()));
+                  break;
+              }
+            },
+          ),
+        ],
+      );
+    }
+
+    Widget MyBaseAppBar() {
+      return BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            BaseBarButton(AppLocalizations.of(context).ron, () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
+            }),
+            BaseBarButton(AppLocalizations.of(context).tsumo, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Tsumo(save: saveTsumo)));
+            }),
+            BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Ryukyoku(save: saveRyukyoku)));
+            }),
+            BaseBarButton(AppLocalizations.of(context).reset, () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                  title: Text(AppLocalizations.of(context).confirm),
+                  content: Text(AppLocalizations.of(context).confirmReset),
+                  actions: [
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(AppLocalizations.of(context).cancel),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          reset();
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      );
+    }
+
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+      return Scaffold(
+        backgroundColor: Colors.green,
+        appBar: MyAppBar(),
         body: Center(
           child: GridView.count(
             shrinkWrap: true,
@@ -657,21 +715,21 @@ class _LayoutState extends State<Layout> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      Constant.kyokus[currentPointSetting.currentKyoku],
+                      Constant.kyokus[_currentPointSetting.currentKyoku],
                       style: TextStyle(
-                        color: nonFirstOyaColor,
+                        color: _nonFirstOyaColor,
                       ),
                     ),
                     Text(
-                      "${currentPointSetting.bonba} 本場",
+                      "${_currentPointSetting.bonba} 本場",
                       style: TextStyle(
-                        color: nonFirstOyaColor,
+                        color: _nonFirstOyaColor,
                       ),
                     ),
                     Text(
-                      "供托: ${currentPointSetting.riichibou}",
+                      "供托: ${_currentPointSetting.riichibou}",
                       style: TextStyle(
-                        color: nonFirstOyaColor,
+                        color: _nonFirstOyaColor,
                       ),
                     ),
                   ],
@@ -699,137 +757,12 @@ class _LayoutState extends State<Layout> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              BaseBarButton(AppLocalizations.of(context).ron, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Ron(next: saveRon)));
-              }),
-              BaseBarButton(AppLocalizations.of(context).tsumo, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Tsumo(save: saveTsumo)));
-              }),
-              BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Ryukyoku(save: saveRyukyoku)));
-              }),
-              BaseBarButton(AppLocalizations.of(context).reset, () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => AlertDialog(
-                    title: Text(AppLocalizations.of(context).confirm),
-                    content: Text(AppLocalizations.of(context).confirmReset),
-                    actions: [
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(AppLocalizations.of(context).cancel),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            reset();
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: Text("OK"),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ],
-          ),
-          color: Colors.blue,
-        ),
+        bottomNavigationBar: MyBaseAppBar(),
       );
     } else {
       return Scaffold(
         backgroundColor: Colors.green,
-        appBar: AppBar(
-          title: FittedBox(
-            child: Text(AppLocalizations.of(context).appTitle),
-          ),
-          actions: [
-            PopupMenuButton<String>(
-              itemBuilder: (BuildContext context) {
-                return choices.entries.map((choice) {
-                  return PopupMenuItem<String>(
-                    value: choice.key,
-                    child: Text(choice.value),
-                  );
-                }).toList();
-              },
-              icon: Icon(
-                Icons.menu,
-              ),
-              onSelected: (string) {
-                switch (string) {
-                  case "pointSetting":
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PointSetting(
-                            currentPointSetting: currentPointSetting,
-                            save: savePointSetting,
-                          )),
-                    );
-                    break;
-                  case "setting":
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Setting(
-                            currentSetting: currentSetting,
-                            save: saveSetting,
-                          )),
-                    );
-                    break;
-                  case "language":
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => LanguageDialog(
-                        onValueChange: (String lang) {
-                          setState(() {
-                            language = lang;
-                          });
-                          widget.setAppLocaleDelegate
-                              .setLocale(supportedLocales[language]);
-                          Constant.languageChange(context);
-                        },
-                        initialValue: language,
-                      ),
-                    );
-                    break;
-                  case "history":
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryPage(
-                              histories: histories,
-                              save: saveHistory,
-                            )));
-                    break;
-                  case "about":
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => About()));
-                    break;
-                }
-              },
-            ),
-          ],
-        ),
+        appBar: MyAppBar(),
         body: Row(
           children: [
             Spacer(),
@@ -869,23 +802,23 @@ class _LayoutState extends State<Layout> {
                     flex: 3,
                   ),
                   Text(
-                    Constant.kyokus[currentPointSetting.currentKyoku],
+                    Constant.kyokus[_currentPointSetting.currentKyoku],
                     style: TextStyle(
-                      color: nonFirstOyaColor,
+                      color: _nonFirstOyaColor,
                     ),
                   ),
                   Spacer(),
                   Text(
-                    "${currentPointSetting.bonba} 本場",
+                    "${_currentPointSetting.bonba} 本場",
                     style: TextStyle(
-                      color: nonFirstOyaColor,
+                      color: _nonFirstOyaColor,
                     ),
                   ),
                   Spacer(),
                   Text(
-                    "供托: ${currentPointSetting.riichibou}",
+                    "供托: ${_currentPointSetting.riichibou}",
                     style: TextStyle(
-                      color: nonFirstOyaColor,
+                      color: _nonFirstOyaColor,
                     ),
                   ),
                   Spacer(
@@ -905,59 +838,7 @@ class _LayoutState extends State<Layout> {
             ),
           ],
         ),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              BaseBarButton(AppLocalizations.of(context).ron, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Ron(next: saveRon)));
-              }),
-              BaseBarButton(AppLocalizations.of(context).tsumo, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Tsumo(save: saveTsumo)));
-              }),
-              BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Ryukyoku(save: saveRyukyoku)));
-              }),
-              BaseBarButton(AppLocalizations.of(context).reset, () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => AlertDialog(
-                    title: Text(AppLocalizations.of(context).confirm),
-                    content: Text(AppLocalizations.of(context).confirmReset),
-                    actions: [
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(AppLocalizations.of(context).cancel),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            reset();
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: Text("OK"),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ],
-          ),
-          color: Colors.blue,
-        ),
+        bottomNavigationBar: MyBaseAppBar(),
       );
     }
   }

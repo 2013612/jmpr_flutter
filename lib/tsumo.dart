@@ -4,7 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'common.dart';
 
 class Tsumo extends StatefulWidget {
-  Function save;
+  final Function save;
+
   Tsumo({
     @required this.save,
   });
@@ -14,7 +15,7 @@ class Tsumo extends StatefulWidget {
 }
 
 class _TsumoState extends State<Tsumo> {
-  int han, fu;
+  int _han, _fu;
   Position _tsumoPlayer;
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
@@ -27,27 +28,27 @@ class _TsumoState extends State<Tsumo> {
   @override
   void initState() {
     super.initState();
-    han = 1;
-    fu = 30;
+    _han = 1;
+    _fu = 30;
     _tsumoPlayer = Position.Bottom;
-  }
-
-  Widget TsumoPlayerRadioListTile(Position position) {
-    return FlexibleCustomRadioTile(
-      position,
-      _tsumoPlayer,
-      Constant.positionTexts[position],
-      (val) {
-        setState(() {
-          _tsumoPlayer = val;
-        });
-      },
-      Constant.arrows[position],
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget TsumoPlayerRadioListTile(Position position) {
+      return FlexibleCustomRadioTile(
+        position,
+        _tsumoPlayer,
+        Constant.positionTexts[position],
+        (val) {
+          setState(() {
+            _tsumoPlayer = val;
+          });
+        },
+        Constant.arrows[position],
+      );
+    }
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -84,16 +85,16 @@ class _TsumoState extends State<Tsumo> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           items: Constant.hans
-                              .map((e) => DropdownMenuItem(
-                                    child: Text(e.toString()),
-                                    value: e.toString(),
+                              .map((han) => DropdownMenuItem(
+                                    child: Text(han.toString()),
+                                    value: han.toString(),
                                   ))
                               .toList(),
-                          value: han.toString(),
+                          value: _han.toString(),
                           isDense: true,
                           onChanged: (val) {
                             setState(() {
-                              han = int.tryParse(val);
+                              _han = int.tryParse(val);
                             });
                           },
                         ),
@@ -113,16 +114,16 @@ class _TsumoState extends State<Tsumo> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           items: Constant.fus
-                              .map((e) => DropdownMenuItem(
-                                    child: Text(e.toString()),
-                                    value: e.toString(),
+                              .map((fu) => DropdownMenuItem(
+                                    child: Text(fu.toString()),
+                                    value: fu.toString(),
                                   ))
                               .toList(),
-                          value: fu.toString(),
+                          value: _fu.toString(),
                           isDense: true,
                           onChanged: (val) {
                             setState(() {
-                              fu = int.tryParse(val);
+                              _fu = int.tryParse(val);
                             });
                           },
                         ),
@@ -147,12 +148,11 @@ class _TsumoState extends State<Tsumo> {
               BaseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
               BaseBarButton(AppLocalizations.of(context).save, () {
-                widget.save(_tsumoPlayer, han, fu);
+                widget.save(_tsumoPlayer, _han, _fu);
                 Navigator.pop(context);
               }),
             ],
           ),
-          color: Colors.blue,
         ),
       ),
     );

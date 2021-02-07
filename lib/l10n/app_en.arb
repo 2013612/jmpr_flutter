@@ -43,9 +43,12 @@
   "@about": {
     "type": "text"
   },
-  "version": "Version 1.0",
+  "version": "Version {version}",
   "@version": {
-    "type": "text"
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
   },
   "develop": "Developed by",
   "@develop": {

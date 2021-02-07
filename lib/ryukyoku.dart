@@ -3,7 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'common.dart';
 
 class Ryukyoku extends StatefulWidget {
-  Function save;
+  final Function save;
+
   Ryukyoku({
     @required this.save,
   });
@@ -114,7 +115,6 @@ class _RyokyokuState extends State<Ryukyoku> {
               }),
             ],
           ),
-          color: Colors.blue,
         ),
       ),
     );

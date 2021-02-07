@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'common.dart';
 
 class Ron extends StatefulWidget {
-  Function next;
+  final Function next;
 
   Ron({this.next});
 
@@ -15,15 +15,15 @@ class Ron extends StatefulWidget {
 
 class _RonState extends State<Ron> {
   Position _ronedPlayer;
-  Map<Position, bool> _ronPlayers;
+  Map<Position, bool> _isRonPlayers;
 
   @override
   void initState() {
     super.initState();
     _ronedPlayer = Position.Bottom;
-    _ronPlayers = Map();
+    _isRonPlayers = Map();
     Position.values.forEach((element) {
-      _ronPlayers[element] = false;
+      _isRonPlayers[element] = false;
     });
   }
 
@@ -43,11 +43,11 @@ class _RonState extends State<Ron> {
 
   Widget RonCheckboxListTile(Position position) {
     return FlexibleCustomCheckBoxTile(
-      _ronPlayers[position],
+      _isRonPlayers[position],
       Constant.positionTexts[position],
       (val) {
         setState(() {
-          _ronPlayers[position] = val;
+          _isRonPlayers[position] = val;
         });
       },
       Constant.arrows[position],
@@ -106,7 +106,7 @@ class _RonState extends State<Ron> {
               BaseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
               BaseBarButton(AppLocalizations.of(context).next, () {
-                if (!_ronPlayers.values
+                if (!_isRonPlayers.values
                     .reduce((value, element) => value || element)) {
                   showDialog(
                       context: context,
@@ -118,7 +118,7 @@ class _RonState extends State<Ron> {
                         );
                       });
                   return;
-                } else if (_ronPlayers[_ronedPlayer]) {
+                } else if (_isRonPlayers[_ronedPlayer]) {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -134,9 +134,9 @@ class _RonState extends State<Ron> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => RonPoint(
-                      ronPlayers: _ronPlayers,
+                      isRonPlayers: _isRonPlayers,
                       save: (Map<Position, int> hans, Map<Position, int> fus) {
-                        widget.next(_ronedPlayer, _ronPlayers, hans, fus);
+                        widget.next(_ronedPlayer, _isRonPlayers, hans, fus);
                         Navigator.pop(context);
                       },
                     ),

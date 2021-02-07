@@ -30,6 +30,7 @@ class _JMPRAPPState extends State<JMPRAPP> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        bottomAppBarColor: Colors.blue,
       ),
       home: Layout(locale, SetAppLocaleDelegate((Locale locale) {
         setState(() {

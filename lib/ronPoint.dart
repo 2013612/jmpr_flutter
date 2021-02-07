@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'common.dart';
 
 class RonPoint extends StatefulWidget {
-  Map<Position, bool> ronPlayers;
-  Function save;
+  final Map<Position, bool> isRonPlayers;
+  final Function save;
 
   RonPoint({
-    @required this.ronPlayers,
+    @required this.isRonPlayers,
     @required this.save,
   });
 
@@ -24,16 +24,16 @@ class _RonPointState extends State<RonPoint> {
       borderRadius: BorderRadius.circular(8.0),
     ),
   );
-  Map<Position, int> hans, fus;
+  Map<Position, int> _hans, _fus;
 
   @override
   void initState() {
     super.initState();
-    hans = Map();
-    fus = Map();
+    _hans = Map();
+    _fus = Map();
     Position.values.forEach((element) {
-      hans[element] = 1;
-      fus[element] = 30;
+      _hans[element] = 1;
+      _fus[element] = 30;
     });
   }
 
@@ -47,23 +47,23 @@ class _RonPointState extends State<RonPoint> {
           Spacer(),
           Text(Constant.positionTexts[position]),
           Spacer(),
-          Container(
+          SizedBox(
             width: 70,
             child: InputDecorator(
               decoration: _inputDecoration,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   items: Constant.hans
-                      .map((e) => DropdownMenuItem(
-                            child: Text(e.toString()),
-                            value: e.toString(),
+                      .map((han) => DropdownMenuItem(
+                            child: Text(han.toString()),
+                            value: han.toString(),
                           ))
                       .toList(),
-                  value: hans[position].toString(),
+                  value: _hans[position].toString(),
                   isDense: true,
                   onChanged: (val) {
                     setState(() {
-                      hans[position] = int.tryParse(val);
+                      _hans[position] = int.tryParse(val);
                     });
                   },
                 ),
@@ -76,23 +76,23 @@ class _RonPointState extends State<RonPoint> {
             child: Text(AppLocalizations.of(context).han),
           ),
           Spacer(),
-          Container(
+          SizedBox(
             width: 70,
             child: InputDecorator(
               decoration: _inputDecoration,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   items: Constant.fus
-                      .map((e) => DropdownMenuItem(
-                            child: Text(e.toString()),
-                            value: e.toString(),
+                      .map((fu) => DropdownMenuItem(
+                            child: Text(fu.toString()),
+                            value: fu.toString(),
                           ))
                       .toList(),
-                  value: fus[position].toString(),
+                  value: _fus[position].toString(),
                   isDense: true,
                   onChanged: (val) {
                     setState(() {
-                      fus[position] = int.tryParse(val);
+                      _fus[position] = int.tryParse(val);
                     });
                   },
                 ),
@@ -122,14 +122,14 @@ class _RonPointState extends State<RonPoint> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.ronPlayers.entries
-                .map((e) {
-                  if (e.value) {
-                    return PlayerPoint(e.key);
+            children: widget.isRonPlayers.entries
+                .map((isRonPlayer) {
+                  if (isRonPlayer.value) {
+                    return PlayerPoint(isRonPlayer.key);
                   }
                 })
                 .toList()
-                .where((item) => item != null)
+                .where((widget) => widget != null)
                 .toList(),
           ),
         ),
@@ -140,12 +140,11 @@ class _RonPointState extends State<RonPoint> {
               BaseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
               BaseBarButton(AppLocalizations.of(context).save, () {
-                widget.save(hans, fus);
+                widget.save(_hans, _fus);
                 Navigator.pop(context);
               }),
             ],
           ),
-          color: Colors.blue,
         ),
       ),
     );

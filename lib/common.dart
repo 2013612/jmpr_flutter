@@ -40,23 +40,17 @@ class Constant {
   ];
 
   static final List<int> hans = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
+    ...List.generate(13, (index) => index + 1),
     26,
     39
   ];
-  static final List<int> fus = [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110];
+
+  static final List<int> fus = [
+    20,
+    25,
+    ...List.generate(9, (index) => (index + 3) * 10)
+  ];
+
   static final Map<int, int> points = {
     4: 2000,
     5: 2000,

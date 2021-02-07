@@ -5,9 +5,9 @@ import 'locale.dart';
 
 class LanguageDialog extends StatefulWidget {
   final String initialValue;
-  final void Function(String) onValueChange;
+  final void Function(String) changeLanguageTo;
 
-  LanguageDialog({this.onValueChange, this.initialValue});
+  LanguageDialog({this.changeLanguageTo, this.initialValue});
 
   @override
   _LanguageDialogState createState() => _LanguageDialogState();
@@ -56,7 +56,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
         ),
         FlatButton(
           onPressed: () {
-            widget.onValueChange(_selectedLanguage);
+            widget.changeLanguageTo(_selectedLanguage);
             Navigator.pop(context);
           },
           child: Text(AppLocalizations.of(context).save),

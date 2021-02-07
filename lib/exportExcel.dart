@@ -11,26 +11,27 @@ import 'package:jmpr_flutter/history.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'common.dart';
 
-class chooseHistory extends StatefulWidget {
+class ChooseHistory extends StatefulWidget {
   final List<History> histories;
-  Function save;
+  final Function next;
 
-  chooseHistory({
+  ChooseHistory({
     @required this.histories,
-    @required this.save,
+    @required this.next,
   });
 
   @override
-  _chooseHistoryState createState() => _chooseHistoryState();
+  _ChooseHistoryState createState() => _ChooseHistoryState();
 }
 
-class _chooseHistoryState extends State<chooseHistory> {
-  List<int> chosen = [];
+class _ChooseHistoryState extends State<ChooseHistory> {
+  List<int> chosen;
   List<History> reversedHistories;
 
   @override
   void initState() {
     super.initState();
+    chosen = [];
     reversedHistories = widget.histories.reversed.toList();
   }
 
@@ -39,6 +40,7 @@ class _chooseHistoryState extends State<chooseHistory> {
     final ShapeBorder _shapeBorder = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).history),
@@ -106,7 +108,7 @@ class _chooseHistoryState extends State<chooseHistory> {
                     builder: (context) => userInput(
                       (String folder, String fileName, String sheetName,
                           Map<Position, String> playerNames) {
-                        widget.save(
+                        widget.next(
                             min(chosen[0], chosen[1]),
                             max(chosen[0], chosen[1]),
                             folder,
@@ -122,7 +124,6 @@ class _chooseHistoryState extends State<chooseHistory> {
             }),
           ],
         ),
-        color: Colors.blue,
       ),
     );
   }

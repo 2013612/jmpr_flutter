@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'common.dart';
 
 class Setting extends StatefulWidget {
-  SettingParameter currentSetting;
-  Function save;
+  final SettingParameter currentSetting;
+  final Function save;
 
   Setting({
     @required this.currentSetting,
@@ -19,7 +19,7 @@ class Setting extends StatefulWidget {
 
 class _SettingState extends State<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
-  SettingParameter editingSetting;
+  SettingParameter _editingSetting;
   final SettingParameter _tenhouSetting = SettingParameter(
     startingPoint: 30000,
     givenStartingPoint: 25000,
@@ -28,8 +28,8 @@ class _SettingState extends State<Setting> {
     ryukyokuPoint: 3000,
     umaBig: 20,
     umaSmall: 10,
-    kiriage: false,
-    douten: false,
+    isKiriage: false,
+    isDouten: false,
     firstOya: Position.Bottom,
   );
   final SettingParameter _RMUSetting = SettingParameter(
@@ -40,8 +40,8 @@ class _SettingState extends State<Setting> {
     ryukyokuPoint: 3000,
     umaBig: 30,
     umaSmall: 10,
-    kiriage: true,
-    douten: true,
+    isKiriage: true,
+    isDouten: true,
     firstOya: Position.Bottom,
   );
   final InputDecoration _inputDecoration = InputDecoration(
@@ -66,21 +66,21 @@ class _SettingState extends State<Setting> {
   @override
   void initState() {
     super.initState();
-    editingSetting = widget.currentSetting ?? _tenhouSetting;
+    _editingSetting = widget.currentSetting ?? _tenhouSetting;
     _givenStartingPointController = TextEditingController(
-        text: editingSetting.givenStartingPoint.toString());
+        text: _editingSetting.givenStartingPoint.toString());
     _startingPointController =
-        TextEditingController(text: editingSetting.startingPoint.toString());
+        TextEditingController(text: _editingSetting.startingPoint.toString());
     _riichibouPointController =
-        TextEditingController(text: editingSetting.riichibouPoint.toString());
+        TextEditingController(text: _editingSetting.riichibouPoint.toString());
     _bonbaPointController =
-        TextEditingController(text: editingSetting.bonbaPoint.toString());
+        TextEditingController(text: _editingSetting.bonbaPoint.toString());
     _ryukyokuPointController =
-        TextEditingController(text: editingSetting.ryukyokuPoint.toString());
+        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
     _umaBigController =
-        TextEditingController(text: editingSetting.umaBig.toString());
+        TextEditingController(text: _editingSetting.umaBig.toString());
     _umaSmallController =
-        TextEditingController(text: editingSetting.umaSmall.toString());
+        TextEditingController(text: _editingSetting.umaSmall.toString());
   }
 
   @override
@@ -90,6 +90,37 @@ class _SettingState extends State<Setting> {
       "RMU A/B RULE": AppLocalizations.of(context).rmu,
       "tenhou": AppLocalizations.of(context).tenhou
     };
+
+    // TODO: update validator function
+    String _defaultValidator(String input) {
+      if (int.tryParse(input) == null) {
+        return AppLocalizations.of(context).errorInteger;
+      }
+      return null;
+    }
+
+    String _umaValidator(_) {
+      if (int.tryParse(_umaBigController.text) == null ||
+          int.tryParse(_umaSmallController.text) == null) {
+        return AppLocalizations.of(context).errorInteger;
+      } else if (int.tryParse(_umaBigController.text) <
+          int.tryParse(_umaSmallController.text)) {
+        return AppLocalizations.of(context).errorDecreasing;
+      }
+      return null;
+    }
+
+    void copySetting(SettingParameter setting) {
+      _givenStartingPointController.text =
+          setting.givenStartingPoint.toString();
+      _startingPointController.text = setting.startingPoint.toString();
+      _riichibouPointController.text = setting.riichibouPoint.toString();
+      _bonbaPointController.text = setting.bonbaPoint.toString();
+      _ryukyokuPointController.text = setting.ryukyokuPoint.toString();
+      _umaBigController.text = setting.umaBig.toString();
+      _umaSmallController.text = setting.umaSmall.toString();
+    }
+
     Widget RowInput(String name, Widget widget) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -109,24 +140,6 @@ class _SettingState extends State<Setting> {
       );
     }
 
-    // TODO: update validator function
-    String _defaultValidator(String val) {
-      if (int.tryParse(val) == null) {
-        return AppLocalizations.of(context).errorInteger;
-      }
-      return null;
-    }
-
-    String _umaValidator(String val) {
-      if (int.tryParse(_umaBigController.text) == null ||
-          int.tryParse(_umaSmallController.text) == null) {
-        return AppLocalizations.of(context).errorInteger;
-      } else if (int.tryParse(_umaBigController.text) <
-          int.tryParse(_umaSmallController.text)) {
-        return AppLocalizations.of(context).errorDecreasing;
-      }
-      return null;
-    }
 
     Widget TextInput(Function save, TextEditingController controller,
         [Function validator]) {
@@ -138,17 +151,6 @@ class _SettingState extends State<Setting> {
         controller: controller,
         validator: validator,
       );
-    }
-
-    void copySetting(SettingParameter setting) {
-      _givenStartingPointController.text =
-          setting.givenStartingPoint.toString();
-      _startingPointController.text = setting.startingPoint.toString();
-      _riichibouPointController.text = setting.riichibouPoint.toString();
-      _bonbaPointController.text = setting.bonbaPoint.toString();
-      _ryukyokuPointController.text = setting.ryukyokuPoint.toString();
-      _umaBigController.text = setting.umaBig.toString();
-      _umaSmallController.text = setting.umaSmall.toString();
     }
 
     return WillPopScope(
@@ -169,32 +171,33 @@ class _SettingState extends State<Setting> {
                   RowInput(
                       AppLocalizations.of(context).startingPoint,
                       TextInput(
-                              (val) =>
-                              editingSetting.startingPoint = int.tryParse(val),
+                          (String startingPoint) => _editingSetting
+                              .startingPoint = int.tryParse(startingPoint),
                           _startingPointController)),
                   RowInput(
                       AppLocalizations.of(context).givenStartingPoint,
                       TextInput(
-                              (val) => editingSetting.givenStartingPoint =
-                              int.tryParse(val),
+                          (String givenStartingPoint) =>
+                              _editingSetting.givenStartingPoint =
+                                  int.tryParse(givenStartingPoint),
                           _givenStartingPointController)),
                   RowInput(
                       AppLocalizations.of(context).riichibouPoint,
                       TextInput(
-                              (val) =>
-                              editingSetting.riichibouPoint = int.tryParse(val),
+                          (String riichibouPoint) => _editingSetting
+                              .riichibouPoint = int.tryParse(riichibouPoint),
                           _riichibouPointController)),
                   RowInput(
                       AppLocalizations.of(context).bonbaPoint,
                       TextInput(
-                              (val) =>
-                              editingSetting.bonbaPoint = int.tryParse(val),
+                          (String bonbaPoint) => _editingSetting.bonbaPoint =
+                              int.tryParse(bonbaPoint),
                           _bonbaPointController)),
                   RowInput(
                       AppLocalizations.of(context).ryukyokuPoint,
                       TextInput(
-                              (val) =>
-                              editingSetting.ryukyokuPoint = int.tryParse(val),
+                          (String ryukyokuPoint) => _editingSetting
+                              .ryukyokuPoint = int.tryParse(ryukyokuPoint),
                           _ryukyokuPointController)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +212,8 @@ class _SettingState extends State<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                                (val) => editingSetting.umaBig = int.tryParse(val),
+                                (String umaBig) =>
+                                _editingSetting.umaBig = int.tryParse(umaBig),
                             _umaBigController,
                             _umaValidator),
                       ),
@@ -217,8 +221,8 @@ class _SettingState extends State<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                                (val) =>
-                                editingSetting.umaSmall = int.tryParse(val),
+                            (String umaSmall) => _editingSetting.umaSmall =
+                                int.tryParse(umaSmall),
                             _umaSmallController,
                             _umaValidator),
                       ),
@@ -241,15 +245,15 @@ class _SettingState extends State<Setting> {
                                   child: Text(positionText.value),
                                   value: positionText.key))
                               .toList(),
-                          value: editingSetting.firstOya,
+                          value: _editingSetting.firstOya,
                           decoration: _inputDecoration,
-                          onChanged: (val) {
+                          onChanged: (Position firstOya) {
                             setState(() {
-                              editingSetting.firstOya = val;
+                              _editingSetting.firstOya = firstOya;
                             });
                           },
-                          onSaved: (val) {
-                            editingSetting.firstOya = val;
+                          onSaved: (Position firstOya) {
+                            _editingSetting.firstOya = firstOya;
                           },
                         ),
                       ),
@@ -258,10 +262,11 @@ class _SettingState extends State<Setting> {
                   Center(
                     child: SizedBox(
                       width: 350.0,
-                      child: CustomCheckBoxTile(editingSetting.kiriage,
-                          AppLocalizations.of(context).kiriage, (val) {
+                      child: CustomCheckBoxTile(_editingSetting.isKiriage,
+                          AppLocalizations.of(context).kiriage,
+                          (bool isKiriage) {
                         setState(() {
-                          editingSetting.kiriage = val;
+                          _editingSetting.isKiriage = isKiriage;
                         });
                       }),
                     ),
@@ -269,10 +274,11 @@ class _SettingState extends State<Setting> {
                   Center(
                     child: SizedBox(
                       width: 350.0,
-                      child: CustomCheckBoxTile(editingSetting.douten,
-                          AppLocalizations.of(context).samePoint, (val) {
+                      child: CustomCheckBoxTile(_editingSetting.isDouten,
+                          AppLocalizations.of(context).samePoint,
+                          (bool isDouten) {
                         setState(() {
-                          editingSetting.douten = val;
+                          _editingSetting.isDouten = isDouten;
                         });
                       }),
                     ),
@@ -303,23 +309,23 @@ class _SettingState extends State<Setting> {
                     }).toList();
                   },
                   child: Text(AppLocalizations.of(context).usualSetting),
-                  onSelected: (string) {
-                    switch (string) {
+                  onSelected: (setting) {
+                    switch (setting) {
                       case "currentSetting":
                         setState(() {
-                          editingSetting = widget.currentSetting;
+                          _editingSetting = widget.currentSetting;
                           copySetting(widget.currentSetting);
                         });
                         break;
                       case "RMU A/B RULE":
                         setState(() {
-                          editingSetting = _RMUSetting;
+                          _editingSetting = _RMUSetting;
                           copySetting(_RMUSetting);
                         });
                         break;
                       case "tenhou":
                         setState(() {
-                          editingSetting = _tenhouSetting;
+                          _editingSetting = _tenhouSetting;
                           copySetting(_tenhouSetting);
                         });
                         break;
@@ -332,13 +338,12 @@ class _SettingState extends State<Setting> {
               BaseBarButton(AppLocalizations.of(context).save, () {
                 if (_settingFormKey.currentState.validate()) {
                   _settingFormKey.currentState.save();
-                  widget.save(editingSetting);
+                  widget.save(_editingSetting);
                   Navigator.pop(context);
                 }
               }),
             ],
           ),
-          color: Colors.blue,
         ),
       ),
     );
@@ -353,8 +358,8 @@ class SettingParameter {
   int ryukyokuPoint;
   int umaSmall;
   int umaBig;
-  bool kiriage;
-  bool douten;
+  bool isKiriage;
+  bool isDouten;
   Position firstOya;
 
   SettingParameter({
@@ -365,8 +370,8 @@ class SettingParameter {
     this.ryukyokuPoint,
     this.umaBig,
     this.umaSmall,
-    this.kiriage,
-    this.douten,
+    this.isKiriage,
+    this.isDouten,
     this.firstOya,
   });
 
@@ -379,8 +384,8 @@ class SettingParameter {
       ryukyokuPoint: ryukyokuPoint,
       umaBig: umaBig,
       umaSmall: umaSmall,
-      kiriage: kiriage,
-      douten: douten,
+      isKiriage: isKiriage,
+      isDouten: isDouten,
       firstOya: firstOya,
     );
   }
@@ -393,8 +398,8 @@ class SettingParameter {
         ryukyokuPoint == other.ryukyokuPoint &&
         umaBig == other.umaBig &&
         umaSmall == other.umaSmall &&
-        kiriage == other.kiriage &&
-        douten == other.douten &&
+        isKiriage == other.isKiriage &&
+        isDouten == other.isDouten &&
         firstOya == other.firstOya;
   }
 }

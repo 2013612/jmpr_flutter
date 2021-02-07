@@ -10,7 +10,7 @@
   "language": "言語",
   "chooseALanguage": "言語を選んでください",
   "about": "アプリについて",
-  "version": "1.0 版本",
+  "version": "{version} 版本",
   "develop": "開発",
   "top": "対面",
   "bottom": "自家",
