@@ -30,8 +30,8 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  final Color _firstOyaColor = Colors.red[300];
-  final Color _nonFirstOyaColor = Colors.white;
+  final Color _firstOyaColor = Colors.yellow;
+  final Color _textColor = Colors.white;
   SettingParameter _currentSetting;
   PointSettingParameter _currentPointSetting;
   List<History> _histories = [];
@@ -443,9 +443,13 @@ class _LayoutState extends State<Layout> {
             AppLocalizations.of(context).pointVariation);
         excel.updateCell(sheetName, cell(4 + 3 * index, 1),
             AppLocalizations.of(context).currentPoint);
-        excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + topRow),
+        excel.updateCell(
+            sheetName,
+            cell(4 + 3 * index, endIndex - startIndex + topRow),
             _histories[endIndex].pointSetting.players[position(index)].point);
-        excel.updateCell(sheetName, cell(4 + 3 * index, endIndex + 1 + topRow),
+        excel.updateCell(
+            sheetName,
+            cell(4 + 3 * index, endIndex - startIndex + 1 + topRow),
             marks[position(index)]);
       });
       excel.updateCell(
@@ -471,16 +475,16 @@ class _LayoutState extends State<Layout> {
       }
 
       for (int i = startIndex; i < endIndex; i++) {
-        excel.updateCell(sheetName, cell(0, i + topRow),
+        excel.updateCell(sheetName, cell(0, i - startIndex + topRow),
             "${Constant.kyokus[_histories[i].pointSetting.currentKyoku]} ${_histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
         excel.updateCell(
             sheetName,
-            cell(1, i + topRow),
+            cell(1, i - startIndex + topRow),
             playerNames[Position.values[(_setting.firstOya.index +
                     _histories[i].pointSetting.currentKyoku) %
                 4]]);
-        List.generate(4, (index) => updateExcelKyoku(i, index));
-        excel.updateCell(sheetName, cell(14, i + topRow),
+        List.generate(4, (index) => updateExcelKyoku(i - startIndex, index));
+        excel.updateCell(sheetName, cell(14, i - startIndex + topRow),
             _histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
       }
 
@@ -516,7 +520,8 @@ class _LayoutState extends State<Layout> {
               style: TextStyle(
                 color: _currentSetting.firstOya == position
                     ? _firstOyaColor
-                    : _nonFirstOyaColor,
+                    : _textColor,
+                fontSize: 20.0,
               ),
             ),
             Spacer(
@@ -634,7 +639,7 @@ class _LayoutState extends State<Layout> {
       );
     }
 
-    Widget MyBaseAppBar() {
+    Widget MyBottomAppBar() {
       return BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -717,19 +722,22 @@ class _LayoutState extends State<Layout> {
                     Text(
                       Constant.kyokus[_currentPointSetting.currentKyoku],
                       style: TextStyle(
-                        color: _nonFirstOyaColor,
+                        color: _textColor,
+                        fontSize: 20.0,
                       ),
                     ),
                     Text(
                       "${_currentPointSetting.bonba} 本場",
                       style: TextStyle(
-                        color: _nonFirstOyaColor,
+                        color: _textColor,
+                        fontSize: 20.0,
                       ),
                     ),
                     Text(
                       "供托: ${_currentPointSetting.riichibou}",
                       style: TextStyle(
-                        color: _nonFirstOyaColor,
+                        color: _textColor,
+                        fontSize: 20.0,
                       ),
                     ),
                   ],
@@ -757,7 +765,7 @@ class _LayoutState extends State<Layout> {
             ],
           ),
         ),
-        bottomNavigationBar: MyBaseAppBar(),
+        bottomNavigationBar: MyBottomAppBar(),
       );
     } else {
       return Scaffold(
@@ -804,21 +812,24 @@ class _LayoutState extends State<Layout> {
                   Text(
                     Constant.kyokus[_currentPointSetting.currentKyoku],
                     style: TextStyle(
-                      color: _nonFirstOyaColor,
+                      color: _textColor,
+                      fontSize: 20.0,
                     ),
                   ),
                   Spacer(),
                   Text(
                     "${_currentPointSetting.bonba} 本場",
                     style: TextStyle(
-                      color: _nonFirstOyaColor,
+                      color: _textColor,
+                      fontSize: 20.0,
                     ),
                   ),
                   Spacer(),
                   Text(
                     "供托: ${_currentPointSetting.riichibou}",
                     style: TextStyle(
-                      color: _nonFirstOyaColor,
+                      color: _textColor,
+                      fontSize: 20.0,
                     ),
                   ),
                   Spacer(
@@ -833,12 +844,10 @@ class _LayoutState extends State<Layout> {
               onPressed: showResult,
               elevation: 1.0,
             ),
-            Spacer(
-              flex: 2,
-            ),
+            Spacer(),
           ],
         ),
-        bottomNavigationBar: MyBaseAppBar(),
+        bottomNavigationBar: MyBottomAppBar(),
       );
     }
   }
