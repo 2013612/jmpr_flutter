@@ -281,8 +281,8 @@
   "@spreadsheet": {
     "type": "text"
   },
-  "exportToSpreadsheet": "Export To Spreadsheet",
-  "@exportToSpreadsheet": {
+  "exportToXlsx": "Export To .xlsx",
+  "@exportToXlsx": {
     "type": "text"
   },
   "errorAtLeastTwoRecords": "At least two records are needed to export to a spreadsheet",

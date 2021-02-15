@@ -89,7 +89,7 @@ class _LayoutState extends State<Layout> {
       "pointSetting": AppLocalizations.of(context).pointSetting,
       "setting": AppLocalizations.of(context).setting,
       "history": AppLocalizations.of(context).history,
-      "exportToSpreadsheet": AppLocalizations.of(context).exportToSpreadsheet,
+      "exportToXlsx": AppLocalizations.of(context).exportToXlsx,
       "language": AppLocalizations.of(context).language,
       "about": AppLocalizations.of(context).about
     };
@@ -602,7 +602,7 @@ class _LayoutState extends State<Layout> {
                     ),
                   );
                   break;
-                case "exportToSpreadsheet":
+                case "exportToXlsx":
                   if (_histories.length < 2) {
                     Fluttertoast.showToast(
                         msg:
