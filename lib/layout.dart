@@ -1,23 +1,24 @@
 import 'dart:io';
 import 'dart:math';
+
 import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
-import 'package:jmpr_flutter/export_excel.dart';
-import 'package:jmpr_flutter/history.dart';
-import 'package:jmpr_flutter/languageDialog.dart';
-import 'package:jmpr_flutter/locale.dart';
-import 'package:jmpr_flutter/pointSetting.dart';
-import 'package:jmpr_flutter/ron.dart';
-import 'package:jmpr_flutter/ryukyoku.dart';
-import 'package:jmpr_flutter/setting.dart';
-import 'package:jmpr_flutter/common.dart';
-import 'package:jmpr_flutter/tsumo.dart';
-import 'package:jmpr_flutter/about.dart';
+import 'about.dart';
+import 'common.dart';
+import 'export_excel.dart';
+import 'history.dart';
+import 'languageDialog.dart';
+import 'locale.dart';
+import 'pointSetting.dart';
+import 'ron.dart';
+import 'ryukyoku.dart';
+import 'setting.dart';
+import 'tsumo.dart';
 
 class Layout extends StatefulWidget {
   final SetAppLocaleDelegate setAppLocaleDelegate;
@@ -34,7 +35,7 @@ class _LayoutState extends State<Layout> {
   final Color _textColor = Colors.white;
   SettingParameter _currentSetting;
   PointSettingParameter _currentPointSetting;
-  List<History> _histories = [];
+  final List<History> _histories = [];
   int _currentHistoryIndex = 0;
   String _language;
 
@@ -63,14 +64,14 @@ class _LayoutState extends State<Layout> {
       isDouten: false,
       firstOya: Position.Bottom,
     );
-    Map<Position, Player> players = Map();
-    Position.values.forEach((element) {
-      players[element] = Player(
-        position: element,
+    Map<Position, Player> players = {};
+    for (Position position in Position.values) {
+      players[position] = Player(
+        position: position,
         point: _currentSetting.givenStartingPoint,
         riichi: false,
       );
-    });
+    }
     _currentPointSetting = PointSettingParameter(
       players: players,
       currentKyoku: 0,
@@ -95,17 +96,17 @@ class _LayoutState extends State<Layout> {
     };
 
     void setRiichiFalse() {
-      Position.values.forEach((element) {
-        _currentPointSetting.players[element].riichi = false;
-      });
+      for (Position position in Position.values) {
+        _currentPointSetting.players[position].riichi = false;
+      }
     }
 
     void reset() {
-      Position.values.forEach((element) {
-        _currentPointSetting.players[element].riichi = false;
-        _currentPointSetting.players[element].point =
+      for (Position position in Position.values) {
+        _currentPointSetting.players[position].riichi = false;
+        _currentPointSetting.players[position].point =
             _currentSetting.givenStartingPoint;
-      });
+      }
       _currentPointSetting.currentKyoku = 0;
       _currentPointSetting.bonba = 0;
       _currentPointSetting.riichibou = 0;
@@ -171,10 +172,10 @@ class _LayoutState extends State<Layout> {
     }
 
     int calPoint(int han, int fu) {
-      int point = pow(2, han + 2) * fu;
+      int point = (pow(2, han + 2) * fu).toInt();
       if (point > 1920) {
         point = Constant.points[han];
-      } else if (point == 1920 && this._currentSetting.isKiriage) {
+      } else if (point == 1920 && _currentSetting.isKiriage) {
         point = 2000;
       }
       return point;
@@ -290,7 +291,7 @@ class _LayoutState extends State<Layout> {
         return Position.values[(_setting.firstOya.index + cal[index][1]) % 4];
       }
 
-      Position.values.forEach((position) {
+      for (Position position in Position.values) {
         cal.add([
           _pointSetting.players[position].point - _setting.startingPoint,
           (Position.values.indexOf(position) -
@@ -298,7 +299,7 @@ class _LayoutState extends State<Layout> {
                   4) %
               4,
         ]);
-      });
+      }
 
       cal.sort((List<int> a, List<int> b) {
         if (a[0] == b[0]) {
@@ -308,7 +309,7 @@ class _LayoutState extends State<Layout> {
         }
       });
 
-      Map<Position, double> marks = Map();
+      Map<Position, double> marks = {};
       double topBonus =
           4 * (_setting.startingPoint - _setting.givenStartingPoint) / 1000;
       if (_setting.isDouten) {
@@ -408,7 +409,7 @@ class _LayoutState extends State<Layout> {
         String fileName, String sheetName, Map<Position, String> playerNames) {
       Excel excel;
       try {
-        final bytes = File(join(folder, fileName + ".xlsx")).readAsBytesSync();
+        final bytes = File(join(folder, "$fileName.xlsx")).readAsBytesSync();
         excel = Excel.decodeBytes(bytes);
       } catch (exception) {
         print(exception);
@@ -488,32 +489,43 @@ class _LayoutState extends State<Layout> {
       }
 
       excel.encode().then((onValue) {
-        File(join(folder, fileName + ".xlsx"))
+        File(join(folder, "$fileName.xlsx"))
           ..createSync(recursive: true)
           ..writeAsBytesSync(onValue);
         Fluttertoast.showToast(
             msg: AppLocalizations.of(context).generateSuccess(fileName),
             backgroundColor: Colors.blue);
       }).catchError((error) => Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).error + ": $error",
+          msg: "${AppLocalizations.of(context).error}${": $error"}",
           backgroundColor: Colors.red));
     }
 
-    Widget PointAndRiichiSwitch(Position position) {
+    Widget pointAndRiichiSwitch(Position position) {
       String sittingText = Constant.sittingTexts[(position.index -
               (_currentSetting.firstOya.index +
                   _currentPointSetting.currentKyoku) +
               8) %
           4];
       return GestureDetector(
+        onTap: () {
+          setState(() {
+            if (!_currentPointSetting.players[position].riichi) {
+              _currentPointSetting.riichibou++;
+              _currentPointSetting.players[position].point -= 1000;
+              _currentPointSetting.players[position].riichi = true;
+            } else {
+              _currentPointSetting.riichibou--;
+              _currentPointSetting.players[position].point += 1000;
+              _currentPointSetting.players[position].riichi = false;
+            }
+          });
+        },
         child: Column(
           children: [
             Spacer(),
-            Container(
-              child: Image.asset(_currentPointSetting.players[position].riichi
-                  ? "assets/riichibou.png"
-                  : "assets/no_riichibou.png"),
-            ),
+            Image.asset(_currentPointSetting.players[position].riichi
+                ? "assets/riichibou.png"
+                : "assets/no_riichibou.png"),
             Text(
               "$sittingText ${_currentPointSetting.players[position].point}",
               style: TextStyle(
@@ -528,23 +540,10 @@ class _LayoutState extends State<Layout> {
             ),
           ],
         ),
-        onTap: () {
-          setState(() {
-            if (!_currentPointSetting.players[position].riichi) {
-              _currentPointSetting.riichibou++;
-              _currentPointSetting.players[position].point -= 1000;
-              _currentPointSetting.players[position].riichi = true;
-            } else {
-              _currentPointSetting.riichibou--;
-              _currentPointSetting.players[position].point += 1000;
-              _currentPointSetting.players[position].riichi = false;
-            }
-          });
-        },
       );
     }
 
-    Widget MyAppBar() {
+    PreferredSizeWidget myAppBar() {
       return AppBar(
         title: FittedBox(
           child: Text(AppLocalizations.of(context).appTitle),
@@ -641,7 +640,7 @@ class _LayoutState extends State<Layout> {
       );
     }
 
-    Widget MyBottomAppBar() {
+    Widget myBottomAppBar() {
       return BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -678,9 +677,7 @@ class _LayoutState extends State<Layout> {
                     ),
                     FlatButton(
                       onPressed: () {
-                        setState(() {
-                          reset();
-                        });
+                        setState(reset);
                         Navigator.pop(context);
                       },
                       child: Text("OK"),
@@ -697,7 +694,7 @@ class _LayoutState extends State<Layout> {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return Scaffold(
         backgroundColor: Colors.green,
-        appBar: MyAppBar(),
+        appBar: myAppBar(),
         body: Center(
           child: GridView.count(
             shrinkWrap: true,
@@ -707,14 +704,14 @@ class _LayoutState extends State<Layout> {
               Center(
                 child: RotatedBox(
                   quarterTurns: 2,
-                  child: PointAndRiichiSwitch(Position.Top),
+                  child: pointAndRiichiSwitch(Position.Top),
                 ),
               ),
               EmptyGrid(),
               Center(
                 child: RotatedBox(
                   quarterTurns: 1,
-                  child: PointAndRiichiSwitch(Position.Left),
+                  child: pointAndRiichiSwitch(Position.Left),
                 ),
               ),
               Center(
@@ -748,38 +745,38 @@ class _LayoutState extends State<Layout> {
               Center(
                 child: RotatedBox(
                   quarterTurns: 3,
-                  child: PointAndRiichiSwitch(Position.Right),
+                  child: pointAndRiichiSwitch(Position.Right),
                 ),
               ),
               EmptyGrid(),
               Center(
-                child: PointAndRiichiSwitch(Position.Bottom),
+                child: pointAndRiichiSwitch(Position.Bottom),
               ),
               FractionallySizedBox(
                 heightFactor: 0.3,
                 widthFactor: 0.6,
                 child: RaisedButton(
-                  child: Text(AppLocalizations.of(context).result),
                   onPressed: showResult,
                   elevation: 1.0,
+                  child: Text(AppLocalizations.of(context).result),
                 ),
               ),
             ],
           ),
         ),
-        bottomNavigationBar: MyBottomAppBar(),
+        bottomNavigationBar: myBottomAppBar(),
       );
     } else {
       return Scaffold(
         backgroundColor: Colors.green,
-        appBar: MyAppBar(),
+        appBar: myAppBar(),
         body: Row(
           children: [
             Spacer(),
             Flexible(
               child: RotatedBox(
                 quarterTurns: 1,
-                child: PointAndRiichiSwitch(Position.Left),
+                child: pointAndRiichiSwitch(Position.Left),
               ),
             ),
             Column(
@@ -788,19 +785,19 @@ class _LayoutState extends State<Layout> {
                 Flexible(
                   child: RotatedBox(
                     quarterTurns: 2,
-                    child: PointAndRiichiSwitch(Position.Top),
+                    child: pointAndRiichiSwitch(Position.Top),
                   ),
                 ),
                 Spacer(
                   flex: 3,
                 ),
-                Flexible(child: PointAndRiichiSwitch(Position.Bottom)),
+                Flexible(child: pointAndRiichiSwitch(Position.Bottom)),
               ],
             ),
             Flexible(
               child: RotatedBox(
                 quarterTurns: 3,
-                child: PointAndRiichiSwitch(Position.Right),
+                child: pointAndRiichiSwitch(Position.Right),
               ),
             ),
             Spacer(),
@@ -842,14 +839,14 @@ class _LayoutState extends State<Layout> {
             ),
             Spacer(),
             RaisedButton(
-              child: Text(AppLocalizations.of(context).result),
               onPressed: showResult,
               elevation: 1.0,
+              child: Text(AppLocalizations.of(context).result),
             ),
             Spacer(),
           ],
         ),
-        bottomNavigationBar: MyBottomAppBar(),
+        bottomNavigationBar: myBottomAppBar(),
       );
     }
   }
