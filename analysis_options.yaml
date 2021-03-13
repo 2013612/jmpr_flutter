@@ -1,0 +1,38 @@
+include: package:effective_dart/analysis_options.yaml
+
+analyzer:
+  exclude: [build/**, l10n/**]
+  strong-mode:
+    implicit-casts: false
+
+linter:
+  rules:
+    camel_case_types: true
+    public_member_api_docs: false
+    omit_local_variable_types: false
+    avoid_types_on_closure_parameters: false
+    lines_longer_than_80_chars: false
+    empty_statements: true
+    literal_only_boolean_expressions: true
+    no_duplicate_case_values: true
+    no_logic_in_create_state: true
+    prefer_void_to_null: true
+    unrelated_type_equality_checks: true
+    unsafe_html: true
+    valid_regexps: true
+    always_declare_return_types: true
+    always_require_non_null_named_parameters: true
+    annotate_overrides: true
+    avoid_bool_literals_in_conditional_expressions: true
+    avoid_single_cascade_in_expression_statements: true
+    avoid_unnecessary_containers: true
+    await_only_futures: true
+    prefer_conditional_assignment: true
+    prefer_contains: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_if_null_operators: true
+    prefer_spread_collections: true
+    sort_child_properties_last: true
+    unawaited_futures: true
+    unnecessary_null_in_if_null_operators: true
+    use_full_hex_values_for_flutter_colors: true
