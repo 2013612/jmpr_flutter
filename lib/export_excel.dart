@@ -7,9 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:jmpr_flutter/history.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import 'common.dart';
+import 'history.dart';
 
 class ChooseHistory extends StatefulWidget {
   final List<History> histories;
@@ -105,7 +106,7 @@ class _ChooseHistoryState extends State<ChooseHistory> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => userInput(
+                    builder: (context) => UserInput(
                       (String folder, String fileName, String sheetName,
                           Map<Position, String> playerNames) {
                         widget.next(
@@ -129,26 +130,27 @@ class _ChooseHistoryState extends State<ChooseHistory> {
   }
 }
 
-class userInput extends StatefulWidget {
-  Function save;
+class UserInput extends StatefulWidget {
+  final Function save;
 
-  userInput(this.save);
+  UserInput(this.save);
 
   @override
-  _userInputState createState() => _userInputState();
+  _UserInputState createState() => _UserInputState();
 }
 
-class _userInputState extends State<userInput> {
+class _UserInputState extends State<UserInput> {
   final _userInputFormKey = GlobalKey<FormState>();
   final TextEditingController _folderController = TextEditingController();
-  final Map<Position, String> playerNames = Map();
+  final Map<Position, String> playerNames = {};
   String folder, fileName, sheetName;
 
   @override
   void initState() {
     super.initState();
-    Position.values.forEach(
-        (element) => playerNames[element] = Constant.positionTexts[element]);
+    for (Position position in Position.values) {
+      playerNames[position] = Constant.positionTexts[position];
+    }
   }
 
   @override
@@ -163,7 +165,7 @@ class _userInputState extends State<userInput> {
           height: 0.0,
         ));
 
-    Widget RowInput(String name, Widget widget, [IconData icon]) {
+    Widget rowInput(String name, Widget widget, [IconData icon]) {
       Widget child;
       if (icon != null) {
         child = Row(
@@ -191,7 +193,8 @@ class _userInputState extends State<userInput> {
       );
     }
 
-    Widget TextInput(String initialValue, Function save, [Function validator]) {
+    Widget textInput(String initialValue, void Function(String) save,
+        [String Function(String) validator]) {
       validator ??= (val) => null;
       return TextFormField(
         initialValue: initialValue,
@@ -201,10 +204,10 @@ class _userInputState extends State<userInput> {
       );
     }
 
-    Widget PositionPointSetting(Position position) {
-      return RowInput(
+    Widget positionPointSetting(Position position) {
+      return rowInput(
         Constant.positionTexts[position],
-        TextInput(playerNames[position],
+        textInput(playerNames[position],
             (String name) => playerNames[position] = name),
         Constant.arrows[position],
       );
@@ -223,10 +226,8 @@ class _userInputState extends State<userInput> {
             child: ListView(
               shrinkWrap: true,
               children: [
-                ...Position.values
-                    .map((position) => PositionPointSetting(position))
-                    .toList(),
-                RowInput(
+                ...Position.values.map(positionPointSetting).toList(),
+                rowInput(
                     AppLocalizations.of(context).folder,
                     TextFormField(
                       readOnly: true,
@@ -250,13 +251,13 @@ class _userInputState extends State<userInput> {
                           path != null && path != "" ? null : "",
                       decoration: _inputDecoration,
                     )),
-                RowInput(
+                rowInput(
                   AppLocalizations.of(context).file,
                   Row(
                     children: [
                       Flexible(
-                        child: TextInput(
-                            AppLocalizations.of(context).spreadsheet + "1",
+                        child: textInput(
+                            "${AppLocalizations.of(context).spreadsheet}1",
                             (String name) => fileName = name,
                             (String name) =>
                                 name != null && name != "" ? null : ""),
@@ -265,10 +266,10 @@ class _userInputState extends State<userInput> {
                     ],
                   ),
                 ),
-                RowInput(
+                rowInput(
                     AppLocalizations.of(context).sheet,
-                    TextInput(
-                        AppLocalizations.of(context).sheet + "1",
+                    textInput(
+                        "${AppLocalizations.of(context).sheet}1",
                         (String name) => sheetName = name,
                         (String name) =>
                             name != null && name != "" ? null : "")),
@@ -278,6 +279,7 @@ class _userInputState extends State<userInput> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        color: Colors.blue,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -292,7 +294,6 @@ class _userInputState extends State<userInput> {
             }),
           ],
         ),
-        color: Colors.blue,
       ),
     );
   }

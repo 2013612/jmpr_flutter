@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
-import 'package:jmpr_flutter/exportExcel.dart';
+import 'package:jmpr_flutter/export_excel.dart';
 import 'package:jmpr_flutter/history.dart';
 import 'package:jmpr_flutter/languageDialog.dart';
 import 'package:jmpr_flutter/locale.dart';
@@ -91,7 +91,7 @@ class _LayoutState extends State<Layout> {
       "history": AppLocalizations.of(context).history,
       "exportToXlsx": AppLocalizations.of(context).exportToXlsx,
       "language": AppLocalizations.of(context).language,
-      "about": AppLocalizations.of(context).about
+      "about": AppLocalizations.of(context).about,
     };
 
     void setRiichiFalse() {
@@ -133,10 +133,14 @@ class _LayoutState extends State<Layout> {
       });
     }
 
-    void updatePlayerPointTsumo(int point, Position position) {
-      Position oya = Position.values[
+    Position currentOya() {
+      return Position.values[
           (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
               4];
+    }
+
+    void updatePlayerPointTsumo(int point, Position position) {
+      Position oya = currentOya();
       if (position == oya) {
         point *= 2;
       }
@@ -178,9 +182,7 @@ class _LayoutState extends State<Layout> {
 
     void saveTsumo(Position tsumoPlayer, int han, int fu) {
       int point = calPoint(han, fu);
-      Position oya = Position.values[
-          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
-              4];
+      Position oya = currentOya();
       setState(() {
         updatePlayerPointTsumo(point, tsumoPlayer);
         if (tsumoPlayer == oya) {
@@ -197,9 +199,7 @@ class _LayoutState extends State<Layout> {
 
     void saveRon(Position ronedPlayer, Map<Position, bool> ronPlayers,
         Map<Position, int> hans, Map<Position, int> fus) {
-      Position oya = Position.values[
-          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
-              4];
+      Position oya = currentOya();
       setState(() {
         int nearIndex = 100;
         ronPlayers.forEach((key, value) {
@@ -235,7 +235,8 @@ class _LayoutState extends State<Layout> {
       });
     }
 
-    void saveRyukyoku(Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
+    void saveRyukyoku(
+        Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
       int numOfTenpai = 0;
       int numOfNagashimagan = 0;
       tenpai.forEach((key, value) {
@@ -244,9 +245,7 @@ class _LayoutState extends State<Layout> {
       nagashimangan.forEach((key, value) {
         if (value) numOfNagashimagan++;
       });
-      Position oya = Position.values[
-          (_currentSetting.firstOya.index + _currentPointSetting.currentKyoku) %
-              4];
+      Position oya = currentOya();
       setState(() {
         if (numOfNagashimagan > 0) {
           int bonba = _currentPointSetting.bonba;
@@ -605,28 +604,31 @@ class _LayoutState extends State<Layout> {
                 case "exportToXlsx":
                   if (_histories.length < 2) {
                     Fluttertoast.showToast(
-                        msg:
-                            AppLocalizations.of(context).errorAtLeastTwoRecords,
-                        backgroundColor: Colors.red);
+                      msg: AppLocalizations.of(context).errorAtLeastTwoRecords,
+                      backgroundColor: Colors.red,
+                    );
                     return;
                   }
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ChooseHistory(
-                              histories: _histories,
-                              next: generateExcel,
-                            )),
+                      builder: (context) => ChooseHistory(
+                        histories: _histories,
+                        next: generateExcel,
+                      ),
+                    ),
                   );
                   break;
                 case "history":
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HistoryPage(
-                                histories: _histories,
-                                goTo: goToHistory,
-                              )));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HistoryPage(
+                        histories: _histories,
+                        goTo: goToHistory,
+                      ),
+                    ),
+                  );
                   break;
                 case "about":
                   Navigator.push(context,
