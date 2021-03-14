@@ -29,15 +29,15 @@ class _RonPointState extends State<RonPoint> {
   @override
   void initState() {
     super.initState();
-    _hans = Map();
-    _fus = Map();
-    Position.values.forEach((element) {
-      _hans[element] = 1;
-      _fus[element] = 30;
-    });
+    _hans = {};
+    _fus = {};
+    for (Position position in Position.values) {
+      _hans[position] = 1;
+      _fus[position] = 30;
+    }
   }
 
-  Widget PlayerPoint(Position position) {
+  Widget playerPoint(Position position) {
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: 8.0,
@@ -55,8 +55,8 @@ class _RonPointState extends State<RonPoint> {
                 child: DropdownButton<String>(
                   items: Constant.hans
                       .map((han) => DropdownMenuItem(
+                    value: han.toString(),
                             child: Text(han.toString()),
-                            value: han.toString(),
                           ))
                       .toList(),
                   value: _hans[position].toString(),
@@ -84,8 +84,8 @@ class _RonPointState extends State<RonPoint> {
                 child: DropdownButton<String>(
                   items: Constant.fus
                       .map((fu) => DropdownMenuItem(
+                    value: fu.toString(),
                             child: Text(fu.toString()),
-                            value: fu.toString(),
                           ))
                       .toList(),
                   value: _fus[position].toString(),
@@ -125,7 +125,7 @@ class _RonPointState extends State<RonPoint> {
             children: widget.isRonPlayers.entries
                 .map((isRonPlayer) {
                   if (isRonPlayer.value) {
-                    return PlayerPoint(isRonPlayer.key);
+                    return playerPoint(isRonPlayer.key);
                   }
                 })
                 .toList()
