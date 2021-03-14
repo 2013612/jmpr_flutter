@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jmpr_flutter/ronPoint.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
+import 'ronPoint.dart';
 
 class Ron extends StatefulWidget {
   final Function next;
@@ -21,18 +21,18 @@ class _RonState extends State<Ron> {
   void initState() {
     super.initState();
     _ronedPlayer = Position.Bottom;
-    _isRonPlayers = Map();
-    Position.values.forEach((element) {
-      _isRonPlayers[element] = false;
-    });
+    _isRonPlayers = {};
+    for (Position position in Position.values) {
+      _isRonPlayers[position] = false;
+    }
   }
 
-  Widget RonedPlayerRadioListTile(Position position) {
+  Widget ronedPlayerRadioListTile(Position position) {
     return FlexibleCustomRadioTile(
       position,
       _ronedPlayer,
       Constant.positionTexts[position],
-      (val) {
+      (Position val) {
         setState(() {
           _ronedPlayer = val;
         });
@@ -41,11 +41,11 @@ class _RonState extends State<Ron> {
     );
   }
 
-  Widget RonCheckboxListTile(Position position) {
+  Widget ronCheckboxListTile(Position position) {
     return FlexibleCustomCheckBoxTile(
       _isRonPlayers[position],
       Constant.positionTexts[position],
-      (val) {
+      (bool val) {
         setState(() {
           _isRonPlayers[position] = val;
         });
@@ -73,33 +73,34 @@ class _RonState extends State<Ron> {
               Text(AppLocalizations.of(context).lose),
               Row(
                 children: [
-                  RonedPlayerRadioListTile(Position.Bottom),
-                  RonedPlayerRadioListTile(Position.Right),
+                  ronedPlayerRadioListTile(Position.Bottom),
+                  ronedPlayerRadioListTile(Position.Right),
                 ],
               ),
               Row(
                 children: [
-                  RonedPlayerRadioListTile(Position.Top),
-                  RonedPlayerRadioListTile(Position.Left),
+                  ronedPlayerRadioListTile(Position.Top),
+                  ronedPlayerRadioListTile(Position.Left),
                 ],
               ),
               Text(AppLocalizations.of(context).win),
               Row(
                 children: [
-                  RonCheckboxListTile(Position.Bottom),
-                  RonCheckboxListTile(Position.Right),
+                  ronCheckboxListTile(Position.Bottom),
+                  ronCheckboxListTile(Position.Right),
                 ],
               ),
               Row(
                 children: [
-                  RonCheckboxListTile(Position.Top),
-                  RonCheckboxListTile(Position.Left),
+                  ronCheckboxListTile(Position.Top),
+                  ronCheckboxListTile(Position.Left),
                 ],
               ),
             ],
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          color: Colors.blue,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -109,25 +110,29 @@ class _RonState extends State<Ron> {
                 if (!_isRonPlayers.values
                     .reduce((value, element) => value || element)) {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(AppLocalizations.of(context).error),
-                          content: Text(
-                              AppLocalizations.of(context).errorAtLeastOneWin),
-                        );
-                      });
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(AppLocalizations.of(context).error),
+                        content: Text(
+                          AppLocalizations.of(context).errorAtLeastOneWin,
+                        ),
+                      );
+                    },
+                  );
                   return;
                 } else if (_isRonPlayers[_ronedPlayer]) {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(AppLocalizations.of(context).error),
-                          content: Text(
-                              AppLocalizations.of(context).errorSamePlayer),
-                        );
-                      });
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(AppLocalizations.of(context).error),
+                        content: Text(
+                          AppLocalizations.of(context).errorSamePlayer,
+                        ),
+                      );
+                    },
+                  );
                   return;
                 }
                 Navigator.push(
@@ -145,7 +150,6 @@ class _RonState extends State<Ron> {
               }),
             ],
           ),
-          color: Colors.blue,
         ),
       ),
     );
