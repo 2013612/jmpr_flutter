@@ -24,7 +24,7 @@ class About extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context).develop + ": 2013612"),
+            child: Text("${AppLocalizations.of(context).develop}: 2013612"),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
