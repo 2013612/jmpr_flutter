@@ -24,7 +24,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
 
   @override
   Widget build(BuildContext context) {
-    Widget LanguageRadioListTile(String lang) {
+    Widget languageRadioListTile(String lang) {
       return RadioListTile<String>(
         value: lang,
         title: Text(languageText[lang]),
@@ -43,9 +43,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
       title: Text(AppLocalizations.of(context).chooseALanguage),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: languageText.keys
-            .map((lang) => LanguageRadioListTile(lang))
-            .toList(),
+        children: languageText.keys.map(languageRadioListTile).toList(),
       ),
       actions: [
         FlatButton(

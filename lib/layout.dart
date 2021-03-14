@@ -12,7 +12,7 @@ import 'about.dart';
 import 'common.dart';
 import 'export_excel.dart';
 import 'history.dart';
-import 'languageDialog.dart';
+import 'language_dialog.dart';
 import 'locale.dart';
 import 'pointSetting.dart';
 import 'ron.dart';
