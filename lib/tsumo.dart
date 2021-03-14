@@ -35,12 +35,12 @@ class _TsumoState extends State<Tsumo> {
 
   @override
   Widget build(BuildContext context) {
-    Widget TsumoPlayerRadioListTile(Position position) {
+    Widget tsumoPlayerRadioListTile(Position position) {
       return FlexibleCustomRadioTile(
         position,
         _tsumoPlayer,
         Constant.positionTexts[position],
-        (val) {
+        (Position val) {
           setState(() {
             _tsumoPlayer = val;
           });
@@ -66,14 +66,14 @@ class _TsumoState extends State<Tsumo> {
               Text(AppLocalizations.of(context).tsumo),
               Row(
                 children: [
-                  TsumoPlayerRadioListTile(Position.Bottom),
-                  TsumoPlayerRadioListTile(Position.Right),
+                  tsumoPlayerRadioListTile(Position.Bottom),
+                  tsumoPlayerRadioListTile(Position.Right),
                 ],
               ),
               Row(
                 children: [
-                  TsumoPlayerRadioListTile(Position.Top),
-                  TsumoPlayerRadioListTile(Position.Left),
+                  tsumoPlayerRadioListTile(Position.Top),
+                  tsumoPlayerRadioListTile(Position.Left),
                 ],
               ),
               Row(
@@ -86,8 +86,8 @@ class _TsumoState extends State<Tsumo> {
                         child: DropdownButton<String>(
                           items: Constant.hans
                               .map((han) => DropdownMenuItem(
+                            value: han.toString(),
                                     child: Text(han.toString()),
-                                    value: han.toString(),
                                   ))
                               .toList(),
                           value: _han.toString(),
@@ -115,8 +115,8 @@ class _TsumoState extends State<Tsumo> {
                         child: DropdownButton<String>(
                           items: Constant.fus
                               .map((fu) => DropdownMenuItem(
+                            value: fu.toString(),
                                     child: Text(fu.toString()),
-                                    value: fu.toString(),
                                   ))
                               .toList(),
                           value: _fu.toString(),
