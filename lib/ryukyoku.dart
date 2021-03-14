@@ -19,36 +19,36 @@ class _RyokyokuState extends State<Ryukyoku> {
   @override
   void initState() {
     super.initState();
-    _tenpai = Map();
-    _nagashimangan = Map();
-    Position.values.forEach((element) {
-      _tenpai[element] = false;
-      _nagashimangan[element] = false;
-    });
+    _tenpai = {};
+    _nagashimangan = {};
+    for (Position position in Position.values) {
+      _tenpai[position] = false;
+      _nagashimangan[position] = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget TenpaiCheckboxListTile(Position position) {
+    Widget tenpaiCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _tenpai[position],
         Constant.positionTexts[position],
-        (val) {
+        (bool isTenpai) {
           setState(() {
-            _tenpai[position] = val;
+            _tenpai[position] = isTenpai;
           });
         },
         Constant.arrows[position],
       );
     }
 
-    Widget NagashimanganCheckboxListTile(Position position) {
+    Widget nagashimanganCheckboxListTile(Position position) {
       return FlexibleCustomCheckBoxTile(
         _nagashimangan[position],
         Constant.positionTexts[position],
-        (val) {
+        (bool isNagashimangan) {
           setState(() {
-            _nagashimangan[position] = val;
+            _nagashimangan[position] = isNagashimangan;
           });
         },
         Constant.arrows[position],
@@ -72,27 +72,27 @@ class _RyokyokuState extends State<Ryukyoku> {
               Text(AppLocalizations.of(context).tenpai),
               Row(
                 children: [
-                  TenpaiCheckboxListTile(Position.Bottom),
-                  TenpaiCheckboxListTile(Position.Right),
+                  tenpaiCheckboxListTile(Position.Bottom),
+                  tenpaiCheckboxListTile(Position.Right),
                 ],
               ),
               Row(
                 children: [
-                  TenpaiCheckboxListTile(Position.Top),
-                  TenpaiCheckboxListTile(Position.Left),
+                  tenpaiCheckboxListTile(Position.Top),
+                  tenpaiCheckboxListTile(Position.Left),
                 ],
               ),
               Text(AppLocalizations.of(context).nagashimangan),
               Row(
                 children: [
-                  NagashimanganCheckboxListTile(Position.Bottom),
-                  NagashimanganCheckboxListTile(Position.Right),
+                  nagashimanganCheckboxListTile(Position.Bottom),
+                  nagashimanganCheckboxListTile(Position.Right),
                 ],
               ),
               Row(
                 children: [
-                  NagashimanganCheckboxListTile(Position.Top),
-                  NagashimanganCheckboxListTile(Position.Left),
+                  nagashimanganCheckboxListTile(Position.Top),
+                  nagashimanganCheckboxListTile(Position.Left),
                 ],
               ),
             ],
