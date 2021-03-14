@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
-import 'pointSetting.dart';
+import 'point_setting.dart';
 import 'setting.dart';
 
 class HistoryPage extends StatelessWidget {

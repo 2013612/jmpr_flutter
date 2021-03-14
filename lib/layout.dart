@@ -14,7 +14,7 @@ import 'export_excel.dart';
 import 'history.dart';
 import 'language_dialog.dart';
 import 'locale.dart';
-import 'pointSetting.dart';
+import 'point_setting.dart';
 import 'ron.dart';
 import 'ryukyoku.dart';
 import 'setting.dart';

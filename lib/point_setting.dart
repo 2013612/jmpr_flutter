@@ -27,11 +27,11 @@ class _PointSettingState extends State<PointSetting> {
   void initState() {
     super.initState();
     _currentPointSetting = widget.currentPointSetting;
-    _positionControllers = Map();
-    Position.values.forEach((position) {
+    _positionControllers = {};
+    for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
           text: _currentPointSetting.players[position].point.toString());
-    });
+    }
     _bonbaController =
         TextEditingController(text: _currentPointSetting.bonba.toString());
     _riichibouController =
@@ -64,15 +64,15 @@ class _PointSettingState extends State<PointSetting> {
     }
 
     void copyPointSetting(PointSettingParameter pointSettingParameter) {
-      Position.values.forEach((position) {
+      for (Position position in Position.values) {
         _positionControllers[position].text =
             pointSettingParameter.players[position].point.toString();
-      });
+      }
       _bonbaController.text = pointSettingParameter.bonba.toString();
       _riichibouController.text = pointSettingParameter.riichibou.toString();
     }
 
-    Widget RowInput(String name, Widget widget, [IconData icon]) {
+    Widget rowInput(String name, Widget widget, [IconData icon]) {
       Widget child;
       if (icon != null) {
         child = Row(
@@ -100,7 +100,8 @@ class _PointSettingState extends State<PointSetting> {
       );
     }
 
-    Widget TextInput(Function save, TextEditingController controller, Function validator) {
+    Widget textInput(void Function(String) save,
+        TextEditingController controller, String Function(String) validator) {
       return TextFormField(
         keyboardType: TextInputType.numberWithOptions(signed: true),
         decoration: _inputDecoration,
@@ -110,11 +111,11 @@ class _PointSettingState extends State<PointSetting> {
       );
     }
 
-    Widget DropdownInput() {
+    Widget dropdownInput() {
       return DropdownButtonFormField<String>(
         items: Constant.kyokus
             .map((String kyoku) =>
-                DropdownMenuItem<String>(child: Text(kyoku), value: kyoku))
+                DropdownMenuItem<String>(value: kyoku, child: Text(kyoku)))
             .toList(),
         value: Constant.kyokus[_currentPointSetting.currentKyoku],
         decoration: _inputDecoration,
@@ -129,10 +130,10 @@ class _PointSettingState extends State<PointSetting> {
       );
     }
 
-    Widget PositionPointSetting(Position position) {
-      return RowInput(
+    Widget positionPointSetting(Position position) {
+      return rowInput(
           Constant.positionTexts[position],
-          TextInput(
+          textInput(
               (String point) => _currentPointSetting.players[position].point =
                   int.tryParse(point),
               _positionControllers[position],
@@ -155,24 +156,22 @@ class _PointSettingState extends State<PointSetting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  ...Position.values
-                      .map((position) => PositionPointSetting(position))
-                      .toList(),
-                  RowInput(
+                  ...Position.values.map(positionPointSetting).toList(),
+                  rowInput(
                     AppLocalizations.of(context).kyoku,
-                    DropdownInput(),
+                    dropdownInput(),
                   ),
-                  RowInput(
+                  rowInput(
                     AppLocalizations.of(context).bonba,
-                    TextInput(
+                    textInput(
                         (String bonba) =>
                             _currentPointSetting.bonba = int.tryParse(bonba),
                         _bonbaController,
                         _nonNegativeIntegerValidator),
                   ),
-                  RowInput(
+                  rowInput(
                     AppLocalizations.of(context).kyoutaku,
-                    TextInput(
+                    textInput(
                         (String kyoutaku) => _currentPointSetting.riichibou =
                             int.tryParse(kyoutaku),
                         _riichibouController,
@@ -239,7 +238,7 @@ class PointSettingParameter {
       {this.players, this.currentKyoku, this.bonba, this.riichibou});
 
   PointSettingParameter clone() {
-    Map<Position, Player> newPlayers = Map();
+    Map<Position, Player> newPlayers = {};
     players.forEach((key, value) {
       newPlayers[key] = value.clone();
     });
