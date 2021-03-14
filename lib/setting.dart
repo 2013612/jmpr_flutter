@@ -32,6 +32,8 @@ class _SettingState extends State<Setting> {
     isDouten: false,
     firstOya: Position.Bottom,
   );
+
+  // ignore: non_constant_identifier_names
   final SettingParameter _RMUSetting = SettingParameter(
     startingPoint: 30000,
     givenStartingPoint: 30000,
@@ -121,14 +123,14 @@ class _SettingState extends State<Setting> {
       _umaSmallController.text = setting.umaSmall.toString();
     }
 
-    Widget RowInput(String name, Widget widget) {
+    Widget rowInput(String name, Widget widget) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             width: 100,
             child: Text(
-              name + ":",
+              "$name:",
             ),
           ),
           Container(
@@ -140,9 +142,9 @@ class _SettingState extends State<Setting> {
       );
     }
 
-
-    Widget TextInput(Function save, TextEditingController controller,
-        [Function validator]) {
+    Widget textInput(
+        void Function(String) save, TextEditingController controller,
+        [String Function(String) validator]) {
       validator ??= _defaultValidator;
       return TextFormField(
         keyboardType: TextInputType.numberWithOptions(signed: true),
@@ -168,34 +170,34 @@ class _SettingState extends State<Setting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  RowInput(
+                  rowInput(
                       AppLocalizations.of(context).startingPoint,
-                      TextInput(
+                      textInput(
                           (String startingPoint) => _editingSetting
                               .startingPoint = int.tryParse(startingPoint),
                           _startingPointController)),
-                  RowInput(
+                  rowInput(
                       AppLocalizations.of(context).givenStartingPoint,
-                      TextInput(
+                      textInput(
                           (String givenStartingPoint) =>
                               _editingSetting.givenStartingPoint =
                                   int.tryParse(givenStartingPoint),
                           _givenStartingPointController)),
-                  RowInput(
+                  rowInput(
                       AppLocalizations.of(context).riichibouPoint,
-                      TextInput(
+                      textInput(
                           (String riichibouPoint) => _editingSetting
                               .riichibouPoint = int.tryParse(riichibouPoint),
                           _riichibouPointController)),
-                  RowInput(
+                  rowInput(
                       AppLocalizations.of(context).bonbaPoint,
-                      TextInput(
+                      textInput(
                           (String bonbaPoint) => _editingSetting.bonbaPoint =
                               int.tryParse(bonbaPoint),
                           _bonbaPointController)),
-                  RowInput(
+                  rowInput(
                       AppLocalizations.of(context).ryukyokuPoint,
-                      TextInput(
+                      textInput(
                           (String ryukyokuPoint) => _editingSetting
                               .ryukyokuPoint = int.tryParse(ryukyokuPoint),
                           _ryukyokuPointController)),
@@ -205,14 +207,14 @@ class _SettingState extends State<Setting> {
                       Container(
                         width: 100,
                         child: Text(
-                          AppLocalizations.of(context).uma + ":",
+                          "${AppLocalizations.of(context).uma}:",
                         ),
                       ),
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
-                        child: TextInput(
-                                (String umaBig) =>
+                        child: textInput(
+                            (String umaBig) =>
                                 _editingSetting.umaBig = int.tryParse(umaBig),
                             _umaBigController,
                             _umaValidator),
@@ -220,7 +222,7 @@ class _SettingState extends State<Setting> {
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
-                        child: TextInput(
+                        child: textInput(
                             (String umaSmall) => _editingSetting.umaSmall =
                                 int.tryParse(umaSmall),
                             _umaSmallController,
@@ -234,7 +236,7 @@ class _SettingState extends State<Setting> {
                       Container(
                         width: 100,
                         child:
-                            Text(AppLocalizations.of(context).firstOya + ":"),
+                            Text("${AppLocalizations.of(context).firstOya}:"),
                       ),
                       Container(
                         width: 200,
@@ -242,8 +244,9 @@ class _SettingState extends State<Setting> {
                         child: DropdownButtonFormField<Position>(
                           items: Constant.positionTexts.entries
                               .map((positionText) => DropdownMenuItem<Position>(
-                                  child: Text(positionText.value),
-                                  value: positionText.key))
+                                    value: positionText.key,
+                                    child: Text(positionText.value),
+                                  ))
                               .toList(),
                           value: _editingSetting.firstOya,
                           decoration: _inputDecoration,
@@ -308,7 +311,6 @@ class _SettingState extends State<Setting> {
                       );
                     }).toList();
                   },
-                  child: Text(AppLocalizations.of(context).usualSetting),
                   onSelected: (setting) {
                     switch (setting) {
                       case "currentSetting":
@@ -331,6 +333,7 @@ class _SettingState extends State<Setting> {
                         break;
                     }
                   },
+                  child: Text(AppLocalizations.of(context).usualSetting),
                 ),
               ),
               BaseBarButton(AppLocalizations.of(context).cancel,
