@@ -28,7 +28,7 @@ class _RonState extends State<Ron> {
   }
 
   Widget ronedPlayerRadioListTile(Position position) {
-    return FlexibleCustomRadioTile(
+    return flexibleCustomRadioTile(
       position,
       _ronedPlayer,
       Constant.positionTexts[position],
@@ -42,7 +42,7 @@ class _RonState extends State<Ron> {
   }
 
   Widget ronCheckboxListTile(Position position) {
-    return FlexibleCustomCheckBoxTile(
+    return flexibleCustomCheckBoxTile(
       _isRonPlayers[position],
       Constant.positionTexts[position],
       (bool val) {
@@ -104,9 +104,9 @@ class _RonState extends State<Ron> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton(AppLocalizations.of(context).cancel,
+              baseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
-              BaseBarButton(AppLocalizations.of(context).next, () {
+              baseBarButton(AppLocalizations.of(context).next, () {
                 if (!_isRonPlayers.values
                     .reduce((value, element) => value || element)) {
                   showDialog(

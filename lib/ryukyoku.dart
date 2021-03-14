@@ -30,7 +30,7 @@ class _RyokyokuState extends State<Ryukyoku> {
   @override
   Widget build(BuildContext context) {
     Widget tenpaiCheckboxListTile(Position position) {
-      return FlexibleCustomCheckBoxTile(
+      return flexibleCustomCheckBoxTile(
         _tenpai[position],
         Constant.positionTexts[position],
         (bool isTenpai) {
@@ -43,7 +43,7 @@ class _RyokyokuState extends State<Ryukyoku> {
     }
 
     Widget nagashimanganCheckboxListTile(Position position) {
-      return FlexibleCustomCheckBoxTile(
+      return flexibleCustomCheckBoxTile(
         _nagashimangan[position],
         Constant.positionTexts[position],
         (bool isNagashimangan) {
@@ -102,14 +102,14 @@ class _RyokyokuState extends State<Ryukyoku> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton(AppLocalizations.of(context).abortiveDraw, () {
+              baseBarButton(AppLocalizations.of(context).abortiveDraw, () {
                 setState(() {
                   _tenpai.updateAll((key, value) => _tenpai[key] = true);
                 });
               }),
-              BaseBarButton(AppLocalizations.of(context).cancel,
+              baseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
-              BaseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(AppLocalizations.of(context).save, () {
                 widget.save(_tenpai, _nagashimangan);
                 Navigator.pop(context);
               }),

@@ -137,9 +137,9 @@ class _RonPointState extends State<RonPoint> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton(AppLocalizations.of(context).cancel,
+              baseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
-              BaseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(AppLocalizations.of(context).save, () {
                 widget.save(_hans, _fus);
                 Navigator.pop(context);
               }),

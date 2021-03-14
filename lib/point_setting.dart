@@ -186,15 +186,15 @@ class _PointSettingState extends State<PointSetting> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton(
+              baseBarButton(
                 AppLocalizations.of(context).currentPointSetting,
                 () => copyPointSetting(widget.currentPointSetting),
               ),
-              BaseBarButton(
+              baseBarButton(
                 AppLocalizations.of(context).cancel,
                 () => Navigator.pop(context),
               ),
-              BaseBarButton(
+              baseBarButton(
                 AppLocalizations.of(context).save,
                 () {
                   if (_pointSettingFormKey.currentState.validate()) {

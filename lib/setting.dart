@@ -265,7 +265,7 @@ class _SettingState extends State<Setting> {
                   Center(
                     child: SizedBox(
                       width: 350.0,
-                      child: CustomCheckBoxTile(_editingSetting.isKiriage,
+                      child: customCheckBoxTile(_editingSetting.isKiriage,
                           AppLocalizations.of(context).kiriage,
                           (bool isKiriage) {
                         setState(() {
@@ -277,7 +277,7 @@ class _SettingState extends State<Setting> {
                   Center(
                     child: SizedBox(
                       width: 350.0,
-                      child: CustomCheckBoxTile(_editingSetting.isDouten,
+                      child: customCheckBoxTile(_editingSetting.isDouten,
                           AppLocalizations.of(context).samePoint,
                           (bool isDouten) {
                         setState(() {
@@ -336,9 +336,9 @@ class _SettingState extends State<Setting> {
                   child: Text(AppLocalizations.of(context).usualSetting),
                 ),
               ),
-              BaseBarButton(AppLocalizations.of(context).cancel,
+              baseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
-              BaseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(AppLocalizations.of(context).save, () {
                 if (_settingFormKey.currentState.validate()) {
                   _settingFormKey.currentState.save();
                   widget.save(_editingSetting);

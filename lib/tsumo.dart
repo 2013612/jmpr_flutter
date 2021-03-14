@@ -36,7 +36,7 @@ class _TsumoState extends State<Tsumo> {
   @override
   Widget build(BuildContext context) {
     Widget tsumoPlayerRadioListTile(Position position) {
-      return FlexibleCustomRadioTile(
+      return flexibleCustomRadioTile(
         position,
         _tsumoPlayer,
         Constant.positionTexts[position],
@@ -145,9 +145,9 @@ class _TsumoState extends State<Tsumo> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BaseBarButton(AppLocalizations.of(context).cancel,
+              baseBarButton(AppLocalizations.of(context).cancel,
                   () => Navigator.pop(context)),
-              BaseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(AppLocalizations.of(context).save, () {
                 widget.save(_tsumoPlayer, _han, _fu);
                 Navigator.pop(context);
               }),

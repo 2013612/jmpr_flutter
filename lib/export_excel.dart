@@ -85,9 +85,9 @@ class _ChooseHistoryState extends State<ChooseHistory> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BaseBarButton(AppLocalizations.of(context).cancel,
+            baseBarButton(AppLocalizations.of(context).cancel,
                 () => Navigator.pop(context)),
-            BaseBarButton(AppLocalizations.of(context).next, () {
+            baseBarButton(AppLocalizations.of(context).next, () {
               if (chosen.length < 2) {
                 Fluttertoast.showToast(
                     msg: AppLocalizations.of(context).errorExactTwoRecords,
@@ -283,9 +283,9 @@ class _UserInputState extends State<UserInput> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BaseBarButton(AppLocalizations.of(context).cancel,
+            baseBarButton(AppLocalizations.of(context).cancel,
                 () => Navigator.pop(context)),
-            BaseBarButton(AppLocalizations.of(context).save, () {
+            baseBarButton(AppLocalizations.of(context).save, () {
               if (_userInputFormKey.currentState.validate()) {
                 _userInputFormKey.currentState.save();
                 widget.save(folder, fileName, sheetName, playerNames);

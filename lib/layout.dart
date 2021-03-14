@@ -645,23 +645,23 @@ class _LayoutState extends State<Layout> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BaseBarButton(AppLocalizations.of(context).ron, () {
+            baseBarButton(AppLocalizations.of(context).ron, () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
             }),
-            BaseBarButton(AppLocalizations.of(context).tsumo, () {
+            baseBarButton(AppLocalizations.of(context).tsumo, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Tsumo(save: saveTsumo)));
             }),
-            BaseBarButton(AppLocalizations.of(context).ryukyoku, () {
+            baseBarButton(AppLocalizations.of(context).ryukyoku, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Ryukyoku(save: saveRyukyoku)));
             }),
-            BaseBarButton(AppLocalizations.of(context).reset, () {
+            baseBarButton(AppLocalizations.of(context).reset, () {
               showDialog(
                 context: context,
                 barrierDismissible: false,
