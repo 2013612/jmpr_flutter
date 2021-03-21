@@ -71,5 +71,7 @@
   "exportToXlsx": ".xlsxへの書き出し",
   "errorAtLeastTwoRecords": "スプレッドシートへの書き出すは二つレコードが必要です。",
   "errorExactTwoRecords": "ちょうど二つレコードを選択してください",
-  "errorSettingsAreDifferent": "同じ設定のレコードを選択してください"
+  "errorSettingsAreDifferent": "同じ設定のレコードを選択してください",
+  "warningExistingSheetName": "{fileName}.xlsxに{sheetName}があります",
+  "openExcel": "{fileName}.xlsxを開きます"
 }

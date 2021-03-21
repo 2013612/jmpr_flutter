@@ -108,15 +108,24 @@ class _ChooseHistoryState extends State<ChooseHistory> {
                   MaterialPageRoute(
                     builder: (context) => UserInput(
                       (String folder, String fileName, String sheetName,
-                          Map<Position, String> playerNames) {
-                        widget.next(
-                            min(chosen[0], chosen[1]),
-                            max(chosen[0], chosen[1]),
-                            folder,
-                            fileName,
-                            sheetName,
-                            playerNames);
-                        Navigator.pop(context);
+                          Map<Position, String> playerNames) async {
+                        bool success2 = true;
+                        await widget
+                            .next(
+                                min(chosen[0], chosen[1]),
+                                max(chosen[0], chosen[1]),
+                                folder,
+                                fileName,
+                                sheetName,
+                                playerNames)
+                            .then((bool success) {
+                          if (success) {
+                            Navigator.pop(context);
+                          } else {
+                            success2 = false;
+                          }
+                        });
+                        return success2;
                       },
                     ),
                   ),
@@ -288,8 +297,13 @@ class _UserInputState extends State<UserInput> {
             baseBarButton(AppLocalizations.of(context).save, () {
               if (_userInputFormKey.currentState.validate()) {
                 _userInputFormKey.currentState.save();
-                widget.save(folder, fileName, sheetName, playerNames);
-                Navigator.pop(context);
+                widget
+                    .save(folder, fileName, sheetName, playerNames)
+                    .then((bool success) {
+                  if (success) {
+                    Navigator.pop(context);
+                  }
+                });
               }
             }),
           ],

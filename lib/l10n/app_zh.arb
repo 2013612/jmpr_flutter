@@ -71,5 +71,7 @@
   "exportToXlsx": "匯出到.xlsx",
   "errorAtLeastTwoRecords": "需要至少2項記錄才能匯出到試算表",
   "errorExactTwoRecords": "您需要選擇2項記錄",
-  "errorSettingsAreDifferent": "您需要選擇有同一設定的記錄"
+  "errorSettingsAreDifferent": "您需要選擇有同一設定的記錄",
+  "warningExistingSheetName": "{fileName}.xlsx內已有{sheetName}工作表",
+  "openExcel": "開啓{fileName}.xlsx"
 }

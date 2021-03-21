@@ -296,5 +296,20 @@
   "errorSettingsAreDifferent": "You need to choose records with same setting",
   "@errorSettingsAreDifferent": {
     "type": "text"
+  },
+  "warningExistingSheetName": "{sheetName} already exists in {fileName}.xlsx",
+  "@warningExistingSheetName": {
+    "type": "text",
+    "placeholders": {
+      "sheetName": {},
+      "fileName": {}
+    }
+  },
+  "openExcel": "Open {fileName}.xlsx",
+  "@openExcel": {
+    "type": "text",
+    "placeholders": {
+      "fileName": {}
+    }
   }
 }

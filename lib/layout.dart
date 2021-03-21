@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 
 import 'about.dart';
@@ -114,9 +115,11 @@ class _LayoutState extends State<Layout> {
     }
 
     void goToHistory(History history) {
-      _currentPointSetting = history.pointSetting.clone();
-      _currentSetting = history.setting.clone();
-      _currentHistoryIndex = _histories.indexOf(history) + 1;
+      setState(() {
+        _currentPointSetting = history.pointSetting.clone();
+        _currentSetting = history.setting.clone();
+        _currentHistoryIndex = _histories.indexOf(history) + 1;
+      });
     }
 
     void saveSetting(SettingParameter setting) {
@@ -167,7 +170,10 @@ class _LayoutState extends State<Layout> {
           }
         }
       });
-      _currentPointSetting.bonba = 0;
+      if (position != oya) {
+        _currentPointSetting.bonba = 0;
+      }
+
       _currentPointSetting.riichibou = 0;
     }
 
@@ -405,18 +411,57 @@ class _LayoutState extends State<Layout> {
       );
     }
 
-    void generateExcel(int startIndex, int endIndex, String folder,
-        String fileName, String sheetName, Map<Position, String> playerNames) {
+    Future<Excel> createExcelFile(
+        String folder, String fileName, String sheetName) async {
       Excel excel;
       try {
         final bytes = File(join(folder, "$fileName.xlsx")).readAsBytesSync();
         excel = Excel.decodeBytes(bytes);
+        if (excel.tables.keys.contains(sheetName)) {
+          await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    content: Text(AppLocalizations.of(context)
+                        .warningExistingSheetName(sheetName, fileName)),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(AppLocalizations.of(context).cancel),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          OpenFile.open(join(folder, "$fileName.xlsx"));
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                            AppLocalizations.of(context).openExcel(fileName)),
+                      ),
+                    ],
+                  ));
+          return null;
+        }
       } catch (exception) {
         print(exception);
       }
       if (excel == null) {
         excel = Excel.createExcel();
         excel.rename("Sheet1", sheetName);
+      }
+      return excel;
+    }
+
+    Future<bool> generateExcel(
+        int startIndex,
+        int endIndex,
+        String folder,
+        String fileName,
+        String sheetName,
+        Map<Position, String> playerNames) async {
+      Excel excel = await createExcelFile(folder, fileName, sheetName);
+      if (excel == null) {
+        return false;
       }
       final int topRow = 2;
       final SettingParameter _setting = _histories[endIndex].setting;
@@ -458,7 +503,7 @@ class _LayoutState extends State<Layout> {
       void updateExcelKyoku(int row, int pos) {
         excel.updateCell(
             sheetName,
-            cell(2 + pos * 3, row + topRow),
+            cell(2 + pos * 3, row + topRow - startIndex),
             _histories[row + 1]
                 .pointSetting
                 .players[position(pos)]
@@ -467,10 +512,12 @@ class _LayoutState extends State<Layout> {
                 .toUpperCase());
         excel.updateCell(
             sheetName,
-            cell(3 + pos * 3, row + topRow),
+            cell(3 + pos * 3, row + topRow - startIndex),
             _histories[row + 1].pointSetting.players[position(pos)].point -
                 _histories[row].pointSetting.players[position(pos)].point);
-        excel.updateCell(sheetName, cell(4 + pos * 3, row + topRow),
+        excel.updateCell(
+            sheetName,
+            cell(4 + pos * 3, row + topRow - startIndex),
             _histories[row].pointSetting.players[position(pos)].point);
       }
 
@@ -483,7 +530,7 @@ class _LayoutState extends State<Layout> {
             playerNames[Position.values[(_setting.firstOya.index +
                     _histories[i].pointSetting.currentKyoku) %
                 4]]);
-        List.generate(4, (index) => updateExcelKyoku(i - startIndex, index));
+        List.generate(4, (index) => updateExcelKyoku(i, index));
         excel.updateCell(sheetName, cell(14, i - startIndex + topRow),
             _histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
       }
@@ -493,11 +540,16 @@ class _LayoutState extends State<Layout> {
           ..createSync(recursive: true)
           ..writeAsBytesSync(onValue);
         Fluttertoast.showToast(
-            msg: AppLocalizations.of(context).generateSuccess(fileName),
-            backgroundColor: Colors.blue);
-      }).catchError((error) => Fluttertoast.showToast(
-          msg: "${AppLocalizations.of(context).error}${": $error"}",
-          backgroundColor: Colors.red));
+          msg: AppLocalizations.of(context).generateSuccess(fileName),
+          backgroundColor: Colors.blue,
+        );
+        OpenFile.open(join(folder, "$fileName.xlsx"));
+      }).catchError((error) {
+        Fluttertoast.showToast(
+            msg: "${AppLocalizations.of(context).error}${": $error"}",
+            backgroundColor: Colors.red);
+      });
+      return true;
     }
 
     Widget pointAndRiichiSwitch(Position position) {
@@ -669,13 +721,13 @@ class _LayoutState extends State<Layout> {
                   title: Text(AppLocalizations.of(context).confirm),
                   content: Text(AppLocalizations.of(context).confirmReset),
                   actions: [
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
                       child: Text(AppLocalizations.of(context).cancel),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         setState(reset);
                         Navigator.pop(context);
@@ -755,9 +807,8 @@ class _LayoutState extends State<Layout> {
               FractionallySizedBox(
                 heightFactor: 0.3,
                 widthFactor: 0.6,
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: showResult,
-                  elevation: 1.0,
                   child: Text(AppLocalizations.of(context).result),
                 ),
               ),
@@ -838,9 +889,8 @@ class _LayoutState extends State<Layout> {
               ),
             ),
             Spacer(),
-            RaisedButton(
+            ElevatedButton(
               onPressed: showResult,
-              elevation: 1.0,
               child: Text(AppLocalizations.of(context).result),
             ),
             Spacer(),

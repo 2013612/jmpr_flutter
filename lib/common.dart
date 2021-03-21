@@ -53,6 +53,8 @@ class Constant {
   ];
 
   static final Map<int, int> points = {
+    2: 2000,
+    3: 2000,
     4: 2000,
     5: 2000,
     6: 3000,
