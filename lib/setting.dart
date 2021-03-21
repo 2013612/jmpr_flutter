@@ -303,6 +303,7 @@ class _SettingState extends State<Setting> {
                   primary: Colors.white,
                   elevation: 0.0,
                   shape: _shapeBorder,
+                  minimumSize: Size(88, 36),
                 ),
                 child: PopupMenuButton<String>(
                   itemBuilder: (BuildContext context) {

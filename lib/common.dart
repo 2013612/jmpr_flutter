@@ -97,6 +97,7 @@ Widget baseBarButton(String name, void Function() pressed,
       onPrimary: Colors.black,
       elevation: 0.0,
       shape: shapeBorder,
+      minimumSize: Size(88, 36),
     ),
     child: Text(
       name,
