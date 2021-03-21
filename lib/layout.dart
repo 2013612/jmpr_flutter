@@ -63,7 +63,7 @@ class _LayoutState extends State<Layout> {
       umaSmall: 10,
       isKiriage: false,
       isDouten: false,
-      firstOya: Position.Bottom,
+      firstOya: Position.bottom,
     );
     Map<Position, Player> players = {};
     for (Position position in Position.values) {
@@ -756,14 +756,14 @@ class _LayoutState extends State<Layout> {
               Center(
                 child: RotatedBox(
                   quarterTurns: 2,
-                  child: pointAndRiichiSwitch(Position.Top),
+                  child: pointAndRiichiSwitch(Position.top),
                 ),
               ),
               EmptyGrid(),
               Center(
                 child: RotatedBox(
                   quarterTurns: 1,
-                  child: pointAndRiichiSwitch(Position.Left),
+                  child: pointAndRiichiSwitch(Position.left),
                 ),
               ),
               Center(
@@ -797,12 +797,12 @@ class _LayoutState extends State<Layout> {
               Center(
                 child: RotatedBox(
                   quarterTurns: 3,
-                  child: pointAndRiichiSwitch(Position.Right),
+                  child: pointAndRiichiSwitch(Position.right),
                 ),
               ),
               EmptyGrid(),
               Center(
-                child: pointAndRiichiSwitch(Position.Bottom),
+                child: pointAndRiichiSwitch(Position.bottom),
               ),
               FractionallySizedBox(
                 heightFactor: 0.3,
@@ -827,7 +827,7 @@ class _LayoutState extends State<Layout> {
             Flexible(
               child: RotatedBox(
                 quarterTurns: 1,
-                child: pointAndRiichiSwitch(Position.Left),
+                child: pointAndRiichiSwitch(Position.left),
               ),
             ),
             Column(
@@ -836,19 +836,19 @@ class _LayoutState extends State<Layout> {
                 Flexible(
                   child: RotatedBox(
                     quarterTurns: 2,
-                    child: pointAndRiichiSwitch(Position.Top),
+                    child: pointAndRiichiSwitch(Position.top),
                   ),
                 ),
                 Spacer(
                   flex: 3,
                 ),
-                Flexible(child: pointAndRiichiSwitch(Position.Bottom)),
+                Flexible(child: pointAndRiichiSwitch(Position.bottom)),
               ],
             ),
             Flexible(
               child: RotatedBox(
                 quarterTurns: 3,
-                child: pointAndRiichiSwitch(Position.Right),
+                child: pointAndRiichiSwitch(Position.right),
               ),
             ),
             Spacer(),

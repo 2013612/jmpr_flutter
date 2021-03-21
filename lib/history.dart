@@ -49,15 +49,15 @@ class HistoryPage extends StatelessWidget {
                       content:
                       Text(AppLocalizations.of(context).confirmHistory),
                       actions: [
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(AppLocalizations.of(context).cancel),
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(AppLocalizations.of(context).cancel),
+                          ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
                               goTo(history);
                               Navigator.of(context).pop();
                             },

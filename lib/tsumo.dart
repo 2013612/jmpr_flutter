@@ -30,7 +30,7 @@ class _TsumoState extends State<Tsumo> {
     super.initState();
     _han = 1;
     _fu = 30;
-    _tsumoPlayer = Position.Bottom;
+    _tsumoPlayer = Position.bottom;
   }
 
   @override
@@ -66,14 +66,14 @@ class _TsumoState extends State<Tsumo> {
               Text(AppLocalizations.of(context).tsumo),
               Row(
                 children: [
-                  tsumoPlayerRadioListTile(Position.Bottom),
-                  tsumoPlayerRadioListTile(Position.Right),
+                  tsumoPlayerRadioListTile(Position.bottom),
+                  tsumoPlayerRadioListTile(Position.right),
                 ],
               ),
               Row(
                 children: [
-                  tsumoPlayerRadioListTile(Position.Top),
-                  tsumoPlayerRadioListTile(Position.Left),
+                  tsumoPlayerRadioListTile(Position.top),
+                  tsumoPlayerRadioListTile(Position.left),
                 ],
               ),
               Row(

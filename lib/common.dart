@@ -8,10 +8,10 @@ class Constant {
 
   static void languageChange(BuildContext context) {
     Constant.positionTexts = {
-      Position.Bottom: AppLocalizations.of(context).bottom,
-      Position.Right: AppLocalizations.of(context).right,
-      Position.Top: AppLocalizations.of(context).top,
-      Position.Left: AppLocalizations.of(context).left,
+      Position.bottom: AppLocalizations.of(context).bottom,
+      Position.right: AppLocalizations.of(context).right,
+      Position.top: AppLocalizations.of(context).top,
+      Position.left: AppLocalizations.of(context).left,
     };
     Constant.sittingTexts = [
       AppLocalizations.of(context).east,
@@ -70,32 +70,34 @@ class Constant {
   };
 
   static final Map<Position, IconData> arrows = {
-    Position.Bottom: Icons.arrow_downward,
-    Position.Right: Icons.arrow_forward,
-    Position.Top: Icons.arrow_upward,
-    Position.Left: Icons.arrow_back
+    Position.bottom: Icons.arrow_downward,
+    Position.right: Icons.arrow_forward,
+    Position.top: Icons.arrow_upward,
+    Position.left: Icons.arrow_back
   };
 }
 
 enum Position {
-  Bottom,
-  Right,
-  Top,
-  Left,
+  bottom,
+  right,
+  top,
+  left,
 }
 
 Widget baseBarButton(String name, void Function() pressed,
-    [ShapeBorder shapeBorder]) {
+    [OutlinedBorder shapeBorder]) {
   shapeBorder ??= RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(50.0),
   );
 
-  return RaisedButton(
+  return ElevatedButton(
     onPressed: pressed,
-    textColor: Colors.black,
-    color: Colors.white,
-    elevation: 0.0,
-    shape: shapeBorder,
+    style: ElevatedButton.styleFrom(
+      primary: Colors.white,
+      onPrimary: Colors.black,
+      elevation: 0.0,
+      shape: shapeBorder,
+    ),
     child: Text(
       name,
     ),
@@ -103,6 +105,7 @@ Widget baseBarButton(String name, void Function() pressed,
 }
 
 Widget customCheckBoxTile(
+    // ignore: avoid_positional_boolean_parameters
     bool value, String title, void Function(bool) onChanged,
     [IconData icon]) {
   return CheckboxListTile(
@@ -116,6 +119,7 @@ Widget customCheckBoxTile(
 }
 
 Widget flexibleCustomCheckBoxTile(
+    // ignore: avoid_positional_boolean_parameters
     bool value, String title, void Function(bool) onChanged,
     [IconData icon]) {
   return Flexible(

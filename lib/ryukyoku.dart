@@ -72,27 +72,27 @@ class _RyokyokuState extends State<Ryukyoku> {
               Text(AppLocalizations.of(context).tenpai),
               Row(
                 children: [
-                  tenpaiCheckboxListTile(Position.Bottom),
-                  tenpaiCheckboxListTile(Position.Right),
+                  tenpaiCheckboxListTile(Position.bottom),
+                  tenpaiCheckboxListTile(Position.right),
                 ],
               ),
               Row(
                 children: [
-                  tenpaiCheckboxListTile(Position.Top),
-                  tenpaiCheckboxListTile(Position.Left),
+                  tenpaiCheckboxListTile(Position.top),
+                  tenpaiCheckboxListTile(Position.left),
                 ],
               ),
               Text(AppLocalizations.of(context).nagashimangan),
               Row(
                 children: [
-                  nagashimanganCheckboxListTile(Position.Bottom),
-                  nagashimanganCheckboxListTile(Position.Right),
+                  nagashimanganCheckboxListTile(Position.bottom),
+                  nagashimanganCheckboxListTile(Position.right),
                 ],
               ),
               Row(
                 children: [
-                  nagashimanganCheckboxListTile(Position.Top),
-                  nagashimanganCheckboxListTile(Position.Left),
+                  nagashimanganCheckboxListTile(Position.top),
+                  nagashimanganCheckboxListTile(Position.left),
                 ],
               ),
             ],

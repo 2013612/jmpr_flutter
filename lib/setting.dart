@@ -30,7 +30,7 @@ class _SettingState extends State<Setting> {
     umaSmall: 10,
     isKiriage: false,
     isDouten: false,
-    firstOya: Position.Bottom,
+    firstOya: Position.bottom,
   );
 
   // ignore: non_constant_identifier_names
@@ -44,7 +44,7 @@ class _SettingState extends State<Setting> {
     umaSmall: 10,
     isKiriage: true,
     isDouten: true,
-    firstOya: Position.Bottom,
+    firstOya: Position.bottom,
   );
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
@@ -61,7 +61,7 @@ class _SettingState extends State<Setting> {
       _umaBigController,
       _umaSmallController;
 
-  static final ShapeBorder _shapeBorder = RoundedRectangleBorder(
+  static final OutlinedBorder _shapeBorder = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(50.0),
   );
 
@@ -296,12 +296,14 @@ class _SettingState extends State<Setting> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // This RaisedButton is used just for the size and shape, does not used as a button
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {},
-                textColor: Colors.black,
-                color: Colors.white,
-                elevation: 0.0,
-                shape: _shapeBorder,
+                style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.black,
+                  primary: Colors.white,
+                  elevation: 0.0,
+                  shape: _shapeBorder,
+                ),
                 child: PopupMenuButton<String>(
                   itemBuilder: (BuildContext context) {
                     return _usualSettings.entries.map((setting) {

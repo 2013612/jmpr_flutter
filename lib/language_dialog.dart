@@ -46,13 +46,13 @@ class _LanguageDialogState extends State<LanguageDialog> {
         children: languageText.keys.map(languageRadioListTile).toList(),
       ),
       actions: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: Text(AppLocalizations.of(context).cancel),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             widget.changeLanguageTo(_selectedLanguage);
             Navigator.pop(context);

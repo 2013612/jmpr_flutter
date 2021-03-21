@@ -20,7 +20,7 @@ class _RonState extends State<Ron> {
   @override
   void initState() {
     super.initState();
-    _ronedPlayer = Position.Bottom;
+    _ronedPlayer = Position.bottom;
     _isRonPlayers = {};
     for (Position position in Position.values) {
       _isRonPlayers[position] = false;
@@ -73,27 +73,27 @@ class _RonState extends State<Ron> {
               Text(AppLocalizations.of(context).lose),
               Row(
                 children: [
-                  ronedPlayerRadioListTile(Position.Bottom),
-                  ronedPlayerRadioListTile(Position.Right),
+                  ronedPlayerRadioListTile(Position.bottom),
+                  ronedPlayerRadioListTile(Position.right),
                 ],
               ),
               Row(
                 children: [
-                  ronedPlayerRadioListTile(Position.Top),
-                  ronedPlayerRadioListTile(Position.Left),
+                  ronedPlayerRadioListTile(Position.top),
+                  ronedPlayerRadioListTile(Position.left),
                 ],
               ),
               Text(AppLocalizations.of(context).win),
               Row(
                 children: [
-                  ronCheckboxListTile(Position.Bottom),
-                  ronCheckboxListTile(Position.Right),
+                  ronCheckboxListTile(Position.bottom),
+                  ronCheckboxListTile(Position.right),
                 ],
               ),
               Row(
                 children: [
-                  ronCheckboxListTile(Position.Top),
-                  ronCheckboxListTile(Position.Left),
+                  ronCheckboxListTile(Position.top),
+                  ronCheckboxListTile(Position.left),
                 ],
               ),
             ],
