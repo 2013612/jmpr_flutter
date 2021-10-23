@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'classes/point_setting.dart' as ps;
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
 
 class PointSetting extends StatefulWidget {
   final ps.PointSetting currentPointSetting;
@@ -189,17 +190,17 @@ class _PointSettingState extends State<PointSetting> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(
-                AppLocalizations.of(context)!.currentPointSetting,
-                () => copyPointSetting(widget.currentPointSetting),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.currentPointSetting,
+                onPress: () => copyPointSetting(widget.currentPointSetting),
               ),
-              baseBarButton(
-                AppLocalizations.of(context)!.cancel,
-                () => Navigator.pop(context),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.cancel,
+                onPress: () => Navigator.pop(context),
               ),
-              baseBarButton(
-                AppLocalizations.of(context)!.save,
-                () {
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.save,
+                onPress: () {
                   if (_pointSettingFormKey.currentState!.validate()) {
                     _pointSettingFormKey.currentState!.save();
                     widget.save(_currentPointSetting);

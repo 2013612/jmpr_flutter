@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
 import 'utility/iterable_methods.dart';
 
 class RonPoint extends StatefulWidget {
@@ -122,9 +123,9 @@ class _RonPointState extends State<RonPoint> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.isRonPlayers!.entries
+            children: widget.isRonPlayers.entries
                 .map((isRonPlayer) {
-                  if (isRonPlayer.value!) {
+                  if (isRonPlayer.value) {
                     return playerPoint(isRonPlayer.key);
                   }
                 })
@@ -136,11 +137,14 @@ class _RonPointState extends State<RonPoint> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(i18n.cancel, () => Navigator.pop(context)),
-              baseBarButton(i18n.save, () {
-                widget.save(_hans, _fus);
-                Navigator.pop(context);
-              }),
+              BaseBarButton(
+                  name: i18n.cancel, onPress: () => Navigator.pop(context)),
+              BaseBarButton(
+                  name: i18n.save,
+                  onPress: () {
+                    widget.save(_hans, _fus);
+                    Navigator.pop(context);
+                  }),
             ],
           ),
         ),

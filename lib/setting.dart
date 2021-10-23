@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'classes/setting.dart' as setting;
+import 'classes/setting.dart' as class_s;
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
+import 'common_widgets/custom_check_box_tile.dart';
 
 class Setting extends StatefulWidget {
-  final setting.Setting currentSetting;
+  final class_s.Setting currentSetting;
   final Function save;
 
   Setting({
@@ -20,8 +22,8 @@ class Setting extends StatefulWidget {
 
 class _SettingState extends State<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
-  late setting.Setting _editingSetting;
-  final setting.Setting _tenhouSetting = setting.Setting(
+  late class_s.Setting _editingSetting;
+  final class_s.Setting _tenhouSetting = class_s.Setting(
     startingPoint: 30000,
     givenStartingPoint: 25000,
     riichibouPoint: 1000,
@@ -35,7 +37,7 @@ class _SettingState extends State<Setting> {
   );
 
   // ignore: non_constant_identifier_names
-  final setting.Setting _RMUSetting = setting.Setting(
+  final class_s.Setting _RMUSetting = class_s.Setting(
     startingPoint: 30000,
     givenStartingPoint: 30000,
     riichibouPoint: 1000,
@@ -69,7 +71,7 @@ class _SettingState extends State<Setting> {
   @override
   void initState() {
     super.initState();
-    _editingSetting = widget.currentSetting ?? _tenhouSetting;
+    _editingSetting = widget.currentSetting;
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
     _startingPointController =
@@ -113,7 +115,7 @@ class _SettingState extends State<Setting> {
       return null;
     }
 
-    void copySetting(setting.Setting setting) {
+    void copySetting(class_s.Setting setting) {
       _givenStartingPointController.text =
           setting.givenStartingPoint.toString();
       _startingPointController.text = setting.startingPoint.toString();
@@ -266,25 +268,29 @@ class _SettingState extends State<Setting> {
                   Center(
                     child: SizedBox(
                       width: 350.0,
-                      child: customCheckBoxTile(_editingSetting.isKiriage,
-                          AppLocalizations.of(context)!.kiriage,
-                          (bool? isKiriage) {
-                        setState(() {
-                          _editingSetting.isKiriage = isKiriage!;
-                        });
-                      }),
+                      child: CustomCheckBoxTile(
+                        checkBoxValue: _editingSetting.isKiriage,
+                        title: AppLocalizations.of(context)!.kiriage,
+                        onChanged: (bool? isKiriage) {
+                          setState(() {
+                            _editingSetting.isKiriage = isKiriage!;
+                          });
+                        },
+                      ),
                     ),
                   ),
                   Center(
                     child: SizedBox(
                       width: 350.0,
-                      child: customCheckBoxTile(_editingSetting.isDouten,
-                          AppLocalizations.of(context)!.samePoint,
-                          (bool? isDouten) {
-                        setState(() {
-                          _editingSetting.isDouten = isDouten!;
-                        });
-                      }),
+                      child: CustomCheckBoxTile(
+                        checkBoxValue: _editingSetting.isDouten,
+                        title: AppLocalizations.of(context)!.samePoint,
+                        onChanged: (bool? isDouten) {
+                          setState(() {
+                            _editingSetting.isDouten = isDouten!;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -340,15 +346,20 @@ class _SettingState extends State<Setting> {
                   child: Text(AppLocalizations.of(context)!.usualSetting),
                 ),
               ),
-              baseBarButton(AppLocalizations.of(context)!.cancel,
-                  () => Navigator.pop(context)),
-              baseBarButton(AppLocalizations.of(context)!.save, () {
-                if (_settingFormKey.currentState!.validate()) {
-                  _settingFormKey.currentState!.save();
-                  widget.save(_editingSetting);
-                  Navigator.pop(context);
-                }
-              }),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.cancel,
+                onPress: () => Navigator.pop(context),
+              ),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.save,
+                onPress: () {
+                  if (_settingFormKey.currentState!.validate()) {
+                    _settingFormKey.currentState!.save();
+                    widget.save(_editingSetting);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             ],
           ),
         ),

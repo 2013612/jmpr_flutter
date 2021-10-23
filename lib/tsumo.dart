@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
+import 'common_widgets/custom_radio_tile.dart';
 
 class Tsumo extends StatefulWidget {
   final Function save;
@@ -15,8 +17,8 @@ class Tsumo extends StatefulWidget {
 }
 
 class _TsumoState extends State<Tsumo> {
-  int? _han, _fu;
-  Position? _tsumoPlayer;
+  late int _han, _fu;
+  late Position _tsumoPlayer;
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
     contentPadding: EdgeInsets.all(8.0),
@@ -37,16 +39,16 @@ class _TsumoState extends State<Tsumo> {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     Widget tsumoPlayerRadioListTile(Position position) {
-      return flexibleCustomRadioTile(
-        position,
-        _tsumoPlayer,
-        Constant.positionTexts[position]!,
-        (Position? val) {
+      return CustomRadioTile(
+        value: position,
+        cur: _tsumoPlayer,
+        title: Constant.positionTexts[position]!,
+        onChanged: (Position? val) {
           setState(() {
-            _tsumoPlayer = val;
+            _tsumoPlayer = val ?? Position.bottom;
           });
         },
-        Constant.arrows[position],
+        icon: Constant.arrows[position]!,
       );
     }
 
@@ -95,7 +97,7 @@ class _TsumoState extends State<Tsumo> {
                           isDense: true,
                           onChanged: (val) {
                             setState(() {
-                              _han = int.tryParse(val!);
+                              _han = int.tryParse(val!) ?? 1;
                             });
                           },
                         ),
@@ -124,7 +126,7 @@ class _TsumoState extends State<Tsumo> {
                           isDense: true,
                           onChanged: (val) {
                             setState(() {
-                              _fu = int.tryParse(val!);
+                              _fu = int.tryParse(val!) ?? 30;
                             });
                           },
                         ),
@@ -146,11 +148,17 @@ class _TsumoState extends State<Tsumo> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(i18n.cancel, () => Navigator.pop(context)),
-              baseBarButton(i18n.save, () {
-                widget.save(_tsumoPlayer, _han, _fu);
-                Navigator.pop(context);
-              }),
+              BaseBarButton(
+                name: i18n.cancel,
+                onPress: () => Navigator.pop(context),
+              ),
+              BaseBarButton(
+                name: i18n.save,
+                onPress: () {
+                  widget.save(_tsumoPlayer, _han, _fu);
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),

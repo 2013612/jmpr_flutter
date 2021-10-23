@@ -15,6 +15,7 @@ import 'classes/player.dart';
 import 'classes/point_setting.dart' as class_ps;
 import 'classes/setting.dart' as class_s;
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
 import 'export_excel.dart';
 import 'history.dart';
 import 'language_dialog.dart';
@@ -702,47 +703,57 @@ class _LayoutState extends State<Layout> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            baseBarButton(AppLocalizations.of(context)!.ron, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
-            }),
-            baseBarButton(AppLocalizations.of(context)!.tsumo, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Tsumo(save: saveTsumo)));
-            }),
-            baseBarButton(AppLocalizations.of(context)!.ryukyoku, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Ryukyoku(save: saveRyukyoku)));
-            }),
-            baseBarButton(AppLocalizations.of(context)!.reset, () {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.confirm),
-                  content: Text(AppLocalizations.of(context)!.confirmReset),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(AppLocalizations.of(context)!.cancel),
+            BaseBarButton(
+                name: AppLocalizations.of(context)!.ron,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ron(next: saveRon)));
+                }),
+            BaseBarButton(
+                name: AppLocalizations.of(context)!.tsumo,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Tsumo(save: saveTsumo)));
+                }),
+            BaseBarButton(
+                name: AppLocalizations.of(context)!.ryukyoku,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ryukyoku(save: saveRyukyoku)));
+                }),
+            BaseBarButton(
+                name: AppLocalizations.of(context)!.reset,
+                onPress: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => AlertDialog(
+                      title: Text(AppLocalizations.of(context)!.confirm),
+                      content: Text(AppLocalizations.of(context)!.confirmReset),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(reset);
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK"),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () {
-                        setState(reset);
-                        Navigator.pop(context);
-                      },
-                      child: Text("OK"),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                  );
+                }),
           ],
         ),
       );

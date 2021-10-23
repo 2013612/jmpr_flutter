@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'classes/history.dart';
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
 
 class ChooseHistory extends StatefulWidget {
   final List<History> histories;
@@ -38,13 +39,14 @@ class _ChooseHistoryState extends State<ChooseHistory> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     final ShapeBorder _shapeBorder = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.history),
+        title: Text(i18n.history),
       ),
       body: ListView.builder(
         itemCount: reversedHistories.length,
@@ -85,54 +87,57 @@ class _ChooseHistoryState extends State<ChooseHistory> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            baseBarButton(AppLocalizations.of(context)!.cancel,
-                () => Navigator.pop(context)),
-            baseBarButton(AppLocalizations.of(context)!.next, () {
-              if (chosen.length < 2) {
-                Fluttertoast.showToast(
-                    msg: AppLocalizations.of(context)!.errorExactTwoRecords,
-                    backgroundColor: Colors.red);
-                return;
-              } else if (!reversedHistories[chosen[0]]
-                  .setting
-                  .equal(reversedHistories[chosen[1]].setting)) {
-                Fluttertoast.showToast(
-                    msg:
-                        AppLocalizations.of(context)!.errorSettingsAreDifferent,
-                    backgroundColor: Colors.red);
-                return;
-              } else {
-                chosen[0] = reversedHistories.length - 1 - chosen[0];
-                chosen[1] = reversedHistories.length - 1 - chosen[1];
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UserInput(
-                      (String folder, String fileName, String sheetName,
-                          Map<Position, String> playerNames) async {
-                        bool success2 = true;
-                        await widget
-                            .next(
-                                min(chosen[0], chosen[1]),
-                                max(chosen[0], chosen[1]),
-                                folder,
-                                fileName,
-                                sheetName,
-                                playerNames)
-                            .then((bool success) {
-                          if (success) {
-                            Navigator.pop(context);
-                          } else {
-                            success2 = false;
-                          }
-                        });
-                        return success2;
-                      },
-                    ),
-                  ),
-                );
-              }
-            }),
+            BaseBarButton(
+              name: i18n.cancel,
+              onPress: () => Navigator.pop(context),
+            ),
+            BaseBarButton(
+                name: i18n.next,
+                onPress: () {
+                  if (chosen.length < 2) {
+                    Fluttertoast.showToast(
+                        msg: i18n.errorExactTwoRecords,
+                        backgroundColor: Colors.red);
+                    return;
+                  } else if (!reversedHistories[chosen[0]]
+                      .setting
+                      .equal(reversedHistories[chosen[1]].setting)) {
+                    Fluttertoast.showToast(
+                        msg: i18n.errorSettingsAreDifferent,
+                        backgroundColor: Colors.red);
+                    return;
+                  } else {
+                    chosen[0] = reversedHistories.length - 1 - chosen[0];
+                    chosen[1] = reversedHistories.length - 1 - chosen[1];
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserInput(
+                          (String folder, String fileName, String sheetName,
+                              Map<Position, String> playerNames) async {
+                            bool success2 = true;
+                            await widget
+                                .next(
+                                    min(chosen[0], chosen[1]),
+                                    max(chosen[0], chosen[1]),
+                                    folder,
+                                    fileName,
+                                    sheetName,
+                                    playerNames)
+                                .then((bool success) {
+                              if (success) {
+                                Navigator.pop(context);
+                              } else {
+                                success2 = false;
+                              }
+                            });
+                            return success2;
+                          },
+                        ),
+                      ),
+                    );
+                  }
+                }),
           ],
         ),
       ),
@@ -165,6 +170,7 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     final InputDecoration _inputDecoration = InputDecoration(
         isDense: true,
         contentPadding: EdgeInsets.all(8.0),
@@ -225,7 +231,7 @@ class _UserInputState extends State<UserInput> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.setting),
+        title: Text(i18n.setting),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -238,7 +244,7 @@ class _UserInputState extends State<UserInput> {
               children: [
                 ...Position.values.map(positionPointSetting).toList(),
                 rowInput(
-                    AppLocalizations.of(context)!.folder,
+                    i18n.folder,
                     TextFormField(
                       readOnly: true,
                       controller: _folderController,
@@ -263,12 +269,12 @@ class _UserInputState extends State<UserInput> {
                       decoration: _inputDecoration,
                     )),
                 rowInput(
-                  AppLocalizations.of(context)!.file,
+                  i18n.file,
                   Row(
                     children: [
                       Flexible(
                         child: textInput(
-                            "${AppLocalizations.of(context)!.spreadsheet}1",
+                            "${i18n.spreadsheet}1",
                             (String? name) => fileName = name,
                             (String? name) =>
                                 name != null && name != "" ? null : ""),
@@ -278,9 +284,9 @@ class _UserInputState extends State<UserInput> {
                   ),
                 ),
                 rowInput(
-                    AppLocalizations.of(context)!.sheet,
+                    i18n.sheet,
                     textInput(
-                        "${AppLocalizations.of(context)!.sheet}1",
+                        "${i18n.sheet}1",
                         (String? name) => sheetName = name,
                         (String? name) =>
                             name != null && name != "" ? null : "")),
@@ -294,20 +300,25 @@ class _UserInputState extends State<UserInput> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            baseBarButton(AppLocalizations.of(context)!.cancel,
-                () => Navigator.pop(context)),
-            baseBarButton(AppLocalizations.of(context)!.save, () {
-              if (_userInputFormKey.currentState!.validate()) {
-                _userInputFormKey.currentState!.save();
-                widget
-                    .save(folder, fileName, sheetName, playerNames)
-                    .then((bool success) {
-                  if (success) {
-                    Navigator.pop(context);
-                  }
-                });
-              }
-            }),
+            BaseBarButton(
+              name: i18n.cancel,
+              onPress: () => Navigator.pop(context),
+            ),
+            BaseBarButton(
+              name: i18n.save,
+              onPress: () {
+                if (_userInputFormKey.currentState!.validate()) {
+                  _userInputFormKey.currentState!.save();
+                  widget
+                      .save(folder, fileName, sheetName, playerNames)
+                      .then((bool success) {
+                    if (success) {
+                      Navigator.pop(context);
+                    }
+                  });
+                }
+              },
+            ),
           ],
         ),
       ),

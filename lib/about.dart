@@ -4,9 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.about),
+        title: Text(i18n.about),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -14,17 +15,17 @@ class About extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context)!.appTitle),
+            child: Text(i18n.appTitle),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context)!.version("1.1.1")),
+            child: Text(i18n.version("1.1.1")),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text("${AppLocalizations.of(context)!.develop}: 2013612"),
+            child: Text("${i18n.develop}: 2013612"),
           ),
           Container(
             padding: EdgeInsets.all(8.0),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
+import 'common_widgets/custom_check_box_tile.dart';
+import 'common_widgets/custom_radio_tile.dart';
 import 'ron_point.dart';
 
 class Ron extends StatefulWidget {
@@ -26,29 +29,33 @@ class _RonState extends State<Ron> {
   }
 
   Widget ronedPlayerRadioListTile(Position position) {
-    return flexibleCustomRadioTile(
-      position,
-      _ronedPlayer,
-      Constant.positionTexts[position]!,
-      (Position? val) {
-        setState(() {
-          _ronedPlayer = val ?? Position.bottom;
-        });
-      },
-      Constant.arrows[position],
+    return Flexible(
+      child: CustomRadioTile(
+        value: position,
+        cur: _ronedPlayer,
+        title: Constant.positionTexts[position]!,
+        onChanged: (Position? val) {
+          setState(() {
+            _ronedPlayer = val ?? Position.bottom;
+          });
+        },
+        icon: Constant.arrows[position]!,
+      ),
     );
   }
 
   Widget ronCheckboxListTile(Position position) {
-    return flexibleCustomCheckBoxTile(
-      _isRonPlayers[position]!,
-      Constant.positionTexts[position]!,
-      (bool? val) {
-        setState(() {
-          _isRonPlayers[position] = val ?? false;
-        });
-      },
-      Constant.arrows[position],
+    return Flexible(
+      child: CustomCheckBoxTile(
+        checkBoxValue: _isRonPlayers[position]!,
+        title: Constant.positionTexts[position]!,
+        onChanged: (bool? val) {
+          setState(() {
+            _isRonPlayers[position] = val ?? false;
+          });
+        },
+        icon: Constant.arrows[position],
+      ),
     );
   }
 
@@ -103,49 +110,53 @@ class _RonState extends State<Ron> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(i18n.cancel, () => Navigator.pop(context)),
-              baseBarButton(i18n.next, () {
-                if (!_isRonPlayers.values
-                    .reduce((value, element) => value || element)) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(i18n.error),
-                        content: Text(
-                          i18n.errorAtLeastOneWin,
-                        ),
+              BaseBarButton(
+                  name: i18n.cancel, onPress: () => Navigator.pop(context)),
+              BaseBarButton(
+                  name: i18n.next,
+                  onPress: () {
+                    if (!_isRonPlayers.values
+                        .reduce((value, element) => value || element)) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(i18n.error),
+                            content: Text(
+                              i18n.errorAtLeastOneWin,
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                  return;
-                } else if (_isRonPlayers[_ronedPlayer]!) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(i18n.error),
-                        content: Text(
-                          i18n.errorSamePlayer,
-                        ),
+                      return;
+                    } else if (_isRonPlayers[_ronedPlayer]!) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(i18n.error),
+                            content: Text(
+                              i18n.errorSamePlayer,
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                  return;
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RonPoint(
-                      isRonPlayers: _isRonPlayers,
-                      save: (Map<Position, int> hans, Map<Position, int> fus) {
-                        widget.next(_ronedPlayer, _isRonPlayers, hans, fus);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                );
-              }),
+                      return;
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RonPoint(
+                          isRonPlayers: _isRonPlayers,
+                          save: (Map<Position, int> hans,
+                              Map<Position, int> fus) {
+                            widget.next(_ronedPlayer, _isRonPlayers, hans, fus);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                  }),
             ],
           ),
         ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
+import 'common_widgets/base_bar_button.dart';
+import 'common_widgets/custom_check_box_tile.dart';
 
 class Ryukyoku extends StatefulWidget {
   final Function save;
@@ -31,28 +33,32 @@ class _RyokyokuState extends State<Ryukyoku> {
   @override
   Widget build(BuildContext context) {
     Widget tenpaiCheckboxListTile(Position position) {
-      return flexibleCustomCheckBoxTile(
-        _tenpai[position] ?? false,
-        Constant.positionTexts[position]!,
-        (bool? isTenpai) {
-          setState(() {
-            _tenpai[position] = isTenpai ?? false;
-          });
-        },
-        Constant.arrows[position],
+      return Flexible(
+        child: CustomCheckBoxTile(
+          checkBoxValue: _tenpai[position] ?? false,
+          title: Constant.positionTexts[position]!,
+          onChanged: (bool? isTenpai) {
+            setState(() {
+              _tenpai[position] = isTenpai ?? false;
+            });
+          },
+          icon: Constant.arrows[position],
+        ),
       );
     }
 
     Widget nagashimanganCheckboxListTile(Position position) {
-      return flexibleCustomCheckBoxTile(
-        _nagashimangan[position] ?? false,
-        Constant.positionTexts[position]!,
-        (bool? isNagashimangan) {
-          setState(() {
-            _nagashimangan[position] = isNagashimangan ?? false;
-          });
-        },
-        Constant.arrows[position],
+      return Flexible(
+        child: CustomCheckBoxTile(
+          checkBoxValue: _nagashimangan[position] ?? false,
+          title: Constant.positionTexts[position]!,
+          onChanged: (bool? isNagashimangan) {
+            setState(() {
+              _nagashimangan[position] = isNagashimangan ?? false;
+            });
+          },
+          icon: Constant.arrows[position],
+        ),
       );
     }
 
@@ -103,17 +109,25 @@ class _RyokyokuState extends State<Ryukyoku> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(AppLocalizations.of(context)!.abortiveDraw, () {
-                setState(() {
-                  _tenpai.updateAll((key, value) => _tenpai[key] = true);
-                });
-              }),
-              baseBarButton(AppLocalizations.of(context)!.cancel,
-                  () => Navigator.pop(context)),
-              baseBarButton(AppLocalizations.of(context)!.save, () {
-                widget.save(_tenpai, _nagashimangan);
-                Navigator.pop(context);
-              }),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.abortiveDraw,
+                onPress: () {
+                  setState(() {
+                    _tenpai.updateAll((key, value) => _tenpai[key] = true);
+                  });
+                },
+              ),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.cancel,
+                onPress: () => Navigator.pop(context),
+              ),
+              BaseBarButton(
+                name: AppLocalizations.of(context)!.save,
+                onPress: () {
+                  widget.save(_tenpai, _nagashimangan);
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
