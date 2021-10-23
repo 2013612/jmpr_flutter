@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'classes/history.dart';
 import 'common.dart';
-import 'point_setting.dart';
-import 'setting.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<History> histories;
   final Function goTo;
 
   HistoryPage({
-    @required this.histories,
-    @required this.goTo,
+    required this.histories,
+    required this.goTo,
   });
 
   @override
@@ -19,10 +18,9 @@ class HistoryPage extends StatelessWidget {
     final ShapeBorder _shapeBorder = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     );
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).history),
+        title: Text(AppLocalizations.of(context)!.history),
       ),
       body: ListView(
         children: histories.reversed
@@ -31,31 +29,31 @@ class HistoryPage extends StatelessWidget {
                 leading: Text(
                     "${Constant.kyokus[history.pointSetting.currentKyoku]} - ${history.pointSetting.bonba}"),
                 title: FittedBox(
-                child: Text(
-                  history.pointSetting.players.entries.fold(
-                      "",
-                          (previousValue, player) =>
-                      "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
+                  child: Text(
+                    history.pointSetting.players.entries.fold(
+                        "",
+                        (previousValue, player) =>
+                            "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
+                  ),
                 ),
-              ),
-              shape: _shapeBorder,
-              dense: true,
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(AppLocalizations.of(context).confirm),
-                      content:
-                      Text(AppLocalizations.of(context).confirmHistory),
-                      actions: [
-                        TextButton(
+                shape: _shapeBorder,
+                dense: true,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(AppLocalizations.of(context)!.confirm),
+                        content:
+                            Text(AppLocalizations.of(context)!.confirmHistory),
+                        actions: [
+                          TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text(AppLocalizations.of(context).cancel),
+                            child: Text(AppLocalizations.of(context)!.cancel),
                           ),
-                        TextButton(
+                          TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                               goTo(history);
@@ -74,11 +72,4 @@ class HistoryPage extends StatelessWidget {
       ),
     );
   }
-}
-
-class History {
-  PointSettingParameter pointSetting;
-  SettingParameter setting;
-
-  History({this.pointSetting, this.setting});
 }

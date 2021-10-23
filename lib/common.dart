@@ -3,25 +3,25 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class Constant {
-  static Map<Position, String> positionTexts;
-  static List<String> sittingTexts;
+  static late Map<Position, String> positionTexts;
+  static late List<String> sittingTexts;
 
   static void languageChange(BuildContext context) {
     Constant.positionTexts = {
-      Position.bottom: AppLocalizations.of(context).bottom,
-      Position.right: AppLocalizations.of(context).right,
-      Position.top: AppLocalizations.of(context).top,
-      Position.left: AppLocalizations.of(context).left,
+      Position.bottom: AppLocalizations.of(context)!.bottom,
+      Position.right: AppLocalizations.of(context)!.right,
+      Position.top: AppLocalizations.of(context)!.top,
+      Position.left: AppLocalizations.of(context)!.left,
     };
     Constant.sittingTexts = [
-      AppLocalizations.of(context).east,
-      AppLocalizations.of(context).south,
-      AppLocalizations.of(context).west,
-      AppLocalizations.of(context).north
+      AppLocalizations.of(context)!.east,
+      AppLocalizations.of(context)!.south,
+      AppLocalizations.of(context)!.west,
+      AppLocalizations.of(context)!.north
     ];
   }
 
-  static final List<String> kyokus = [
+  static final List<String?> kyokus = [
     "東一局",
     "東二局",
     "東三局",
@@ -85,7 +85,7 @@ enum Position {
 }
 
 Widget baseBarButton(String name, void Function() pressed,
-    [OutlinedBorder shapeBorder]) {
+    [OutlinedBorder? shapeBorder]) {
   shapeBorder ??= RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(50.0),
   );
@@ -107,8 +107,10 @@ Widget baseBarButton(String name, void Function() pressed,
 
 Widget customCheckBoxTile(
     // ignore: avoid_positional_boolean_parameters
-    bool value, String title, void Function(bool) onChanged,
-    [IconData icon]) {
+    bool value,
+    String title,
+    void Function(bool?) onChanged,
+    [IconData? icon]) {
   return CheckboxListTile(
     value: value,
     title: Text(title),
@@ -121,15 +123,17 @@ Widget customCheckBoxTile(
 
 Widget flexibleCustomCheckBoxTile(
     // ignore: avoid_positional_boolean_parameters
-    bool value, String title, void Function(bool) onChanged,
-    [IconData icon]) {
+    bool value,
+    String title,
+    void Function(bool?) onChanged,
+    [IconData? icon]) {
   return Flexible(
     child: customCheckBoxTile(value, title, onChanged, icon),
   );
 }
 
-Widget customRadioTile(Position value, Position cur, String title,
-    void Function(Position) onChanged, IconData icon) {
+Widget customRadioTile(Position value, Position? cur, String title,
+    void Function(Position?) onChanged, IconData? icon) {
   return RadioListTile<Position>(
     value: value,
     title: Text(title),
@@ -141,8 +145,8 @@ Widget customRadioTile(Position value, Position cur, String title,
   );
 }
 
-Widget flexibleCustomRadioTile(Position value, Position cur, String title,
-    void Function(Position) onChanged, IconData icon) {
+Widget flexibleCustomRadioTile(Position value, Position? cur, String title,
+    void Function(Position?) onChanged, IconData? icon) {
   return Flexible(
     child: customRadioTile(value, cur, title, onChanged, icon),
   );

@@ -10,6 +10,10 @@ import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 
 import 'about.dart';
+import 'classes/history.dart';
+import 'classes/player.dart';
+import 'classes/point_setting.dart' as class_ps;
+import 'classes/setting.dart' as class_s;
 import 'common.dart';
 import 'export_excel.dart';
 import 'history.dart';
@@ -23,7 +27,7 @@ import 'tsumo.dart';
 
 class Layout extends StatefulWidget {
   final SetAppLocaleDelegate setAppLocaleDelegate;
-  final Locale locale;
+  final Locale? locale;
 
   Layout(this.locale, this.setAppLocaleDelegate);
 
@@ -34,11 +38,11 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   final Color _firstOyaColor = Colors.yellow;
   final Color _textColor = Colors.white;
-  SettingParameter _currentSetting;
-  PointSettingParameter _currentPointSetting;
+  late class_s.Setting _currentSetting;
+  late class_ps.PointSetting _currentPointSetting;
   final List<History> _histories = [];
   int _currentHistoryIndex = 0;
-  String _language;
+  late String _language;
 
   void addHistory() {
     if (_currentHistoryIndex < _histories.length) {
@@ -53,7 +57,7 @@ class _LayoutState extends State<Layout> {
   @override
   void initState() {
     super.initState();
-    _currentSetting = SettingParameter(
+    _currentSetting = class_s.Setting(
       startingPoint: 30000,
       givenStartingPoint: 25000,
       riichibouPoint: 1000,
@@ -73,7 +77,7 @@ class _LayoutState extends State<Layout> {
         riichi: false,
       );
     }
-    _currentPointSetting = PointSettingParameter(
+    _currentPointSetting = class_ps.PointSetting(
       players: players,
       currentKyoku: 0,
       bonba: 0,
@@ -81,31 +85,31 @@ class _LayoutState extends State<Layout> {
     );
     addHistory();
     _currentHistoryIndex = 1;
-    _language = widget.locale.languageCode;
+    _language = widget.locale!.languageCode;
   }
 
   @override
   Widget build(BuildContext context) {
     Constant.languageChange(context);
     Map<String, String> choices = {
-      "pointSetting": AppLocalizations.of(context).pointSetting,
-      "setting": AppLocalizations.of(context).setting,
-      "history": AppLocalizations.of(context).history,
-      "exportToXlsx": AppLocalizations.of(context).exportToXlsx,
-      "language": AppLocalizations.of(context).language,
-      "about": AppLocalizations.of(context).about,
+      "pointSetting": AppLocalizations.of(context)!.pointSetting,
+      "setting": AppLocalizations.of(context)!.setting,
+      "history": AppLocalizations.of(context)!.history,
+      "exportToXlsx": AppLocalizations.of(context)!.exportToXlsx,
+      "language": AppLocalizations.of(context)!.language,
+      "about": AppLocalizations.of(context)!.about,
     };
 
     void setRiichiFalse() {
       for (Position position in Position.values) {
-        _currentPointSetting.players[position].riichi = false;
+        _currentPointSetting.players[position]!.riichi = false;
       }
     }
 
     void reset() {
       for (Position position in Position.values) {
-        _currentPointSetting.players[position].riichi = false;
-        _currentPointSetting.players[position].point =
+        _currentPointSetting.players[position]!.riichi = false;
+        _currentPointSetting.players[position]!.point =
             _currentSetting.givenStartingPoint;
       }
       _currentPointSetting.currentKyoku = 0;
@@ -122,14 +126,14 @@ class _LayoutState extends State<Layout> {
       });
     }
 
-    void saveSetting(SettingParameter setting) {
+    void saveSetting(class_s.Setting setting) {
       setState(() {
         _currentSetting = setting;
         reset();
       });
     }
 
-    void savePointSetting(PointSettingParameter pointSetting) {
+    void savePointSetting(class_ps.PointSetting pointSetting) {
       setState(() {
         _currentPointSetting = pointSetting;
         addHistory();
@@ -180,7 +184,7 @@ class _LayoutState extends State<Layout> {
     int calPoint(int han, int fu) {
       int point = (pow(2, han + 2) * fu).toInt();
       if (point > 1920) {
-        point = Constant.points[han];
+        point = Constant.points[han]!;
       } else if (point == 1920 && _currentSetting.isKiriage) {
         point = 2000;
       }
@@ -211,26 +215,26 @@ class _LayoutState extends State<Layout> {
         int nearIndex = 100;
         ronPlayers.forEach((key, value) {
           if (value) {
-            int point = calPoint(hans[key], fus[key]);
+            int point = calPoint(hans[key]!, fus[key]!);
             if (key == oya) {
               point = (point * 6 + 99) ~/ 100 * 100;
             } else {
               point = (point * 4 + 99) ~/ 100 * 100;
             }
-            _currentPointSetting.players[key].point += point;
-            _currentPointSetting.players[ronedPlayer].point -= point;
+            _currentPointSetting.players[key]!.point += point;
+            _currentPointSetting.players[ronedPlayer]!.point -= point;
             nearIndex =
                 min(nearIndex, ((key.index - ronedPlayer.index) + 4) % 4);
           }
         });
         nearIndex = (nearIndex + ronedPlayer.index) % 4;
-        _currentPointSetting.players[ronedPlayer].point -=
+        _currentPointSetting.players[ronedPlayer]!.point -=
             _currentPointSetting.bonba * _currentSetting.bonbaPoint;
-        _currentPointSetting.players[Position.values[nearIndex]].point +=
+        _currentPointSetting.players[Position.values[nearIndex]]!.point +=
             _currentPointSetting.bonba * _currentSetting.bonbaPoint +
                 _currentPointSetting.riichibou * _currentSetting.riichibouPoint;
         _currentPointSetting.riichibou = 0;
-        if (ronPlayers[oya]) {
+        if (ronPlayers[oya]!) {
           _currentPointSetting.bonba++;
         } else {
           _currentPointSetting.bonba = 0;
@@ -255,8 +259,8 @@ class _LayoutState extends State<Layout> {
       Position oya = currentOya();
       setState(() {
         if (numOfNagashimagan > 0) {
-          int bonba = _currentPointSetting.bonba;
-          int riichibou = _currentPointSetting.riichibou;
+          int? bonba = _currentPointSetting.bonba;
+          int? riichibou = _currentPointSetting.riichibou;
           _currentPointSetting.bonba = 0;
           _currentPointSetting.riichibou = 0;
           nagashimangan.forEach((key, value) {
@@ -270,16 +274,16 @@ class _LayoutState extends State<Layout> {
           if (numOfTenpai != 0 && numOfTenpai != 4) {
             tenpai.forEach((key, value) {
               if (value) {
-                _currentPointSetting.players[key].point +=
+                _currentPointSetting.players[key]!.point +=
                     _currentSetting.ryukyokuPoint ~/ numOfTenpai;
               } else {
-                _currentPointSetting.players[key].point -=
+                _currentPointSetting.players[key]!.point -=
                     _currentSetting.ryukyokuPoint ~/ (4 - numOfTenpai);
               }
             });
           }
         }
-        if (!tenpai[oya]) {
+        if (!tenpai[oya]!) {
           _currentPointSetting.currentKyoku =
               (_currentPointSetting.currentKyoku + 1) % 16;
         }
@@ -290,8 +294,8 @@ class _LayoutState extends State<Layout> {
     }
 
     Map<Position, double> calResult(History history) {
-      final PointSettingParameter _pointSetting = history.pointSetting;
-      final SettingParameter _setting = history.setting;
+      final class_ps.PointSetting _pointSetting = history.pointSetting;
+      final class_s.Setting _setting = history.setting;
       List<List<int>> cal = [];
       Position position(int index) {
         return Position.values[(_setting.firstOya.index + cal[index][1]) % 4];
@@ -299,7 +303,7 @@ class _LayoutState extends State<Layout> {
 
       for (Position position in Position.values) {
         cal.add([
-          _pointSetting.players[position].point - _setting.startingPoint,
+          _pointSetting.players[position]!.point - _setting.startingPoint,
           (Position.values.indexOf(position) -
                   Position.values.indexOf(_setting.firstOya) +
                   4) %
@@ -388,7 +392,7 @@ class _LayoutState extends State<Layout> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context).result),
+          title: Text(AppLocalizations.of(context)!.result),
           content: Column(
             children: marks.entries
                 .map((mark) => Row(
@@ -396,7 +400,7 @@ class _LayoutState extends State<Layout> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
-                            Constant.positionTexts[mark.key],
+                            Constant.positionTexts[mark.key]!,
                           ),
                         ),
                         Text(
@@ -411,9 +415,9 @@ class _LayoutState extends State<Layout> {
       );
     }
 
-    Future<Excel> createExcelFile(
+    Future<Excel?> createExcelFile(
         String folder, String fileName, String sheetName) async {
-      Excel excel;
+      Excel? excel;
       try {
         final bytes = File(join(folder, "$fileName.xlsx")).readAsBytesSync();
         excel = Excel.decodeBytes(bytes);
@@ -421,14 +425,14 @@ class _LayoutState extends State<Layout> {
           await showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                    content: Text(AppLocalizations.of(context)
+                    content: Text(AppLocalizations.of(context)!
                         .warningExistingSheetName(sheetName, fileName)),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text(AppLocalizations.of(context).cancel),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                       TextButton(
                         onPressed: () {
@@ -436,7 +440,7 @@ class _LayoutState extends State<Layout> {
                           Navigator.pop(context);
                         },
                         child: Text(
-                            AppLocalizations.of(context).openExcel(fileName)),
+                            AppLocalizations.of(context)!.openExcel(fileName)),
                       ),
                     ],
                   ));
@@ -459,12 +463,12 @@ class _LayoutState extends State<Layout> {
         String fileName,
         String sheetName,
         Map<Position, String> playerNames) async {
-      Excel excel = await createExcelFile(folder, fileName, sheetName);
+      Excel? excel = await createExcelFile(folder, fileName, sheetName);
       if (excel == null) {
         return false;
       }
       final int topRow = 2;
-      final SettingParameter _setting = _histories[endIndex].setting;
+      final class_s.Setting _setting = _histories[endIndex].setting;
 
       CellIndex cell(int col, int row) {
         return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
@@ -477,28 +481,29 @@ class _LayoutState extends State<Layout> {
       Map<Position, double> marks = calResult(_histories[endIndex]);
 
       excel.updateCell(
-          sheetName, cell(0, 1), AppLocalizations.of(context).kyoku);
-      excel.updateCell(sheetName, cell(1, 1), AppLocalizations.of(context).oya);
+          sheetName, cell(0, 1), AppLocalizations.of(context)!.kyoku);
+      excel.updateCell(
+          sheetName, cell(1, 1), AppLocalizations.of(context)!.oya);
       List.generate(4, (index) {
         excel.merge(sheetName, cell(2 + 3 * index, 0), cell(4 + 3 * index, 0),
             customValue: playerNames[position(index)]);
         excel.updateCell(sheetName, cell(2 + 3 * index, 1),
-            AppLocalizations.of(context).riichi);
+            AppLocalizations.of(context)!.riichi);
         excel.updateCell(sheetName, cell(3 + 3 * index, 1),
-            AppLocalizations.of(context).pointVariation);
+            AppLocalizations.of(context)!.pointVariation);
         excel.updateCell(sheetName, cell(4 + 3 * index, 1),
-            AppLocalizations.of(context).currentPoint);
+            AppLocalizations.of(context)!.currentPoint);
         excel.updateCell(
             sheetName,
             cell(4 + 3 * index, endIndex - startIndex + topRow),
-            _histories[endIndex].pointSetting.players[position(index)].point);
+            _histories[endIndex].pointSetting.players[position(index)]!.point);
         excel.updateCell(
             sheetName,
             cell(4 + 3 * index, endIndex - startIndex + 1 + topRow),
             marks[position(index)]);
       });
       excel.updateCell(
-          sheetName, cell(14, 1), AppLocalizations.of(context).kyoutaku);
+          sheetName, cell(14, 1), AppLocalizations.of(context)!.kyoutaku);
 
       void updateExcelKyoku(int row, int pos) {
         excel.updateCell(
@@ -506,24 +511,24 @@ class _LayoutState extends State<Layout> {
             cell(2 + pos * 3, row + topRow - startIndex),
             _histories[row + 1]
                 .pointSetting
-                .players[position(pos)]
+                .players[position(pos)]!
                 .riichi
                 .toString()
                 .toUpperCase());
         excel.updateCell(
             sheetName,
             cell(3 + pos * 3, row + topRow - startIndex),
-            _histories[row + 1].pointSetting.players[position(pos)].point -
-                _histories[row].pointSetting.players[position(pos)].point);
+            _histories[row + 1].pointSetting.players[position(pos)]!.point -
+                _histories[row].pointSetting.players[position(pos)]!.point);
         excel.updateCell(
             sheetName,
             cell(4 + pos * 3, row + topRow - startIndex),
-            _histories[row].pointSetting.players[position(pos)].point);
+            _histories[row].pointSetting.players[position(pos)]!.point);
       }
 
       for (int i = startIndex; i < endIndex; i++) {
         excel.updateCell(sheetName, cell(0, i - startIndex + topRow),
-            "${Constant.kyokus[_histories[i].pointSetting.currentKyoku]} ${_histories[i].pointSetting.bonba}${AppLocalizations.of(context).bonba}");
+            "${Constant.kyokus[_histories[i].pointSetting.currentKyoku]} ${_histories[i].pointSetting.bonba}${AppLocalizations.of(context)!.bonba}");
         excel.updateCell(
             sheetName,
             cell(1, i - startIndex + topRow),
@@ -535,20 +540,20 @@ class _LayoutState extends State<Layout> {
             _histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
       }
 
-      excel.encode().then((onValue) {
-        File(join(folder, "$fileName.xlsx"))
-          ..createSync(recursive: true)
-          ..writeAsBytesSync(onValue);
-        Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).generateSuccess(fileName),
-          backgroundColor: Colors.blue,
-        );
-        OpenFile.open(join(folder, "$fileName.xlsx"));
-      }).catchError((error) {
-        Fluttertoast.showToast(
-            msg: "${AppLocalizations.of(context).error}${": $error"}",
-            backgroundColor: Colors.red);
-      });
+      // excel.encode().then((onValue) {
+      //   File(join(folder, "$fileName.xlsx"))
+      //     ..createSync(recursive: true)
+      //     ..writeAsBytesSync(onValue);
+      //   Fluttertoast.showToast(
+      //     msg: AppLocalizations.of(context).generateSuccess(fileName),
+      //     backgroundColor: Colors.blue,
+      //   );
+      //   OpenFile.open(join(folder, "$fileName.xlsx"));
+      // }).catchError((error) {
+      //   Fluttertoast.showToast(
+      //       msg: "${AppLocalizations.of(context).error}${": $error"}",
+      //       backgroundColor: Colors.red);
+      // });
       return true;
     }
 
@@ -561,25 +566,25 @@ class _LayoutState extends State<Layout> {
       return GestureDetector(
         onTap: () {
           setState(() {
-            if (!_currentPointSetting.players[position].riichi) {
+            if (!_currentPointSetting.players[position]!.riichi) {
               _currentPointSetting.riichibou++;
-              _currentPointSetting.players[position].point -= 1000;
-              _currentPointSetting.players[position].riichi = true;
+              _currentPointSetting.players[position]!.point -= 1000;
+              _currentPointSetting.players[position]!.riichi = true;
             } else {
               _currentPointSetting.riichibou--;
-              _currentPointSetting.players[position].point += 1000;
-              _currentPointSetting.players[position].riichi = false;
+              _currentPointSetting.players[position]!.point += 1000;
+              _currentPointSetting.players[position]!.riichi = false;
             }
           });
         },
         child: Column(
           children: [
             Spacer(),
-            Image.asset(_currentPointSetting.players[position].riichi
+            Image.asset(_currentPointSetting.players[position]!.riichi
                 ? "assets/riichibou.png"
                 : "assets/no_riichibou.png"),
             Text(
-              "$sittingText ${_currentPointSetting.players[position].point}",
+              "$sittingText ${_currentPointSetting.players[position]!.point}",
               style: TextStyle(
                 color: _currentSetting.firstOya == position
                     ? _firstOyaColor
@@ -598,7 +603,7 @@ class _LayoutState extends State<Layout> {
     PreferredSizeWidget myAppBar() {
       return AppBar(
         title: FittedBox(
-          child: Text(AppLocalizations.of(context).appTitle),
+          child: Text(AppLocalizations.of(context)!.appTitle),
         ),
         actions: [
           PopupMenuButton<String>(
@@ -645,7 +650,7 @@ class _LayoutState extends State<Layout> {
                           _language = lang;
                         });
                         widget.setAppLocaleDelegate
-                            .setLocale(supportedLocales[_language]);
+                            .setLocale(supportedLocales[_language]!);
                         Constant.languageChange(context);
                       },
                       initialValue: _language,
@@ -655,7 +660,7 @@ class _LayoutState extends State<Layout> {
                 case "exportToXlsx":
                   if (_histories.length < 2) {
                     Fluttertoast.showToast(
-                      msg: AppLocalizations.of(context).errorAtLeastTwoRecords,
+                      msg: AppLocalizations.of(context)!.errorAtLeastTwoRecords,
                       backgroundColor: Colors.red,
                     );
                     return;
@@ -697,35 +702,35 @@ class _LayoutState extends State<Layout> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            baseBarButton(AppLocalizations.of(context).ron, () {
+            baseBarButton(AppLocalizations.of(context)!.ron, () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Ron(next: saveRon)));
             }),
-            baseBarButton(AppLocalizations.of(context).tsumo, () {
+            baseBarButton(AppLocalizations.of(context)!.tsumo, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Tsumo(save: saveTsumo)));
             }),
-            baseBarButton(AppLocalizations.of(context).ryukyoku, () {
+            baseBarButton(AppLocalizations.of(context)!.ryukyoku, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Ryukyoku(save: saveRyukyoku)));
             }),
-            baseBarButton(AppLocalizations.of(context).reset, () {
+            baseBarButton(AppLocalizations.of(context)!.reset, () {
               showDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (context) => AlertDialog(
-                  title: Text(AppLocalizations.of(context).confirm),
-                  content: Text(AppLocalizations.of(context).confirmReset),
+                  title: Text(AppLocalizations.of(context)!.confirm),
+                  content: Text(AppLocalizations.of(context)!.confirmReset),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text(AppLocalizations.of(context).cancel),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -771,7 +776,7 @@ class _LayoutState extends State<Layout> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      Constant.kyokus[_currentPointSetting.currentKyoku],
+                      Constant.kyokus[_currentPointSetting.currentKyoku]!,
                       style: TextStyle(
                         color: _textColor,
                         fontSize: 20.0,
@@ -809,7 +814,7 @@ class _LayoutState extends State<Layout> {
                 widthFactor: 0.6,
                 child: ElevatedButton(
                   onPressed: showResult,
-                  child: Text(AppLocalizations.of(context).result),
+                  child: Text(AppLocalizations.of(context)!.result),
                 ),
               ),
             ],
@@ -860,7 +865,7 @@ class _LayoutState extends State<Layout> {
                     flex: 3,
                   ),
                   Text(
-                    Constant.kyokus[_currentPointSetting.currentKyoku],
+                    Constant.kyokus[_currentPointSetting.currentKyoku]!,
                     style: TextStyle(
                       color: _textColor,
                       fontSize: 20.0,
@@ -891,7 +896,7 @@ class _LayoutState extends State<Layout> {
             Spacer(),
             ElevatedButton(
               onPressed: showResult,
-              child: Text(AppLocalizations.of(context).result),
+              child: Text(AppLocalizations.of(context)!.result),
             ),
             Spacer(),
           ],

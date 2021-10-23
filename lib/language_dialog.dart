@@ -7,14 +7,14 @@ class LanguageDialog extends StatefulWidget {
   final String initialValue;
   final void Function(String) changeLanguageTo;
 
-  LanguageDialog({this.changeLanguageTo, this.initialValue});
+  LanguageDialog({required this.changeLanguageTo, required this.initialValue});
 
   @override
   _LanguageDialogState createState() => _LanguageDialogState();
 }
 
 class _LanguageDialogState extends State<LanguageDialog> {
-  String _selectedLanguage;
+  late String _selectedLanguage;
 
   @override
   void initState() {
@@ -24,13 +24,14 @@ class _LanguageDialogState extends State<LanguageDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     Widget languageRadioListTile(String lang) {
       return RadioListTile<String>(
         value: lang,
-        title: Text(languageText[lang]),
+        title: Text(languageText[lang]!),
         onChanged: (val) {
           setState(() {
-            _selectedLanguage = val;
+            _selectedLanguage = val ?? "ja";
           });
         },
         dense: true,
@@ -40,7 +41,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
     }
 
     return AlertDialog(
-      title: Text(AppLocalizations.of(context).chooseALanguage),
+      title: Text(i18n.chooseALanguage),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: languageText.keys.map(languageRadioListTile).toList(),
@@ -50,14 +51,14 @@ class _LanguageDialogState extends State<LanguageDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(AppLocalizations.of(context).cancel),
+          child: Text(i18n.cancel),
         ),
         TextButton(
           onPressed: () {
             widget.changeLanguageTo(_selectedLanguage);
             Navigator.pop(context);
           },
-          child: Text(AppLocalizations.of(context).save),
+          child: Text(i18n.save),
         ),
       ],
       scrollable: true,

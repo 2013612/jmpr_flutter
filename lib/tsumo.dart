@@ -7,7 +7,7 @@ class Tsumo extends StatefulWidget {
   final Function save;
 
   Tsumo({
-    @required this.save,
+    required this.save,
   });
 
   @override
@@ -15,8 +15,8 @@ class Tsumo extends StatefulWidget {
 }
 
 class _TsumoState extends State<Tsumo> {
-  int _han, _fu;
-  Position _tsumoPlayer;
+  int? _han, _fu;
+  Position? _tsumoPlayer;
   final InputDecoration _inputDecoration = InputDecoration(
     isDense: true,
     contentPadding: EdgeInsets.all(8.0),
@@ -35,12 +35,13 @@ class _TsumoState extends State<Tsumo> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     Widget tsumoPlayerRadioListTile(Position position) {
       return flexibleCustomRadioTile(
         position,
         _tsumoPlayer,
-        Constant.positionTexts[position],
-        (Position val) {
+        Constant.positionTexts[position]!,
+        (Position? val) {
           setState(() {
             _tsumoPlayer = val;
           });
@@ -53,7 +54,7 @@ class _TsumoState extends State<Tsumo> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).tsumo),
+          title: Text(i18n.tsumo),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -63,7 +64,7 @@ class _TsumoState extends State<Tsumo> {
             ),
             shrinkWrap: true,
             children: [
-              Text(AppLocalizations.of(context).tsumo),
+              Text(i18n.tsumo),
               Row(
                 children: [
                   tsumoPlayerRadioListTile(Position.bottom),
@@ -86,7 +87,7 @@ class _TsumoState extends State<Tsumo> {
                         child: DropdownButton<String>(
                           items: Constant.hans
                               .map((han) => DropdownMenuItem(
-                            value: han.toString(),
+                                    value: han.toString(),
                                     child: Text(han.toString()),
                                   ))
                               .toList(),
@@ -94,7 +95,7 @@ class _TsumoState extends State<Tsumo> {
                           isDense: true,
                           onChanged: (val) {
                             setState(() {
-                              _han = int.tryParse(val);
+                              _han = int.tryParse(val!);
                             });
                           },
                         ),
@@ -104,7 +105,7 @@ class _TsumoState extends State<Tsumo> {
                   Container(
                     width: 40,
                     alignment: Alignment.center,
-                    child: Text(AppLocalizations.of(context).han),
+                    child: Text(i18n.han),
                   ),
                   Spacer(),
                   Container(
@@ -115,7 +116,7 @@ class _TsumoState extends State<Tsumo> {
                         child: DropdownButton<String>(
                           items: Constant.fus
                               .map((fu) => DropdownMenuItem(
-                            value: fu.toString(),
+                                    value: fu.toString(),
                                     child: Text(fu.toString()),
                                   ))
                               .toList(),
@@ -123,7 +124,7 @@ class _TsumoState extends State<Tsumo> {
                           isDense: true,
                           onChanged: (val) {
                             setState(() {
-                              _fu = int.tryParse(val);
+                              _fu = int.tryParse(val!);
                             });
                           },
                         ),
@@ -133,7 +134,7 @@ class _TsumoState extends State<Tsumo> {
                   Container(
                     width: 40,
                     alignment: Alignment.center,
-                    child: Text(AppLocalizations.of(context).fu),
+                    child: Text(i18n.fu),
                   ),
                   Spacer(),
                 ],
@@ -145,9 +146,8 @@ class _TsumoState extends State<Tsumo> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(AppLocalizations.of(context).cancel,
-                  () => Navigator.pop(context)),
-              baseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(i18n.cancel, () => Navigator.pop(context)),
+              baseBarButton(i18n.save, () {
                 widget.save(_tsumoPlayer, _han, _fu);
                 Navigator.pop(context);
               }),

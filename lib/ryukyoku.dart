@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'common.dart';
 
 class Ryukyoku extends StatefulWidget {
   final Function save;
 
   Ryukyoku({
-    @required this.save,
+    required this.save,
   });
 
   @override
@@ -14,7 +15,7 @@ class Ryukyoku extends StatefulWidget {
 }
 
 class _RyokyokuState extends State<Ryukyoku> {
-  Map<Position, bool> _tenpai, _nagashimangan;
+  late Map<Position, bool> _tenpai, _nagashimangan;
 
   @override
   void initState() {
@@ -31,11 +32,11 @@ class _RyokyokuState extends State<Ryukyoku> {
   Widget build(BuildContext context) {
     Widget tenpaiCheckboxListTile(Position position) {
       return flexibleCustomCheckBoxTile(
-        _tenpai[position],
-        Constant.positionTexts[position],
-        (bool isTenpai) {
+        _tenpai[position] ?? false,
+        Constant.positionTexts[position]!,
+        (bool? isTenpai) {
           setState(() {
-            _tenpai[position] = isTenpai;
+            _tenpai[position] = isTenpai ?? false;
           });
         },
         Constant.arrows[position],
@@ -44,11 +45,11 @@ class _RyokyokuState extends State<Ryukyoku> {
 
     Widget nagashimanganCheckboxListTile(Position position) {
       return flexibleCustomCheckBoxTile(
-        _nagashimangan[position],
-        Constant.positionTexts[position],
-        (bool isNagashimangan) {
+        _nagashimangan[position] ?? false,
+        Constant.positionTexts[position]!,
+        (bool? isNagashimangan) {
           setState(() {
-            _nagashimangan[position] = isNagashimangan;
+            _nagashimangan[position] = isNagashimangan ?? false;
           });
         },
         Constant.arrows[position],
@@ -59,7 +60,7 @@ class _RyokyokuState extends State<Ryukyoku> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).ryukyoku),
+          title: Text(AppLocalizations.of(context)!.ryukyoku),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -69,7 +70,7 @@ class _RyokyokuState extends State<Ryukyoku> {
             ),
             shrinkWrap: true,
             children: [
-              Text(AppLocalizations.of(context).tenpai),
+              Text(AppLocalizations.of(context)!.tenpai),
               Row(
                 children: [
                   tenpaiCheckboxListTile(Position.bottom),
@@ -82,7 +83,7 @@ class _RyokyokuState extends State<Ryukyoku> {
                   tenpaiCheckboxListTile(Position.left),
                 ],
               ),
-              Text(AppLocalizations.of(context).nagashimangan),
+              Text(AppLocalizations.of(context)!.nagashimangan),
               Row(
                 children: [
                   nagashimanganCheckboxListTile(Position.bottom),
@@ -102,14 +103,14 @@ class _RyokyokuState extends State<Ryukyoku> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(AppLocalizations.of(context).abortiveDraw, () {
+              baseBarButton(AppLocalizations.of(context)!.abortiveDraw, () {
                 setState(() {
                   _tenpai.updateAll((key, value) => _tenpai[key] = true);
                 });
               }),
-              baseBarButton(AppLocalizations.of(context).cancel,
+              baseBarButton(AppLocalizations.of(context)!.cancel,
                   () => Navigator.pop(context)),
-              baseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(AppLocalizations.of(context)!.save, () {
                 widget.save(_tenpai, _nagashimangan);
                 Navigator.pop(context);
               }),

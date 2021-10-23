@@ -15,7 +15,7 @@ class JMPRAPP extends StatefulWidget {
 }
 
 class _JMPRAPPState extends State<JMPRAPP> {
-  Locale locale;
+  late Locale locale;
 
   @override
   void initState() {

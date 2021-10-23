@@ -6,7 +6,7 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).about),
+        title: Text(AppLocalizations.of(context)!.about),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -14,17 +14,17 @@ class About extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context).appTitle),
+            child: Text(AppLocalizations.of(context)!.appTitle),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context).version("1.1.1")),
+            child: Text(AppLocalizations.of(context)!.version("1.1.1")),
           ),
           Container(
             padding: EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text("${AppLocalizations.of(context).develop}: 2013612"),
+            child: Text("${AppLocalizations.of(context)!.develop}: 2013612"),
           ),
           Container(
             padding: EdgeInsets.all(8.0),

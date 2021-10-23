@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'common.dart';
+import 'utility/iterable_methods.dart';
 
 class RonPoint extends StatefulWidget {
   final Map<Position, bool> isRonPlayers;
   final Function save;
 
   RonPoint({
-    @required this.isRonPlayers,
-    @required this.save,
+    required this.isRonPlayers,
+    required this.save,
   });
 
   @override
@@ -24,13 +25,11 @@ class _RonPointState extends State<RonPoint> {
       borderRadius: BorderRadius.circular(8.0),
     ),
   );
-  Map<Position, int> _hans, _fus;
+  final Map<Position, int> _hans = {}, _fus = {};
 
   @override
   void initState() {
     super.initState();
-    _hans = {};
-    _fus = {};
     for (Position position in Position.values) {
       _hans[position] = 1;
       _fus[position] = 30;
@@ -45,7 +44,7 @@ class _RonPointState extends State<RonPoint> {
       child: Row(
         children: [
           Spacer(),
-          Text(Constant.positionTexts[position]),
+          Text(Constant.positionTexts[position]!),
           Spacer(),
           SizedBox(
             width: 70,
@@ -55,7 +54,7 @@ class _RonPointState extends State<RonPoint> {
                 child: DropdownButton<String>(
                   items: Constant.hans
                       .map((han) => DropdownMenuItem(
-                    value: han.toString(),
+                            value: han.toString(),
                             child: Text(han.toString()),
                           ))
                       .toList(),
@@ -63,7 +62,7 @@ class _RonPointState extends State<RonPoint> {
                   isDense: true,
                   onChanged: (val) {
                     setState(() {
-                      _hans[position] = int.tryParse(val);
+                      _hans[position] = int.tryParse(val ?? "") ?? 1;
                     });
                   },
                 ),
@@ -73,7 +72,7 @@ class _RonPointState extends State<RonPoint> {
           Container(
             width: 40,
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context).han),
+            child: Text(AppLocalizations.of(context)!.han),
           ),
           Spacer(),
           SizedBox(
@@ -84,7 +83,7 @@ class _RonPointState extends State<RonPoint> {
                 child: DropdownButton<String>(
                   items: Constant.fus
                       .map((fu) => DropdownMenuItem(
-                    value: fu.toString(),
+                            value: fu.toString(),
                             child: Text(fu.toString()),
                           ))
                       .toList(),
@@ -92,7 +91,7 @@ class _RonPointState extends State<RonPoint> {
                   isDense: true,
                   onChanged: (val) {
                     setState(() {
-                      _fus[position] = int.tryParse(val);
+                      _fus[position] = int.tryParse(val ?? "") ?? 0;
                     });
                   },
                 ),
@@ -102,7 +101,7 @@ class _RonPointState extends State<RonPoint> {
           Container(
             width: 40,
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context).fu),
+            child: Text(AppLocalizations.of(context)!.fu),
           ),
           Spacer(),
         ],
@@ -112,24 +111,24 @@ class _RonPointState extends State<RonPoint> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     return WillPopScope(
       onWillPop: null,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).point),
+          title: Text(i18n.point),
           automaticallyImplyLeading: false,
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.isRonPlayers.entries
+            children: widget.isRonPlayers!.entries
                 .map((isRonPlayer) {
-                  if (isRonPlayer.value) {
+                  if (isRonPlayer.value!) {
                     return playerPoint(isRonPlayer.key);
                   }
                 })
-                .toList()
-                .where((widget) => widget != null)
+                .compact()
                 .toList(),
           ),
         ),
@@ -137,9 +136,8 @@ class _RonPointState extends State<RonPoint> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              baseBarButton(AppLocalizations.of(context).cancel,
-                  () => Navigator.pop(context)),
-              baseBarButton(AppLocalizations.of(context).save, () {
+              baseBarButton(i18n.cancel, () => Navigator.pop(context)),
+              baseBarButton(i18n.save, () {
                 widget.save(_hans, _fus);
                 Navigator.pop(context);
               }),

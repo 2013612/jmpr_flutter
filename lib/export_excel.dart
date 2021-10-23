@@ -9,16 +9,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'classes/history.dart';
 import 'common.dart';
-import 'history.dart';
 
 class ChooseHistory extends StatefulWidget {
   final List<History> histories;
   final Function next;
 
   ChooseHistory({
-    @required this.histories,
-    @required this.next,
+    required this.histories,
+    required this.next,
   });
 
   @override
@@ -26,8 +26,8 @@ class ChooseHistory extends StatefulWidget {
 }
 
 class _ChooseHistoryState extends State<ChooseHistory> {
-  List<int> chosen;
-  List<History> reversedHistories;
+  late List<int> chosen;
+  late List<History> reversedHistories;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _ChooseHistoryState extends State<ChooseHistory> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).history),
+        title: Text(AppLocalizations.of(context)!.history),
       ),
       body: ListView.builder(
         itemCount: reversedHistories.length,
@@ -85,19 +85,20 @@ class _ChooseHistoryState extends State<ChooseHistory> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            baseBarButton(AppLocalizations.of(context).cancel,
+            baseBarButton(AppLocalizations.of(context)!.cancel,
                 () => Navigator.pop(context)),
-            baseBarButton(AppLocalizations.of(context).next, () {
+            baseBarButton(AppLocalizations.of(context)!.next, () {
               if (chosen.length < 2) {
                 Fluttertoast.showToast(
-                    msg: AppLocalizations.of(context).errorExactTwoRecords,
+                    msg: AppLocalizations.of(context)!.errorExactTwoRecords,
                     backgroundColor: Colors.red);
                 return;
               } else if (!reversedHistories[chosen[0]]
                   .setting
                   .equal(reversedHistories[chosen[1]].setting)) {
                 Fluttertoast.showToast(
-                    msg: AppLocalizations.of(context).errorSettingsAreDifferent,
+                    msg:
+                        AppLocalizations.of(context)!.errorSettingsAreDifferent,
                     backgroundColor: Colors.red);
                 return;
               } else {
@@ -151,8 +152,8 @@ class UserInput extends StatefulWidget {
 class _UserInputState extends State<UserInput> {
   final _userInputFormKey = GlobalKey<FormState>();
   final TextEditingController _folderController = TextEditingController();
-  final Map<Position, String> playerNames = {};
-  String folder, fileName, sheetName;
+  final Map<Position, String?> playerNames = {};
+  String? folder, fileName, sheetName;
 
   @override
   void initState() {
@@ -174,17 +175,17 @@ class _UserInputState extends State<UserInput> {
           height: 0.0,
         ));
 
-    Widget rowInput(String name, Widget widget, [IconData icon]) {
+    Widget rowInput(String? name, Widget widget, [IconData? icon]) {
       Widget child;
       if (icon != null) {
         child = Row(
           children: [
-            Text(name),
+            Text(name!),
             Icon(icon),
           ],
         );
       } else {
-        child = Text(name);
+        child = Text(name!);
       }
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -202,8 +203,8 @@ class _UserInputState extends State<UserInput> {
       );
     }
 
-    Widget textInput(String initialValue, void Function(String) save,
-        [String Function(String) validator]) {
+    Widget textInput(String? initialValue, void Function(String?) save,
+        [String? Function(String?)? validator]) {
       validator ??= (val) => null;
       return TextFormField(
         initialValue: initialValue,
@@ -217,14 +218,14 @@ class _UserInputState extends State<UserInput> {
       return rowInput(
         Constant.positionTexts[position],
         textInput(playerNames[position],
-            (String name) => playerNames[position] = name),
+            (String? name) => playerNames[position] = name),
         Constant.arrows[position],
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).setting),
+        title: Text(AppLocalizations.of(context)!.setting),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -237,14 +238,15 @@ class _UserInputState extends State<UserInput> {
               children: [
                 ...Position.values.map(positionPointSetting).toList(),
                 rowInput(
-                    AppLocalizations.of(context).folder,
+                    AppLocalizations.of(context)!.folder,
                     TextFormField(
                       readOnly: true,
                       controller: _folderController,
                       onTap: () async {
                         final extDirPath = Directory(
-                            await ExtStorage.getExternalStorageDirectory());
-                        final String path = await FilesystemPicker.open(
+                            await ExtStorage.getExternalStorageDirectory() ??
+                                "");
+                        final path = await (FilesystemPicker.open(
                           title: "Save to folder",
                           context: context,
                           rootDirectory: Directory(extDirPath.path),
@@ -252,23 +254,23 @@ class _UserInputState extends State<UserInput> {
                           pickText: "Save file to this folder",
                           requestPermission: () async =>
                               await Permission.storage.request().isGranted,
-                        );
-                        _folderController.text = path;
+                        ));
+                        _folderController.text = path ?? "";
                       },
-                      onSaved: (String path) => folder = path,
-                      validator: (String path) =>
+                      onSaved: (String? path) => folder = path,
+                      validator: (String? path) =>
                           path != null && path != "" ? null : "",
                       decoration: _inputDecoration,
                     )),
                 rowInput(
-                  AppLocalizations.of(context).file,
+                  AppLocalizations.of(context)!.file,
                   Row(
                     children: [
                       Flexible(
                         child: textInput(
-                            "${AppLocalizations.of(context).spreadsheet}1",
-                            (String name) => fileName = name,
-                            (String name) =>
+                            "${AppLocalizations.of(context)!.spreadsheet}1",
+                            (String? name) => fileName = name,
+                            (String? name) =>
                                 name != null && name != "" ? null : ""),
                       ),
                       Text(".xlsx"),
@@ -276,11 +278,11 @@ class _UserInputState extends State<UserInput> {
                   ),
                 ),
                 rowInput(
-                    AppLocalizations.of(context).sheet,
+                    AppLocalizations.of(context)!.sheet,
                     textInput(
-                        "${AppLocalizations.of(context).sheet}1",
-                        (String name) => sheetName = name,
-                        (String name) =>
+                        "${AppLocalizations.of(context)!.sheet}1",
+                        (String? name) => sheetName = name,
+                        (String? name) =>
                             name != null && name != "" ? null : "")),
               ],
             ),
@@ -292,11 +294,11 @@ class _UserInputState extends State<UserInput> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            baseBarButton(AppLocalizations.of(context).cancel,
+            baseBarButton(AppLocalizations.of(context)!.cancel,
                 () => Navigator.pop(context)),
-            baseBarButton(AppLocalizations.of(context).save, () {
-              if (_userInputFormKey.currentState.validate()) {
-                _userInputFormKey.currentState.save();
+            baseBarButton(AppLocalizations.of(context)!.save, () {
+              if (_userInputFormKey.currentState!.validate()) {
+                _userInputFormKey.currentState!.save();
                 widget
                     .save(folder, fileName, sheetName, playerNames)
                     .then((bool success) {
