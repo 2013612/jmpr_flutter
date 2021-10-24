@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../classes/history.dart';
-import '../utility/constant.dart';
+import '../../classes/history.dart';
+import '../../utility/constant.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<History> histories;
@@ -15,12 +15,13 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     final ShapeBorder _shapeBorder = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.history),
+        title: Text(i18n.history),
       ),
       body: ListView(
         children: histories.reversed
@@ -43,15 +44,14 @@ class HistoryPage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text(AppLocalizations.of(context)!.confirm),
-                        content:
-                            Text(AppLocalizations.of(context)!.confirmHistory),
+                        title: Text(i18n.confirm),
+                        content: Text(i18n.confirmHistory),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text(AppLocalizations.of(context)!.cancel),
+                            child: Text(i18n.cancel),
                           ),
                           TextButton(
                             onPressed: () {

@@ -17,7 +17,7 @@ import 'common_widgets/base_bar_button.dart';
 import 'language_dialog.dart';
 import 'pages/about/about.dart';
 import 'pages/export_excel/export_excel.dart';
-import 'pages/history.dart';
+import 'pages/history/history.dart';
 import 'pages/point_setting.dart';
 import 'pages/ron.dart';
 import 'pages/ryukyoku.dart';
