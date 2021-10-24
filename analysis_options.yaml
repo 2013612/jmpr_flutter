@@ -35,3 +35,4 @@ linter:
     sort_child_properties_last: true
     unnecessary_null_in_if_null_operators: true
     use_full_hex_values_for_flutter_colors: true
+    avoid_classes_with_only_static_members: false
