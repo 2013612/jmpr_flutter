@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'classes/history.dart';
-import 'common.dart';
+import '../classes/history.dart';
+import '../utility/constant.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<History> histories;

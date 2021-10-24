@@ -9,22 +9,22 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 
-import 'about.dart';
 import 'classes/history.dart';
 import 'classes/player.dart';
 import 'classes/point_setting.dart' as class_ps;
 import 'classes/setting.dart' as class_s;
-import 'common.dart';
 import 'common_widgets/base_bar_button.dart';
-import 'export_excel.dart';
-import 'history.dart';
 import 'language_dialog.dart';
-import 'locale.dart';
-import 'point_setting.dart';
-import 'ron.dart';
-import 'ryukyoku.dart';
-import 'setting.dart';
-import 'tsumo.dart';
+import 'pages/about.dart';
+import 'pages/export_excel.dart';
+import 'pages/history.dart';
+import 'pages/point_setting.dart';
+import 'pages/ron.dart';
+import 'pages/ryukyoku.dart';
+import 'pages/setting.dart';
+import 'pages/tsumo.dart';
+import 'utility/constant.dart';
+import 'utility/locale.dart';
 
 class Layout extends StatefulWidget {
   final SetAppLocaleDelegate setAppLocaleDelegate;

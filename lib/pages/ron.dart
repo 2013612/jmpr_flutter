@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'common.dart';
-import 'common_widgets/base_bar_button.dart';
-import 'common_widgets/custom_check_box_tile.dart';
-import 'common_widgets/custom_radio_tile.dart';
+import '../common_widgets/base_bar_button.dart';
+import '../common_widgets/custom_check_box_tile.dart';
+import '../common_widgets/custom_radio_tile.dart';
+import '../utility/constant.dart';
 import 'ron_point.dart';
 
 class Ron extends StatefulWidget {

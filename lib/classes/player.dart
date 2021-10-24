@@ -1,4 +1,4 @@
-import '../common.dart';
+import '../utility/constant.dart';
 
 class Player {
   Position position;

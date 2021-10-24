@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'common.dart';
-import 'common_widgets/base_bar_button.dart';
-import 'utility/iterable_methods.dart';
+import '../common_widgets/base_bar_button.dart';
+import '../utility/constant.dart';
+import '../utility/iterable_methods.dart';
 
 class RonPoint extends StatefulWidget {
   final Map<Position, bool> isRonPlayers;

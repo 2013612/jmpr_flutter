@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'classes/setting.dart' as class_s;
-import 'common.dart';
-import 'common_widgets/base_bar_button.dart';
-import 'common_widgets/custom_check_box_tile.dart';
+import '../classes/setting.dart' as class_s;
+import '../common_widgets/base_bar_button.dart';
+import '../common_widgets/custom_check_box_tile.dart';
+import '../utility/constant.dart';
 
 class Setting extends StatefulWidget {
   final class_s.Setting currentSetting;

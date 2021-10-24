@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'classes/point_setting.dart' as ps;
-import 'common.dart';
-import 'common_widgets/base_bar_button.dart';
+import '../classes/point_setting.dart' as ps;
+import '../common_widgets/base_bar_button.dart';
+import '../utility/constant.dart';
 
 class PointSetting extends StatefulWidget {
   final ps.PointSetting currentPointSetting;

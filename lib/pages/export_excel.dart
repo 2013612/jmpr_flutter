@@ -9,9 +9,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'classes/history.dart';
-import 'common.dart';
-import 'common_widgets/base_bar_button.dart';
+import '../classes/history.dart';
+import '../common_widgets/base_bar_button.dart';
+import '../utility/constant.dart';
 
 class ChooseHistory extends StatefulWidget {
   final List<History> histories;
