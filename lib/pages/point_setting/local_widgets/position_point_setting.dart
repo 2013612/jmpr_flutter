@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jmpr_flutter/utility/validators.dart';
 
 import '../../../common_widgets/row_input.dart';
 import '../../../common_widgets/text_input.dart';
@@ -6,18 +7,23 @@ import '../../../utility/constant.dart';
 
 class PositionPointSetting extends StatelessWidget {
   final Position position;
-  final Map<Position, String> playerNames;
+  final void Function(String?) onSaved;
+  final TextEditingController controller;
 
   const PositionPointSetting(
-      {Key? key, required this.position, required this.playerNames})
+      {Key? key,
+      required this.position,
+      required this.onSaved,
+      required this.controller})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return RowInput(
       name: Constant.positionTexts[position]!,
       widget: TextInput(
-        initialValue: playerNames[position]!,
-        onSaved: (String? name) => playerNames[position] = name!,
+        onSaved: onSaved,
+        controller: controller,
+        validator: Validators.integer,
       ),
       icon: Constant.arrows[position],
     );

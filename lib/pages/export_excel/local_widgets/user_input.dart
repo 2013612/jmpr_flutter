@@ -7,11 +7,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common_widgets/base_bar_button.dart';
-import '../../../utility/common_functions.dart';
+import '../../../common_widgets/row_input.dart';
+import '../../../common_widgets/text_input.dart';
 import '../../../utility/constant.dart';
+import '../../../utility/validators.dart';
 import 'position_point_setting.dart';
-import 'row_input.dart';
-import 'text_input.dart';
 
 class UserInput extends StatefulWidget {
   final Function save;
@@ -91,7 +91,7 @@ class _UserInputState extends State<UserInput> {
                       _folderController.text = path ?? "";
                     },
                     onSaved: (String? path) => folder = path,
-                    validator: checkEmpty,
+                    validator: Validators.empty,
                     decoration: _inputDecoration,
                   ),
                 ),
@@ -103,7 +103,7 @@ class _UserInputState extends State<UserInput> {
                         child: TextInput(
                           initialValue: "${i18n.spreadsheet}1",
                           onSaved: (String? name) => fileName = name,
-                          validator: checkEmpty,
+                          validator: Validators.empty,
                         ),
                       ),
                       Text(".xlsx"),
@@ -115,7 +115,7 @@ class _UserInputState extends State<UserInput> {
                   widget: TextInput(
                     initialValue: "${i18n.sheet}1",
                     onSaved: (String? name) => sheetName = name,
-                    validator: checkEmpty,
+                    validator: Validators.empty,
                   ),
                 ),
               ],

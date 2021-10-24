@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:jmpr_flutter/utility/validators.dart';
 
 import 'layout.dart';
 import 'utility/locale.dart';
@@ -25,6 +26,7 @@ class _JMPRAPPState extends State<JMPRAPP> {
 
   @override
   Widget build(BuildContext context) {
+    Validators.context = context;
     return MaterialApp(
       locale: locale,
       title: 'Flutter Demo',

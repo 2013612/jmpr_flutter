@@ -2,9 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../classes/point_setting.dart' as ps;
-import '../common_widgets/base_bar_button.dart';
-import '../utility/constant.dart';
+import '../../classes/point_setting.dart' as ps;
+import '../../common_widgets/base_bar_button.dart';
+import '../../common_widgets/row_input.dart';
+import '../../common_widgets/text_input.dart';
+import '../../utility/constant.dart';
+import '../../utility/validators.dart';
+import 'local_widgets/position_point_setting.dart';
 
 class PointSetting extends StatefulWidget {
   final ps.PointSetting currentPointSetting;
@@ -50,21 +54,6 @@ class _PointSettingState extends State<PointSetting> {
       ),
     );
 
-    // TODO: update validator function
-    String? _integerValidator(String? input) {
-      if (int.tryParse(input!) == null || int.tryParse(input)! % 100 != 0) {
-        return AppLocalizations.of(context)!.errorDivideByHundred;
-      }
-      return null;
-    }
-
-    String? _nonNegativeIntegerValidator(String? input) {
-      if (int.tryParse(input!) == null || int.tryParse(input)! < 0) {
-        return AppLocalizations.of(context)!.errorNonnegative;
-      }
-      return null;
-    }
-
     void copyPointSetting(ps.PointSetting pointSettingParameter) {
       for (Position position in Position.values) {
         _positionControllers[position]!.text =
@@ -74,75 +63,26 @@ class _PointSettingState extends State<PointSetting> {
       _riichibouController.text = pointSettingParameter.riichibou.toString();
     }
 
-    Widget rowInput(String? name, Widget widget, [IconData? icon]) {
-      Widget child;
-      if (icon != null) {
-        child = Row(
-          children: [
-            Text(name!),
-            Icon(icon),
-          ],
-        );
-      } else {
-        child = Text(name!);
-      }
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 70,
-            child: child,
-          ),
-          Container(
-            width: 200,
-            padding: EdgeInsets.all(8.0),
-            child: widget,
-          ),
-        ],
-      );
-    }
+    final Widget dropdownInput = DropdownButtonFormField<String>(
+      items: Constant.kyokus
+          .map((String kyoku) =>
+              DropdownMenuItem<String>(value: kyoku, child: Text(kyoku)))
+          .toList(),
+      value: Constant.kyokus[_currentPointSetting.currentKyoku],
+      decoration: _inputDecoration,
+      onChanged: (String? kyoku) {
+        setState(() {
+          _currentPointSetting.currentKyoku = Constant.kyokus.indexOf(kyoku!);
+        });
+      },
+      onSaved: (String? kyoku) {
+        _currentPointSetting.currentKyoku = Constant.kyokus.indexOf(kyoku!);
+      },
+    );
 
-    Widget textInput(
-        void Function(String?) save,
-        TextEditingController? controller,
-        String? Function(String?) validator) {
-      return TextFormField(
-        keyboardType: TextInputType.numberWithOptions(signed: true),
-        decoration: _inputDecoration,
-        onSaved: save,
-        controller: controller,
-        validator: validator,
-      );
-    }
-
-    Widget dropdownInput() {
-      return DropdownButtonFormField<String>(
-        items: Constant.kyokus
-            .map((String? kyoku) =>
-                DropdownMenuItem<String>(value: kyoku, child: Text(kyoku!)))
-            .toList(),
-        value: Constant.kyokus[_currentPointSetting.currentKyoku],
-        decoration: _inputDecoration,
-        onChanged: (String? kyoku) {
-          setState(() {
-            _currentPointSetting.currentKyoku = Constant.kyokus.indexOf(kyoku);
-          });
-        },
-        onSaved: (String? kyoku) {
-          _currentPointSetting.currentKyoku = Constant.kyokus.indexOf(kyoku);
-        },
-      );
-    }
-
-    Widget positionPointSetting(Position position) {
-      return rowInput(
-          Constant.positionTexts[position],
-          textInput(
-              (String? point) => _currentPointSetting.players[position]!.point =
-                  int.tryParse(point!)!,
-              _positionControllers[position],
-              _integerValidator),
-          Constant.arrows[position]);
+    void Function(String?) posPointSettingOnSave(Position position) {
+      return (String? point) =>
+          _currentPointSetting.players[position]!.point = int.tryParse(point!)!;
     }
 
     return WillPopScope(
@@ -160,26 +100,36 @@ class _PointSettingState extends State<PointSetting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  ...Position.values.map(positionPointSetting).toList(),
-                  rowInput(
-                    AppLocalizations.of(context)!.kyoku,
-                    dropdownInput(),
+                  ...Position.values
+                      .map(
+                        (position) => PositionPointSetting(
+                          controller: _positionControllers[position]!,
+                          onSaved: posPointSettingOnSave(position),
+                          position: position,
+                        ),
+                      )
+                      .toList(),
+                  RowInput(
+                    name: AppLocalizations.of(context)!.kyoku,
+                    widget: dropdownInput,
                   ),
-                  rowInput(
-                    AppLocalizations.of(context)!.bonba,
-                    textInput(
-                        (String? bonba) =>
-                            _currentPointSetting.bonba = int.tryParse(bonba!)!,
-                        _bonbaController,
-                        _nonNegativeIntegerValidator),
+                  RowInput(
+                    name: AppLocalizations.of(context)!.bonba,
+                    widget: TextInput(
+                      onSaved: (String? bonba) =>
+                          _currentPointSetting.bonba = int.tryParse(bonba!)!,
+                      controller: _bonbaController,
+                      validator: Validators.nonNegativeInteger,
+                    ),
                   ),
-                  rowInput(
-                    AppLocalizations.of(context)!.kyoutaku,
-                    textInput(
-                        (String? kyoutaku) => _currentPointSetting.riichibou =
-                            int.tryParse(kyoutaku!)!,
-                        _riichibouController,
-                        _nonNegativeIntegerValidator),
+                  RowInput(
+                    name: AppLocalizations.of(context)!.kyoutaku,
+                    widget: TextInput(
+                      onSaved: (String? kyoutaku) => _currentPointSetting
+                          .riichibou = int.tryParse(kyoutaku!)!,
+                      controller: _riichibouController,
+                      validator: Validators.nonNegativeInteger,
+                    ),
                   ),
                 ],
               ),

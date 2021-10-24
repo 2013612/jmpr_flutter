@@ -21,7 +21,7 @@ class Constant {
     ];
   }
 
-  static final List<String?> kyokus = [
+  static final List<String> kyokus = [
     "東一局",
     "東二局",
     "東三局",
