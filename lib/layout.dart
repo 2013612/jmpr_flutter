@@ -15,7 +15,7 @@ import 'classes/point_setting.dart' as class_ps;
 import 'classes/setting.dart' as class_s;
 import 'common_widgets/base_bar_button.dart';
 import 'language_dialog.dart';
-import 'pages/about.dart';
+import 'pages/about/about.dart';
 import 'pages/export_excel/export_excel.dart';
 import 'pages/history.dart';
 import 'pages/point_setting.dart';
