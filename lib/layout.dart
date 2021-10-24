@@ -19,7 +19,7 @@ import 'pages/about/about.dart';
 import 'pages/export_excel/export_excel.dart';
 import 'pages/history/history.dart';
 import 'pages/point_setting/point_setting.dart';
-import 'pages/ron.dart';
+import 'pages/ron/ron.dart';
 import 'pages/ryukyoku.dart';
 import 'pages/setting.dart';
 import 'pages/tsumo.dart';
