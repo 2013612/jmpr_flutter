@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class TextInput extends StatelessWidget {
-  final String initialValue;
+  final String? initialValue;
   final void Function(String?) onSaved;
   final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
-  const TextInput(
-      {Key? key,
-      required this.initialValue,
-      required this.onSaved,
-      this.validator})
-      : super(key: key);
+  const TextInput({
+    Key? key,
+    this.initialValue,
+    required this.onSaved,
+    this.validator,
+    this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class TextInput extends StatelessWidget {
       decoration: _inputDecoration,
       onSaved: onSaved,
       validator: validator ?? (val) => null,
+      controller: controller,
     );
   }
 }
