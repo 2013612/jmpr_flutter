@@ -3,9 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../utility/constant.dart';
-import '../ron_point.dart';
 import 'local_widgets/ron_check_box_list_tile.dart';
 import 'local_widgets/roned_player_radio_list_tile.dart';
+import 'ron_point.dart';
 
 class Ron extends StatefulWidget {
   final Function next;
