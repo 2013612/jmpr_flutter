@@ -23,7 +23,7 @@ class PositionPointSetting extends StatelessWidget {
       widget: TextInput(
         onSaved: onSaved,
         controller: controller,
-        validator: Validators.integer,
+        validator: Validators.divideByHundred,
       ),
       icon: Constant.arrows[position],
     );

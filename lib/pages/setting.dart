@@ -5,6 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../classes/setting.dart' as class_s;
 import '../common_widgets/base_bar_button.dart';
 import '../common_widgets/custom_check_box_tile.dart';
+import '../common_widgets/row_input.dart';
+import '../common_widgets/text_input.dart';
 import '../utility/constant.dart';
 
 class Setting extends StatefulWidget {
@@ -90,19 +92,12 @@ class _SettingState extends State<Setting> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     final Map<String, String> _usualSettings = {
-      "currentSetting": AppLocalizations.of(context)!.currentSetting,
-      "RMU A/B RULE": AppLocalizations.of(context)!.rmu,
-      "tenhou": AppLocalizations.of(context)!.tenhou
+      "currentSetting": i18n.currentSetting,
+      "RMU A/B RULE": i18n.rmu,
+      "tenhou": i18n.tenhou
     };
-
-    // TODO: update validator function
-    String? _defaultValidator(String? input) {
-      if (int.tryParse(input!) == null) {
-        return AppLocalizations.of(context)!.errorInteger;
-      }
-      return null;
-    }
 
     String? _umaValidator(_) {
       if (int.tryParse(_umaBigController.text) == null ||
@@ -126,43 +121,11 @@ class _SettingState extends State<Setting> {
       _umaSmallController.text = setting.umaSmall.toString();
     }
 
-    Widget rowInput(String name, Widget widget) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 100,
-            child: Text(
-              "$name:",
-            ),
-          ),
-          Container(
-            width: 200,
-            padding: EdgeInsets.all(8.0),
-            child: widget,
-          ),
-        ],
-      );
-    }
-
-    Widget textInput(
-        void Function(String?) save, TextEditingController controller,
-        [String? Function(String?)? validator]) {
-      validator ??= _defaultValidator;
-      return TextFormField(
-        keyboardType: TextInputType.numberWithOptions(signed: true),
-        decoration: _inputDecoration,
-        onSaved: save,
-        controller: controller,
-        validator: validator,
-      );
-    }
-
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.setting),
+          title: Text(i18n.setting),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -173,37 +136,47 @@ class _SettingState extends State<Setting> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  rowInput(
-                      AppLocalizations.of(context)!.startingPoint,
-                      textInput(
-                          (String? startingPoint) => _editingSetting
-                              .startingPoint = int.tryParse(startingPoint!)!,
-                          _startingPointController)),
-                  rowInput(
-                      AppLocalizations.of(context)!.givenStartingPoint,
-                      textInput(
-                          (String? givenStartingPoint) =>
-                              _editingSetting.givenStartingPoint =
-                                  int.tryParse(givenStartingPoint!)!,
-                          _givenStartingPointController)),
-                  rowInput(
-                      AppLocalizations.of(context)!.riichibouPoint,
-                      textInput(
-                          (String? riichibouPoint) => _editingSetting
-                              .riichibouPoint = int.tryParse(riichibouPoint!)!,
-                          _riichibouPointController)),
-                  rowInput(
-                      AppLocalizations.of(context)!.bonbaPoint,
-                      textInput(
-                          (String? bonbaPoint) => _editingSetting.bonbaPoint =
-                              int.tryParse(bonbaPoint!)!,
-                          _bonbaPointController)),
-                  rowInput(
-                      AppLocalizations.of(context)!.ryukyokuPoint,
-                      textInput(
-                          (String? ryukyokuPoint) => _editingSetting
-                              .ryukyokuPoint = int.tryParse(ryukyokuPoint!)!,
-                          _ryukyokuPointController)),
+                  RowInput(
+                    name: i18n.startingPoint,
+                    widget: TextInput(
+                      onSaved: (String? startingPoint) => _editingSetting
+                          .startingPoint = int.tryParse(startingPoint!)!,
+                      controller: _startingPointController,
+                    ),
+                  ),
+                  RowInput(
+                    name: i18n.givenStartingPoint,
+                    widget: TextInput(
+                      onSaved: (String? givenStartingPoint) =>
+                          _editingSetting.givenStartingPoint =
+                              int.tryParse(givenStartingPoint!)!,
+                      controller: _givenStartingPointController,
+                    ),
+                  ),
+                  RowInput(
+                    name: i18n.riichibouPoint,
+                    widget: TextInput(
+                      onSaved: (String? riichibouPoint) => _editingSetting
+                          .riichibouPoint = int.tryParse(riichibouPoint!)!,
+                      controller: _riichibouPointController,
+                    ),
+                  ),
+                  RowInput(
+                    name: i18n.bonbaPoint,
+                    widget: TextInput(
+                      onSaved: (String? bonbaPoint) => _editingSetting
+                          .bonbaPoint = int.tryParse(bonbaPoint!)!,
+                      controller: _bonbaPointController,
+                    ),
+                  ),
+                  RowInput(
+                    name: i18n.ryukyokuPoint,
+                    widget: TextInput(
+                      onSaved: (String? ryukyokuPoint) => _editingSetting
+                          .ryukyokuPoint = int.tryParse(ryukyokuPoint!)!,
+                      controller: _ryukyokuPointController,
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -216,20 +189,22 @@ class _SettingState extends State<Setting> {
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
-                        child: textInput(
-                            (String? umaBig) =>
-                                _editingSetting.umaBig = int.tryParse(umaBig!)!,
-                            _umaBigController,
-                            _umaValidator),
+                        child: TextInput(
+                          onSaved: (String? umaBig) =>
+                              _editingSetting.umaBig = int.tryParse(umaBig!)!,
+                          controller: _umaBigController,
+                          validator: _umaValidator,
+                        ),
                       ),
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
-                        child: textInput(
-                            (String? umaSmall) => _editingSetting.umaSmall =
-                                int.tryParse(umaSmall!)!,
-                            _umaSmallController,
-                            _umaValidator),
+                        child: TextInput(
+                          onSaved: (String? umaSmall) => _editingSetting
+                              .umaSmall = int.tryParse(umaSmall!)!,
+                          controller: _umaSmallController,
+                          validator: _umaValidator,
+                        ),
                       ),
                     ],
                   ),
@@ -238,8 +213,7 @@ class _SettingState extends State<Setting> {
                     children: [
                       Container(
                         width: 100,
-                        child:
-                            Text("${AppLocalizations.of(context)!.firstOya}:"),
+                        child: Text("${i18n.firstOya}:"),
                       ),
                       Container(
                         width: 200,
@@ -270,7 +244,7 @@ class _SettingState extends State<Setting> {
                       width: 350.0,
                       child: CustomCheckBoxTile(
                         checkBoxValue: _editingSetting.isKiriage,
-                        title: AppLocalizations.of(context)!.kiriage,
+                        title: i18n.kiriage,
                         onChanged: (bool? isKiriage) {
                           setState(() {
                             _editingSetting.isKiriage = isKiriage!;
@@ -284,7 +258,7 @@ class _SettingState extends State<Setting> {
                       width: 350.0,
                       child: CustomCheckBoxTile(
                         checkBoxValue: _editingSetting.isDouten,
-                        title: AppLocalizations.of(context)!.samePoint,
+                        title: i18n.samePoint,
                         onChanged: (bool? isDouten) {
                           setState(() {
                             _editingSetting.isDouten = isDouten!;
@@ -343,15 +317,15 @@ class _SettingState extends State<Setting> {
                         break;
                     }
                   },
-                  child: Text(AppLocalizations.of(context)!.usualSetting),
+                  child: Text(i18n.usualSetting),
                 ),
               ),
               BaseBarButton(
-                name: AppLocalizations.of(context)!.cancel,
+                name: i18n.cancel,
                 onPress: () => Navigator.pop(context),
               ),
               BaseBarButton(
-                name: AppLocalizations.of(context)!.save,
+                name: i18n.save,
                 onPress: () {
                   if (_settingFormKey.currentState!.validate()) {
                     _settingFormKey.currentState!.save();
