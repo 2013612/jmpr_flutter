@@ -5,9 +5,7 @@ class CustomCheckBoxTile extends StatelessWidget {
   final String title;
   final void Function(bool?) onChanged;
   final IconData? icon;
-  CustomCheckBoxTile(
-      // ignore: avoid_positional_boolean_parameters
-      {
+  CustomCheckBoxTile({
     required this.checkBoxValue,
     required this.title,
     required this.onChanged,

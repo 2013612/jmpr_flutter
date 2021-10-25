@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../common_widgets/base_bar_button.dart';
-import '../common_widgets/custom_check_box_tile.dart';
-import '../utility/constant.dart';
+import '../../common_widgets/base_bar_button.dart';
+import '../../utility/constant.dart';
+import 'local_widgets/flexible_custom_check_box_tile.dart';
 
 class Ryukyoku extends StatefulWidget {
   final Function save;
@@ -32,41 +32,12 @@ class _RyokyokuState extends State<Ryukyoku> {
 
   @override
   Widget build(BuildContext context) {
-    Widget tenpaiCheckboxListTile(Position position) {
-      return Flexible(
-        child: CustomCheckBoxTile(
-          checkBoxValue: _tenpai[position] ?? false,
-          title: Constant.positionTexts[position]!,
-          onChanged: (bool? isTenpai) {
-            setState(() {
-              _tenpai[position] = isTenpai ?? false;
-            });
-          },
-          icon: Constant.arrows[position],
-        ),
-      );
-    }
-
-    Widget nagashimanganCheckboxListTile(Position position) {
-      return Flexible(
-        child: CustomCheckBoxTile(
-          checkBoxValue: _nagashimangan[position] ?? false,
-          title: Constant.positionTexts[position]!,
-          onChanged: (bool? isNagashimangan) {
-            setState(() {
-              _nagashimangan[position] = isNagashimangan ?? false;
-            });
-          },
-          icon: Constant.arrows[position],
-        ),
-      );
-    }
-
+    final i18n = AppLocalizations.of(context)!;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.ryukyoku),
+          title: Text(i18n.ryukyoku),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -76,30 +47,54 @@ class _RyokyokuState extends State<Ryukyoku> {
             ),
             shrinkWrap: true,
             children: [
-              Text(AppLocalizations.of(context)!.tenpai),
+              Text(i18n.tenpai),
               Row(
                 children: [
-                  tenpaiCheckboxListTile(Position.bottom),
-                  tenpaiCheckboxListTile(Position.right),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.bottom,
+                    map: _tenpai,
+                  ),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.right,
+                    map: _tenpai,
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  tenpaiCheckboxListTile(Position.top),
-                  tenpaiCheckboxListTile(Position.left),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.top,
+                    map: _tenpai,
+                  ),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.left,
+                    map: _tenpai,
+                  ),
                 ],
               ),
-              Text(AppLocalizations.of(context)!.nagashimangan),
+              Text(i18n.nagashimangan),
               Row(
                 children: [
-                  nagashimanganCheckboxListTile(Position.bottom),
-                  nagashimanganCheckboxListTile(Position.right),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.bottom,
+                    map: _nagashimangan,
+                  ),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.right,
+                    map: _nagashimangan,
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  nagashimanganCheckboxListTile(Position.top),
-                  nagashimanganCheckboxListTile(Position.left),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.top,
+                    map: _nagashimangan,
+                  ),
+                  FlexibleCustomCheckBoxTile(
+                    position: Position.left,
+                    map: _nagashimangan,
+                  ),
                 ],
               ),
             ],
@@ -110,7 +105,7 @@ class _RyokyokuState extends State<Ryukyoku> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               BaseBarButton(
-                name: AppLocalizations.of(context)!.abortiveDraw,
+                name: i18n.abortiveDraw,
                 onPress: () {
                   setState(() {
                     _tenpai.updateAll((key, value) => _tenpai[key] = true);
@@ -118,11 +113,11 @@ class _RyokyokuState extends State<Ryukyoku> {
                 },
               ),
               BaseBarButton(
-                name: AppLocalizations.of(context)!.cancel,
+                name: i18n.cancel,
                 onPress: () => Navigator.pop(context),
               ),
               BaseBarButton(
-                name: AppLocalizations.of(context)!.save,
+                name: i18n.save,
                 onPress: () {
                   widget.save(_tenpai, _nagashimangan);
                   Navigator.pop(context);
