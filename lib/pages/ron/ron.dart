@@ -95,12 +95,12 @@ class _RonState extends State<Ron> {
                 children: [
                   RonCheckBoxListTile(
                     position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom]!,
+                    checkBoxValue: _isRonPlayers[Position.bottom],
                     onChanged: checkBoxOnChanged(Position.bottom),
                   ),
                   RonCheckBoxListTile(
                     position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom]!,
+                    checkBoxValue: _isRonPlayers[Position.bottom],
                     onChanged: checkBoxOnChanged(Position.bottom),
                   ),
                 ],
@@ -109,12 +109,12 @@ class _RonState extends State<Ron> {
                 children: [
                   RonCheckBoxListTile(
                     position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom]!,
+                    checkBoxValue: _isRonPlayers[Position.bottom],
                     onChanged: checkBoxOnChanged(Position.bottom),
                   ),
                   RonCheckBoxListTile(
                     position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom]!,
+                    checkBoxValue: _isRonPlayers[Position.bottom],
                     onChanged: checkBoxOnChanged(Position.bottom),
                   ),
                 ],
@@ -128,7 +128,9 @@ class _RonState extends State<Ron> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               BaseBarButton(
-                  name: i18n.cancel, onPress: () => Navigator.pop(context)),
+                name: i18n.cancel,
+                onPress: () => Navigator.pop(context),
+              ),
               BaseBarButton(
                 name: i18n.next,
                 onPress: () {

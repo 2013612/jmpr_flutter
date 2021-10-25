@@ -5,7 +5,7 @@ import '../../../utility/constant.dart';
 
 class RonCheckBoxListTile extends StatelessWidget {
   final Position position;
-  final bool checkBoxValue;
+  final bool? checkBoxValue;
   final void Function(bool?) onChanged;
 
   const RonCheckBoxListTile({
@@ -18,7 +18,7 @@ class RonCheckBoxListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: CustomCheckBoxTile(
-        checkBoxValue: checkBoxValue,
+        checkBoxValue: checkBoxValue ?? false,
         title: Constant.positionTexts[position]!,
         onChanged: onChanged,
         icon: Constant.arrows[position],
