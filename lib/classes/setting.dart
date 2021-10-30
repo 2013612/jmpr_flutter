@@ -13,16 +13,16 @@ class Setting {
   Position firstOya;
 
   Setting({
-    required this.givenStartingPoint,
-    required this.startingPoint,
-    required this.riichibouPoint,
-    required this.bonbaPoint,
-    required this.ryukyokuPoint,
-    required this.umaBig,
-    required this.umaSmall,
-    required this.isKiriage,
-    required this.isDouten,
-    required this.firstOya,
+    this.givenStartingPoint = 30000,
+    this.startingPoint = 25000,
+    this.riichibouPoint = 1000,
+    this.bonbaPoint = 300,
+    this.ryukyokuPoint = 3000,
+    this.umaBig = 20,
+    this.umaSmall = 10,
+    this.isKiriage = false,
+    this.isDouten = false,
+    this.firstOya = Position.bottom,
   });
 
   Setting clone() {
