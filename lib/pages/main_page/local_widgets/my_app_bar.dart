@@ -23,6 +23,7 @@ import 'language_dialog.dart';
 class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final i18n = AppLocalizations.of(context)!;
     var setting = ref.watch(settingProvider).state;
     var pointSetting = ref.watch(pointSettingProvider).state;
     var index = ref.watch(historyIndexProvider).state;
@@ -169,7 +170,10 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
 
     Future<Excel?> createExcelFile(
-        String folder, String fileName, String sheetName) async {
+      String folder,
+      String fileName,
+      String sheetName,
+    ) async {
       Excel? excel;
       try {
         final bytes = File(join(folder, "$fileName.xlsx")).readAsBytesSync();
@@ -210,12 +214,13 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
 
     Future<bool> generateExcel(
-        int startIndex,
-        int endIndex,
-        String folder,
-        String fileName,
-        String sheetName,
-        Map<Position, String> playerNames) async {
+      int startIndex,
+      int endIndex,
+      String folder,
+      String fileName,
+      String sheetName,
+      Map<Position, String> playerNames,
+    ) async {
       Excel? excel = await createExcelFile(folder, fileName, sheetName);
       if (excel == null) {
         return false;
@@ -293,19 +298,30 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
             histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
       }
 
+      var fileBytes = excel.save();
+
+      File(join(folder, "$fileName.xlsx"))
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(fileBytes!);
+
+      Fluttertoast.showToast(
+        msg: i18n.generateSuccess(fileName),
+        backgroundColor: Colors.blue,
+      );
+      OpenFile.open(join(folder, "$fileName.xlsx"));
+
       // excel.encode().then((onValue) {
       //   File(join(folder, "$fileName.xlsx"))
       //     ..createSync(recursive: true)
       //     ..writeAsBytesSync(onValue);
       //   Fluttertoast.showToast(
-      //     msg: AppLocalizations.of(context).generateSuccess(fileName),
+      //     msg: i18n.generateSuccess(fileName),
       //     backgroundColor: Colors.blue,
       //   );
       //   OpenFile.open(join(folder, "$fileName.xlsx"));
       // }).catchError((error) {
       //   Fluttertoast.showToast(
-      //       msg: "${AppLocalizations.of(context).error}${": $error"}",
-      //       backgroundColor: Colors.red);
+      //       msg: "${i18n.error}${": $error"}", backgroundColor: Colors.red);
       // });
       return true;
     }
