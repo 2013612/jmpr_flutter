@@ -1,24 +1,15 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/classes/history.dart';
-import 'package:jmpr_flutter/classes/player.dart';
-import 'package:jmpr_flutter/classes/point_setting.dart';
+import 'dart:ui';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../classes/history.dart';
+import '../classes/player.dart';
+import '../classes/point_setting.dart';
 import '../classes/setting.dart';
 import 'constant.dart';
 
 final settingProvider = StateProvider(
-  (_) => Setting(
-    startingPoint: 30000,
-    givenStartingPoint: 25000,
-    riichibouPoint: 1000,
-    bonbaPoint: 300,
-    ryukyokuPoint: 3000,
-    umaBig: 20,
-    umaSmall: 10,
-    isKiriage: false,
-    isDouten: false,
-    firstOya: Position.bottom,
-  ),
+  (_) => Setting(),
 );
 
 final pointSettingProvider = StateProvider(
@@ -49,3 +40,7 @@ final historyProvider = Provider(
     )
   ],
 );
+
+final historyIndexProvider = StateProvider((_) => 1);
+
+final localeProvider = StateProvider((_) => Locale('ja'));
