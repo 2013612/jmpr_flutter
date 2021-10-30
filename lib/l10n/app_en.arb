@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "appTitle": "Japanese Mahjong Point Recorder",
   "@appTitle": {
     "type": "text"
