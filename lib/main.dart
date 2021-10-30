@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/utility/providers.dart';
 
-import 'pages/main_page/layout.dart';
+import 'pages/main_page/main_page.dart';
+import 'utility/providers.dart';
 import 'utility/validators.dart';
 
 void main() {
@@ -21,7 +21,7 @@ class JMPRAPP extends ConsumerWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         bottomAppBarColor: Colors.blue,
       ),
-      home: Layout(),
+      home: MainPage(),
       locale: ref.watch(localeProvider).state,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
