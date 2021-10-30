@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-class SetAppLocaleDelegate {
-  final void Function(Locale) setLocale;
-
-  SetAppLocaleDelegate(this.setLocale);
-}
-
 final Map<String, Locale> supportedLocales = {
   "ja": Locale("ja", ""),
   "zh": Locale.fromSubtags(
