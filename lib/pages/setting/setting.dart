@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../classes/setting.dart' as class_s;
 import '../../common_widgets/base_bar_button.dart';
@@ -8,13 +9,12 @@ import '../../common_widgets/custom_check_box_tile.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../utility/constant.dart';
+import '../../utility/providers.dart';
 
-class Setting extends StatefulWidget {
-  final class_s.Setting currentSetting;
+class Setting extends ConsumerStatefulWidget {
   final Function save;
 
   Setting({
-    required this.currentSetting,
     required this.save,
   });
 
@@ -22,42 +22,12 @@ class Setting extends StatefulWidget {
   _SettingState createState() => _SettingState();
 }
 
-class _SettingState extends State<Setting> {
+class _SettingState extends ConsumerState<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
   late class_s.Setting _editingSetting;
-  final class_s.Setting _tenhouSetting = class_s.Setting(
-    startingPoint: 30000,
-    givenStartingPoint: 25000,
-    riichibouPoint: 1000,
-    bonbaPoint: 300,
-    ryukyokuPoint: 3000,
-    umaBig: 20,
-    umaSmall: 10,
-    isKiriage: false,
-    isDouten: false,
-    firstOya: Position.bottom,
-  );
-
+  final class_s.Setting _tenhouSetting = class_s.Setting.tenhou();
   // ignore: non_constant_identifier_names
-  final class_s.Setting _RMUSetting = class_s.Setting(
-    startingPoint: 30000,
-    givenStartingPoint: 30000,
-    riichibouPoint: 1000,
-    bonbaPoint: 300,
-    ryukyokuPoint: 3000,
-    umaBig: 30,
-    umaSmall: 10,
-    isKiriage: true,
-    isDouten: true,
-    firstOya: Position.bottom,
-  );
-  final InputDecoration _inputDecoration = InputDecoration(
-    isDense: true,
-    contentPadding: EdgeInsets.all(8),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-  );
+  final class_s.Setting _RMUSetting = class_s.Setting.RMU();
   late TextEditingController _givenStartingPointController,
       _startingPointController,
       _riichibouPointController,
@@ -66,14 +36,10 @@ class _SettingState extends State<Setting> {
       _umaBigController,
       _umaSmallController;
 
-  static final OutlinedBorder _shapeBorder = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(50.0),
-  );
-
   @override
   void initState() {
     super.initState();
-    _editingSetting = widget.currentSetting;
+    _editingSetting = ref.watch(settingProvider).state;
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
     _startingPointController =
@@ -93,6 +59,15 @@ class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+
+    final InputDecoration _inputDecoration = InputDecoration(
+      isDense: true,
+      contentPadding: EdgeInsets.all(8),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
+
     final Map<String, String> _usualSettings = {
       "currentSetting": i18n.currentSetting,
       "RMU A/B RULE": i18n.rmu,
@@ -100,25 +75,26 @@ class _SettingState extends State<Setting> {
     };
 
     String? _umaValidator(_) {
-      if (int.tryParse(_umaBigController.text) == null ||
-          int.tryParse(_umaSmallController.text) == null) {
-        return AppLocalizations.of(context)!.errorInteger;
-      } else if (int.tryParse(_umaBigController.text)! <
-          int.tryParse(_umaSmallController.text)!) {
-        return AppLocalizations.of(context)!.errorDecreasing;
+      final umaBig = int.tryParse(_umaBigController.text);
+      final umaSmall = int.tryParse(_umaSmallController.text);
+      if (umaBig == null || umaSmall == null) {
+        return i18n.errorInteger;
+      } else if (umaBig < umaSmall) {
+        return i18n.errorDecreasing;
       }
       return null;
     }
 
-    void copySetting(class_s.Setting setting) {
+    void copySetting() {
       _givenStartingPointController.text =
-          setting.givenStartingPoint.toString();
-      _startingPointController.text = setting.startingPoint.toString();
-      _riichibouPointController.text = setting.riichibouPoint.toString();
-      _bonbaPointController.text = setting.bonbaPoint.toString();
-      _ryukyokuPointController.text = setting.ryukyokuPoint.toString();
-      _umaBigController.text = setting.umaBig.toString();
-      _umaSmallController.text = setting.umaSmall.toString();
+          _editingSetting.givenStartingPoint.toString();
+      _startingPointController.text = _editingSetting.startingPoint.toString();
+      _riichibouPointController.text =
+          _editingSetting.riichibouPoint.toString();
+      _bonbaPointController.text = _editingSetting.bonbaPoint.toString();
+      _ryukyokuPointController.text = _editingSetting.ryukyokuPoint.toString();
+      _umaBigController.text = _editingSetting.umaBig.toString();
+      _umaSmallController.text = _editingSetting.umaSmall.toString();
     }
 
     return WillPopScope(
@@ -139,8 +115,9 @@ class _SettingState extends State<Setting> {
                   RowInput(
                     name: i18n.startingPoint,
                     widget: TextInput(
-                      onSaved: (String? startingPoint) => _editingSetting
-                          .startingPoint = int.tryParse(startingPoint!)!,
+                      onSaved: (String? startingPoint) =>
+                          _editingSetting.startingPoint =
+                              int.tryParse(startingPoint ?? "") ?? 0,
                       controller: _startingPointController,
                     ),
                   ),
@@ -149,15 +126,16 @@ class _SettingState extends State<Setting> {
                     widget: TextInput(
                       onSaved: (String? givenStartingPoint) =>
                           _editingSetting.givenStartingPoint =
-                              int.tryParse(givenStartingPoint!)!,
+                              int.tryParse(givenStartingPoint ?? "") ?? 0,
                       controller: _givenStartingPointController,
                     ),
                   ),
                   RowInput(
                     name: i18n.riichibouPoint,
                     widget: TextInput(
-                      onSaved: (String? riichibouPoint) => _editingSetting
-                          .riichibouPoint = int.tryParse(riichibouPoint!)!,
+                      onSaved: (String? riichibouPoint) =>
+                          _editingSetting.riichibouPoint =
+                              int.tryParse(riichibouPoint ?? "") ?? 0,
                       controller: _riichibouPointController,
                     ),
                   ),
@@ -165,15 +143,16 @@ class _SettingState extends State<Setting> {
                     name: i18n.bonbaPoint,
                     widget: TextInput(
                       onSaved: (String? bonbaPoint) => _editingSetting
-                          .bonbaPoint = int.tryParse(bonbaPoint!)!,
+                          .bonbaPoint = int.tryParse(bonbaPoint ?? "") ?? 0,
                       controller: _bonbaPointController,
                     ),
                   ),
                   RowInput(
                     name: i18n.ryukyokuPoint,
                     widget: TextInput(
-                      onSaved: (String? ryukyokuPoint) => _editingSetting
-                          .ryukyokuPoint = int.tryParse(ryukyokuPoint!)!,
+                      onSaved: (String? ryukyokuPoint) =>
+                          _editingSetting.ryukyokuPoint =
+                              int.tryParse(ryukyokuPoint ?? "") ?? 0,
                       controller: _ryukyokuPointController,
                     ),
                   ),
@@ -183,15 +162,15 @@ class _SettingState extends State<Setting> {
                       Container(
                         width: 100,
                         child: Text(
-                          "${AppLocalizations.of(context)!.uma}:",
+                          "${i18n.uma}:",
                         ),
                       ),
                       Container(
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                          onSaved: (String? umaBig) =>
-                              _editingSetting.umaBig = int.tryParse(umaBig!)!,
+                          onSaved: (String? umaBig) => _editingSetting.umaBig =
+                              int.tryParse(umaBig ?? "") ?? 0,
                           controller: _umaBigController,
                           validator: _umaValidator,
                         ),
@@ -201,7 +180,7 @@ class _SettingState extends State<Setting> {
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
                           onSaved: (String? umaSmall) => _editingSetting
-                              .umaSmall = int.tryParse(umaSmall!)!,
+                              .umaSmall = int.tryParse(umaSmall ?? "") ?? 0,
                           controller: _umaSmallController,
                           validator: _umaValidator,
                         ),
@@ -229,11 +208,13 @@ class _SettingState extends State<Setting> {
                           decoration: _inputDecoration,
                           onChanged: (Position? firstOya) {
                             setState(() {
-                              _editingSetting.firstOya = firstOya!;
+                              _editingSetting.firstOya =
+                                  firstOya ?? Position.bottom;
                             });
                           },
                           onSaved: (Position? firstOya) {
-                            _editingSetting.firstOya = firstOya!;
+                            _editingSetting.firstOya =
+                                firstOya ?? Position.bottom;
                           },
                         ),
                       ),
@@ -247,7 +228,7 @@ class _SettingState extends State<Setting> {
                         title: i18n.kiriage,
                         onChanged: (bool? isKiriage) {
                           setState(() {
-                            _editingSetting.isKiriage = isKiriage!;
+                            _editingSetting.isKiriage = isKiriage ?? false;
                           });
                         },
                       ),
@@ -261,7 +242,7 @@ class _SettingState extends State<Setting> {
                         title: i18n.samePoint,
                         onChanged: (bool? isDouten) {
                           setState(() {
-                            _editingSetting.isDouten = isDouten!;
+                            _editingSetting.isDouten = isDouten ?? false;
                           });
                         },
                       ),
@@ -276,14 +257,16 @@ class _SettingState extends State<Setting> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // This RaisedButton is used just for the size and shape, does not used as a button
+              // This ElevatedButton is used just for the size and shape, does not used as a button
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   onPrimary: Colors.black,
                   primary: Colors.white,
                   elevation: 0.0,
-                  shape: _shapeBorder,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
                   minimumSize: Size(88, 36),
                 ),
                 child: PopupMenuButton<String>(
@@ -299,23 +282,21 @@ class _SettingState extends State<Setting> {
                     switch (setting) {
                       case "currentSetting":
                         setState(() {
-                          _editingSetting = widget.currentSetting;
-                          copySetting(widget.currentSetting);
+                          _editingSetting = ref.watch(settingProvider).state;
                         });
                         break;
                       case "RMU A/B RULE":
                         setState(() {
                           _editingSetting = _RMUSetting;
-                          copySetting(_RMUSetting);
                         });
                         break;
                       case "tenhou":
                         setState(() {
                           _editingSetting = _tenhouSetting;
-                          copySetting(_tenhouSetting);
                         });
                         break;
                     }
+                    copySetting();
                   },
                   child: Text(i18n.usualSetting),
                 ),
