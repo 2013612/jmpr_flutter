@@ -39,7 +39,7 @@ class _SettingState extends ConsumerState<Setting> {
   @override
   void initState() {
     super.initState();
-    _editingSetting = ref.watch(settingProvider).state;
+    _editingSetting = ref.read(settingProvider).state;
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
     _startingPointController =

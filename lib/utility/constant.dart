@@ -3,21 +3,24 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class Constant {
-  static late final BuildContext context;
+  static void changeLanguage(BuildContext context) {
+    positionTexts = {
+      Position.bottom: AppLocalizations.of(context)!.bottom,
+      Position.right: AppLocalizations.of(context)!.right,
+      Position.top: AppLocalizations.of(context)!.top,
+      Position.left: AppLocalizations.of(context)!.left,
+    };
+    sittingTexts = [
+      AppLocalizations.of(context)!.east,
+      AppLocalizations.of(context)!.south,
+      AppLocalizations.of(context)!.west,
+      AppLocalizations.of(context)!.north
+    ];
+  }
 
-  static Map<Position, String> positionTexts = {
-    Position.bottom: AppLocalizations.of(context)!.bottom,
-    Position.right: AppLocalizations.of(context)!.right,
-    Position.top: AppLocalizations.of(context)!.top,
-    Position.left: AppLocalizations.of(context)!.left,
-  };
+  static late Map<Position, String> positionTexts;
 
-  static List<String> sittingTexts = [
-    AppLocalizations.of(context)!.east,
-    AppLocalizations.of(context)!.south,
-    AppLocalizations.of(context)!.west,
-    AppLocalizations.of(context)!.north
-  ];
+  static late List<String> sittingTexts;
 
   static final List<String> kyokus = [
     "東一局",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/utility/constant.dart';
 import 'package:jmpr_flutter/utility/providers.dart';
 
 import '../../../utility/locale.dart';
@@ -16,7 +17,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
   @override
   void initState() {
     super.initState();
-    _selectedLanguage = ref.watch(localeProvider).state.languageCode;
+    _selectedLanguage = ref.read(localeProvider).state.languageCode;
   }
 
   @override
@@ -54,6 +55,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
           onPressed: () {
             ref.watch(localeProvider).state =
                 supportedLocales[_selectedLanguage]!;
+            Constant.changeLanguage(context);
             Navigator.pop(context);
           },
           child: Text(i18n.save),

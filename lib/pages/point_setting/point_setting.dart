@@ -32,7 +32,7 @@ class _PointSettingState extends ConsumerState<PointSetting> {
   @override
   void initState() {
     super.initState();
-    _currentPointSetting = ref.watch(pointSettingProvider).state;
+    _currentPointSetting = ref.read(pointSettingProvider).state;
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
