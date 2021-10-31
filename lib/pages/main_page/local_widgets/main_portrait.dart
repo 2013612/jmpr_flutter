@@ -117,7 +117,7 @@ class MainPortrait extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.result),
+          title: Text(i18n.result),
           content: Column(
             children: marks.entries
                 .map((mark) => Row(
