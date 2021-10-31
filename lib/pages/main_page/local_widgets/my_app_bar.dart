@@ -358,7 +358,6 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PointSetting(
-                      currentPointSetting: pointSetting,
                       save: savePointSetting,
                     ),
                   ),

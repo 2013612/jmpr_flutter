@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../classes/point_setting.dart' as ps;
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../utility/constant.dart';
+import '../../utility/providers.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/position_point_setting.dart';
 
-class PointSetting extends StatefulWidget {
-  final ps.PointSetting currentPointSetting;
+class PointSetting extends ConsumerStatefulWidget {
   final Function save;
 
   PointSetting({
-    required this.currentPointSetting,
     required this.save,
   });
 
@@ -23,7 +23,7 @@ class PointSetting extends StatefulWidget {
   _PointSettingState createState() => _PointSettingState();
 }
 
-class _PointSettingState extends State<PointSetting> {
+class _PointSettingState extends ConsumerState<PointSetting> {
   final _pointSettingFormKey = GlobalKey<FormState>();
   late ps.PointSetting _currentPointSetting;
   late Map<Position, TextEditingController> _positionControllers;
@@ -32,7 +32,7 @@ class _PointSettingState extends State<PointSetting> {
   @override
   void initState() {
     super.initState();
-    _currentPointSetting = widget.currentPointSetting;
+    _currentPointSetting = ref.watch(pointSettingProvider).state;
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
@@ -46,6 +46,7 @@ class _PointSettingState extends State<PointSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     final InputDecoration _inputDecoration = InputDecoration(
       isDense: true,
       contentPadding: EdgeInsets.all(8.0),
@@ -89,7 +90,7 @@ class _PointSettingState extends State<PointSetting> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.pointSetting),
+          title: Text(i18n.pointSetting),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -110,11 +111,11 @@ class _PointSettingState extends State<PointSetting> {
                       )
                       .toList(),
                   RowInput(
-                    name: AppLocalizations.of(context)!.kyoku,
+                    name: i18n.kyoku,
                     widget: dropdownInput,
                   ),
                   RowInput(
-                    name: AppLocalizations.of(context)!.bonba,
+                    name: i18n.bonba,
                     widget: TextInput(
                       onSaved: (String? bonba) =>
                           _currentPointSetting.bonba = int.tryParse(bonba!)!,
@@ -123,7 +124,7 @@ class _PointSettingState extends State<PointSetting> {
                     ),
                   ),
                   RowInput(
-                    name: AppLocalizations.of(context)!.kyoutaku,
+                    name: i18n.kyoutaku,
                     widget: TextInput(
                       onSaved: (String? kyoutaku) => _currentPointSetting
                           .riichibou = int.tryParse(kyoutaku!)!,
@@ -141,15 +142,16 @@ class _PointSettingState extends State<PointSetting> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               BaseBarButton(
-                name: AppLocalizations.of(context)!.currentPointSetting,
-                onPress: () => copyPointSetting(widget.currentPointSetting),
+                name: i18n.currentPointSetting,
+                onPress: () =>
+                    copyPointSetting(ref.watch(pointSettingProvider).state),
               ),
               BaseBarButton(
-                name: AppLocalizations.of(context)!.cancel,
+                name: i18n.cancel,
                 onPress: () => Navigator.pop(context),
               ),
               BaseBarButton(
-                name: AppLocalizations.of(context)!.save,
+                name: i18n.save,
                 onPress: () {
                   if (_pointSettingFormKey.currentState!.validate()) {
                     _pointSettingFormKey.currentState!.save();
