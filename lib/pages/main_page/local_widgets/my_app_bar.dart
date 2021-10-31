@@ -42,12 +42,6 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       index++;
     }
 
-    void goToHistory(History history) {
-      pointSetting = history.pointSetting.clone();
-      setting = history.setting.clone();
-      index = histories.indexOf(history) + 1;
-    }
-
     void reset() {
       for (Position position in Position.values) {
         pointSetting.players[position]!.riichi = false;
@@ -402,10 +396,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HistoryPage(
-                      histories: histories,
-                      goTo: goToHistory,
-                    ),
+                    builder: (context) => HistoryPage(),
                   ),
                 );
                 break;

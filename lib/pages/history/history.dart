@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/history.dart';
 import '../../utility/constant.dart';
+import '../../utility/providers.dart';
 
-class HistoryPage extends StatelessWidget {
-  final List<History> histories;
-  final Function goTo;
-
-  HistoryPage({
-    required this.histories,
-    required this.goTo,
-  });
-
+class HistoryPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
     final ShapeBorder _shapeBorder = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     );
+    final histories = ref.watch(historyProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(i18n.history),
@@ -56,7 +50,12 @@ class HistoryPage extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
-                              goTo(history);
+                              ref.watch(pointSettingProvider).state =
+                                  history.pointSetting.clone();
+                              ref.watch(settingProvider).state =
+                                  history.setting.clone();
+                              ref.watch(historyIndexProvider).state =
+                                  histories.indexOf(history) + 1;
                               Navigator.of(context).pop();
                             },
                             child: Text("OK"),
