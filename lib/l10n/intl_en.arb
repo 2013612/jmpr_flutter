@@ -36,7 +36,7 @@
   "@language": {
     "type": "text"
   },
-  "chooseALanguage": "請選擇一種語言",
+  "chooseALanguage": "Please choose a language",
   "@chooseALanguage": {
     "type": "text"
   },
