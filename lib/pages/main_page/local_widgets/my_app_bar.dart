@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../classes/history.dart';
+import '../../../classes/point_setting.dart' as class_ps;
+import '../../../classes/setting.dart' as class_s;
 import '../../../utility/constant.dart';
 import '../../../utility/providers.dart';
 import '../../about/about.dart';
@@ -52,28 +54,28 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       }
     }
 
-    void saveSetting(Setting setting) {
+    void saveSetting(class_s.Setting setting) {
       setting = setting;
       reset();
     }
 
-    void savePointSetting(PointSetting pointSetting) {
+    void savePointSetting(class_ps.PointSetting pointSetting) {
       pointSetting = pointSetting;
       addHistory();
       setRiichiFalse();
     }
 
     Map<String, String> choices = {
-      "pointSetting": AppLocalizations.of(context)!.pointSetting,
-      "setting": AppLocalizations.of(context)!.setting,
-      "history": AppLocalizations.of(context)!.history,
-      "exportToXlsx": AppLocalizations.of(context)!.exportToXlsx,
-      "language": AppLocalizations.of(context)!.language,
-      "about": AppLocalizations.of(context)!.about,
+      "pointSetting": i18n.pointSetting,
+      "setting": i18n.setting,
+      "history": i18n.history,
+      "exportToXlsx": i18n.exportToXlsx,
+      "language": i18n.language,
+      "about": i18n.about,
     };
     return AppBar(
       title: FittedBox(
-        child: Text(AppLocalizations.of(context)!.appTitle),
+        child: Text(i18n.appTitle),
       ),
       actions: [
         PopupMenuButton<String>(
@@ -120,7 +122,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
               case "exportToXlsx":
                 if (histories.length < 2) {
                   Fluttertoast.showToast(
-                    msg: AppLocalizations.of(context)!.errorAtLeastTwoRecords,
+                    msg: i18n.errorAtLeastTwoRecords,
                     backgroundColor: Colors.red,
                   );
                   return;

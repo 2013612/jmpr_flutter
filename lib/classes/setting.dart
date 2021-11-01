@@ -13,8 +13,8 @@ class Setting {
   Position firstOya;
 
   Setting({
-    this.givenStartingPoint = 30000,
-    this.startingPoint = 25000,
+    this.givenStartingPoint = 25000,
+    this.startingPoint = 30000,
     this.riichibouPoint = 1000,
     this.bonbaPoint = 300,
     this.ryukyokuPoint = 3000,

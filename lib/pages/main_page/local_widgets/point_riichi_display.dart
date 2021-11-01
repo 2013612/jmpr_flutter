@@ -4,16 +4,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/utility/constant.dart';
 import 'package:jmpr_flutter/utility/providers.dart';
 
-class PointRiichiDisplay extends ConsumerWidget {
+class PointRiichiDisplay extends ConsumerStatefulWidget {
   final Position position;
 
   PointRiichiDisplay(this.position);
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _PointRiichiDisplayState createState() => _PointRiichiDisplayState();
+}
+
+class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
+  @override
+  Widget build(BuildContext context) {
     var setting = ref.watch(settingProvider).state;
     var pointSetting = ref.watch(pointSettingProvider).state;
     final Color _firstOyaColor = Colors.yellow;
     final Color _textColor = Colors.white;
+    final position = widget.position;
 
     String sittingText = Constant.sittingTexts[(position.index -
             (setting.firstOya.index + pointSetting.currentKyoku) +
@@ -22,15 +29,17 @@ class PointRiichiDisplay extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        if (!pointSetting.players[position]!.riichi) {
-          pointSetting.riichibou++;
-          pointSetting.players[position]!.point -= 1000;
-          pointSetting.players[position]!.riichi = true;
-        } else {
-          pointSetting.riichibou--;
-          pointSetting.players[position]!.point += 1000;
-          pointSetting.players[position]!.riichi = false;
-        }
+        setState(() {
+          if (!pointSetting.players[position]!.riichi) {
+            pointSetting.riichibou++;
+            pointSetting.players[position]!.point -= 1000;
+            pointSetting.players[position]!.riichi = true;
+          } else {
+            pointSetting.riichibou--;
+            pointSetting.players[position]!.point += 1000;
+            pointSetting.players[position]!.riichi = false;
+          }
+        });
       },
       child: Column(
         children: [

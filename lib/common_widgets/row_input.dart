@@ -25,7 +25,7 @@ class RowInput extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 70,
+          width: 100,
           child: child,
         ),
         Container(

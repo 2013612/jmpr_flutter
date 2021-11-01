@@ -99,23 +99,23 @@ class _RonState extends State<Ron> {
                     onChanged: checkBoxOnChanged(Position.bottom),
                   ),
                   RonCheckBoxListTile(
-                    position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom],
-                    onChanged: checkBoxOnChanged(Position.bottom),
+                    position: Position.right,
+                    checkBoxValue: _isRonPlayers[Position.right],
+                    onChanged: checkBoxOnChanged(Position.right),
                   ),
                 ],
               ),
               Row(
                 children: [
                   RonCheckBoxListTile(
-                    position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom],
-                    onChanged: checkBoxOnChanged(Position.bottom),
+                    position: Position.top,
+                    checkBoxValue: _isRonPlayers[Position.top],
+                    onChanged: checkBoxOnChanged(Position.top),
                   ),
                   RonCheckBoxListTile(
-                    position: Position.bottom,
-                    checkBoxValue: _isRonPlayers[Position.bottom],
-                    onChanged: checkBoxOnChanged(Position.bottom),
+                    position: Position.left,
+                    checkBoxValue: _isRonPlayers[Position.left],
+                    onChanged: checkBoxOnChanged(Position.left),
                   ),
                 ],
               ),

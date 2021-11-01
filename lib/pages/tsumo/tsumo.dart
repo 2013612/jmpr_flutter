@@ -39,16 +39,18 @@ class _TsumoState extends State<Tsumo> {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     Widget tsumoPlayerRadioListTile(Position position) {
-      return CustomRadioTile(
-        value: position,
-        cur: _tsumoPlayer,
-        title: Constant.positionTexts[position]!,
-        onChanged: (Position? val) {
-          setState(() {
-            _tsumoPlayer = val ?? Position.bottom;
-          });
-        },
-        icon: Constant.arrows[position]!,
+      return Flexible(
+        child: CustomRadioTile(
+          value: position,
+          cur: _tsumoPlayer,
+          title: Constant.positionTexts[position]!,
+          onChanged: (Position? val) {
+            setState(() {
+              _tsumoPlayer = val ?? Position.bottom;
+            });
+          },
+          icon: Constant.arrows[position]!,
+        ),
       );
     }
 
