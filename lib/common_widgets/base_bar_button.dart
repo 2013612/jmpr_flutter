@@ -10,13 +10,6 @@ class BaseBarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPress,
-      style: ElevatedButton.styleFrom(
-        primary: Colors.white,
-        onPrimary: Colors.black,
-        elevation: 0.0,
-        shape: shapeBorder,
-        minimumSize: Size(88, 36),
-      ),
       child: Text(
         name,
       ),

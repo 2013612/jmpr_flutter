@@ -18,6 +18,17 @@ class JMPRAPP extends ConsumerWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         bottomAppBarColor: Colors.blue,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: Colors.black,
+            elevation: 0.0,
+            minimumSize: Size(88, 36),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+          ),
+        ),
       ),
       home: MainPage(),
       locale: ref.watch(localeProvider).state,
