@@ -14,4 +14,15 @@ class Player {
       riichi: riichi,
     );
   }
+
+  @override
+  String toString() {
+    return '''
+    {
+      position: $position,
+      point: $point,
+      riichi: $riichi,
+    }
+    ''';
+  }
 }

@@ -6,4 +6,14 @@ class History {
   Setting setting;
 
   History({required this.pointSetting, required this.setting});
+
+  @override
+  String toString() {
+    return '''
+    {
+      pointSetting: $pointSetting,
+      setting: $setting,
+    }
+    ''';
+  }
 }

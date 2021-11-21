@@ -82,4 +82,21 @@ class Setting {
         isDouten == other.isDouten &&
         firstOya == other.firstOya;
   }
+
+  @override
+  String toString() {
+    return '''
+    {
+      givenStartingPoint: $givenStartingPoint,
+      startingPoint: $startingPoint,
+      riichibouPoint: $riichibouPoint,
+      bonbaPoint: $bonbaPoint,
+      ryukyokuPoint: $ryukyokuPoint,
+      umaBig: $umaBig,
+      umaSmall: $umaSmall,
+      isKiriage: $isKiriage,
+      isDouten: $isDouten,
+      firstOya: $firstOya,
+    }''';
+  }
 }

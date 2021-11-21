@@ -26,4 +26,16 @@ class PointSetting {
       riichibou: riichibou,
     );
   }
+
+  @override
+  String toString() {
+    return '''
+    {
+      currentKyoku: $currentKyoku,
+      bonba: $bonba,
+      riichibou: $riichibou,
+      players: $players,
+    }
+    ''';
+  }
 }
