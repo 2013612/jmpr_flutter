@@ -5,8 +5,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'pages/main_page/main_page.dart';
 import 'utility/providers.dart';
 
+class Logger extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderBase provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    print('''
+{
+  "provider": "${provider.name ?? provider.runtimeType}",
+  "newValue": "$newValue"
+}''');
+  }
+}
+
 void main() {
-  runApp(ProviderScope(child: JMPRAPP()));
+  runApp(ProviderScope(observers: [Logger()], child: JMPRAPP()));
 }
 
 class JMPRAPP extends ConsumerWidget {
