@@ -36,12 +36,12 @@ class MyBottomAppBar extends ConsumerWidget {
       if (index < histories.length) {
         histories.removeRange(index, histories.length);
       }
-      histories.add(
-        History(
-          pointSetting: ref.watch(pointSettingProvider).state.clone(),
-          setting: ref.watch(settingProvider).state.clone(),
-        ),
-      );
+      ref.watch(historyProvider).add(
+            History(
+              pointSetting: ref.watch(pointSettingProvider).state.clone(),
+              setting: ref.watch(settingProvider).state.clone(),
+            ),
+          );
       index++;
     }
 
@@ -56,13 +56,14 @@ class MyBottomAppBar extends ConsumerWidget {
     }
 
     void reset() {
-      for (Position position in Position.values) {
-        pointSetting.players[position]!.riichi = false;
-        pointSetting.players[position]!.point = setting.givenStartingPoint;
-      }
-      pointSetting.currentKyoku = 0;
-      pointSetting.bonba = 0;
-      pointSetting.riichibou = 0;
+      ref.refresh(pointSettingProvider);
+      // for (Position position in Position.values) {
+      //   pointSetting.players[position]!.riichi = false;
+      //   pointSetting.players[position]!.point = setting.givenStartingPoint;
+      // }
+      // pointSetting.currentKyoku = 0;
+      // pointSetting.bonba = 0;
+      // pointSetting.riichibou = 0;
       addHistory();
     }
 
@@ -128,8 +129,7 @@ class MyBottomAppBar extends ConsumerWidget {
           }
           pointSetting.players[key]!.point += point;
           pointSetting.players[ronedPlayer]!.point -= point;
-          nearIndex =
-              min(nearIndex, ((key.index - ronedPlayer.index) + 4) % 4);
+          nearIndex = min(nearIndex, ((key.index - ronedPlayer.index) + 4) % 4);
         }
       });
       nearIndex = (nearIndex + ronedPlayer.index) % 4;
