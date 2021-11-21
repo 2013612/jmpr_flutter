@@ -54,8 +54,9 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       }
     }
 
-    void saveSetting(class_s.Setting setting) {
-      setting = setting;
+    void saveSetting(class_s.Setting newSetting) {
+      // cannot use setting declared before
+      ref.watch(settingProvider).state = newSetting;
       reset();
     }
 
