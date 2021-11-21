@@ -14,7 +14,7 @@ class MainPortrait extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var pointSetting = ref.watch(pointSettingProvider).state;
+    var pointSetting = ref.watch(pointSettingProvider);
     final histories = ref.watch(historyProvider);
     final Color _textColor = Colors.white;
 

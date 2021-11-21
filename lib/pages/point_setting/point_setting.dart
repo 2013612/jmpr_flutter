@@ -32,7 +32,7 @@ class _PointSettingState extends ConsumerState<PointSetting> {
   @override
   void initState() {
     super.initState();
-    _currentPointSetting = ref.read(pointSettingProvider).state;
+    _currentPointSetting = ref.read(pointSettingProvider);
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
@@ -144,7 +144,7 @@ class _PointSettingState extends ConsumerState<PointSetting> {
               BaseBarButton(
                 name: i18n.currentPointSetting,
                 onPress: () =>
-                    copyPointSetting(ref.watch(pointSettingProvider).state),
+                    copyPointSetting(ref.watch(pointSettingProvider)),
               ),
               BaseBarButton(
                 name: i18n.cancel,

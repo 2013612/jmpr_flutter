@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart' as class_ps;
 import '../../../classes/setting.dart' as class_s;
-import '../../../utility/constant.dart';
 import '../../../utility/providers.dart';
 import '../../about/about.dart';
 import '../../export_excel/export_excel.dart';
@@ -20,7 +19,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
     var setting = ref.watch(settingProvider).state;
-    var pointSetting = ref.watch(pointSettingProvider).state;
+    var pointSetting = ref.watch(pointSettingProvider);
     var index = ref.watch(historyIndexProvider).state;
     final histories = ref.watch(historyProvider);
 
@@ -30,7 +29,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       }
       histories.add(
         History(
-          pointSetting: ref.watch(pointSettingProvider).state.clone(),
+          pointSetting: ref.watch(pointSettingProvider).clone(),
           setting: ref.watch(settingProvider).state.clone(),
         ),
       );
@@ -38,20 +37,19 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
 
     void reset() {
-      for (Position position in Position.values) {
-        pointSetting.players[position]!.riichi = false;
-        pointSetting.players[position]!.point = setting.givenStartingPoint;
-      }
-      pointSetting.currentKyoku = 0;
-      pointSetting.bonba = 0;
-      pointSetting.riichibou = 0;
+      // for (Position position in Position.values) {
+      //   pointSetting.players[position]!.riichi = false;
+      //   pointSetting.players[position]!.point = setting.givenStartingPoint;
+      // }
+      // pointSetting.currentKyoku = 0;
+      // pointSetting.bonba = 0;
+      // pointSetting.riichibou = 0;
+      ref.refresh(pointSettingProvider);
       addHistory();
     }
 
     void setRiichiFalse() {
-      for (Position position in Position.values) {
-        pointSetting.players[position]!.riichi = false;
-      }
+      ref.read(pointSettingProvider.notifier).setRiichiFalse();
     }
 
     void saveSetting(class_s.Setting newSetting) {
