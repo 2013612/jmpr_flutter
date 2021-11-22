@@ -6,8 +6,9 @@ import 'package:nil/nil.dart';
 import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart';
 import '../../../classes/setting.dart';
+import '../../../providers/histories.dart';
+import '../../../providers/point_setting.dart';
 import '../../../utility/constant.dart';
-import '../../../utility/providers.dart';
 import 'point_riichi_display.dart';
 
 class MainPortrait extends ConsumerWidget {
@@ -15,7 +16,7 @@ class MainPortrait extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
     var pointSetting = ref.watch(pointSettingProvider);
-    final histories = ref.watch(historyProvider);
+    final histories = ref.watch(historiesProvider);
     final Color _textColor = Colors.white;
 
     Map<Position, double> calResult(History history) {

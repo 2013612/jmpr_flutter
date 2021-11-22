@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/setting.dart';
 
 import '../../classes/setting.dart' as class_s;
 import '../../common_widgets/base_bar_button.dart';
@@ -9,7 +10,6 @@ import '../../common_widgets/custom_check_box_tile.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../utility/constant.dart';
-import '../../utility/providers.dart';
 
 class Setting extends ConsumerStatefulWidget {
   final Function save;
@@ -35,26 +35,6 @@ class _SettingState extends ConsumerState<Setting> {
       _ryukyokuPointController,
       _umaBigController,
       _umaSmallController;
-
-  @override
-  void initState() {
-    super.initState();
-    _editingSetting = ref.read(settingProvider).state.clone();
-    _givenStartingPointController = TextEditingController(
-        text: _editingSetting.givenStartingPoint.toString());
-    _startingPointController =
-        TextEditingController(text: _editingSetting.startingPoint.toString());
-    _riichibouPointController =
-        TextEditingController(text: _editingSetting.riichibouPoint.toString());
-    _bonbaPointController =
-        TextEditingController(text: _editingSetting.bonbaPoint.toString());
-    _ryukyokuPointController =
-        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
-    _umaBigController =
-        TextEditingController(text: _editingSetting.umaBig.toString());
-    _umaSmallController =
-        TextEditingController(text: _editingSetting.umaSmall.toString());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -320,5 +300,25 @@ class _SettingState extends ConsumerState<Setting> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _editingSetting = ref.read(settingProvider).state.clone();
+    _givenStartingPointController = TextEditingController(
+        text: _editingSetting.givenStartingPoint.toString());
+    _startingPointController =
+        TextEditingController(text: _editingSetting.startingPoint.toString());
+    _riichibouPointController =
+        TextEditingController(text: _editingSetting.riichibouPoint.toString());
+    _bonbaPointController =
+        TextEditingController(text: _editingSetting.bonbaPoint.toString());
+    _ryukyokuPointController =
+        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
+    _umaBigController =
+        TextEditingController(text: _editingSetting.umaBig.toString());
+    _umaSmallController =
+        TextEditingController(text: _editingSetting.umaSmall.toString());
   }
 }

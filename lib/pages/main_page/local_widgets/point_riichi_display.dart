@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/point_setting.dart';
+import 'package:jmpr_flutter/providers/setting.dart';
 import 'package:jmpr_flutter/utility/constant.dart';
-import 'package:jmpr_flutter/utility/providers.dart';
 
 class PointRiichiDisplay extends ConsumerStatefulWidget {
   final Position position;

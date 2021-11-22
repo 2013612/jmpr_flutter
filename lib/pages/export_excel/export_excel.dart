@@ -14,8 +14,8 @@ import '../../classes/history.dart';
 import '../../classes/point_setting.dart';
 import '../../classes/setting.dart';
 import '../../common_widgets/base_bar_button.dart';
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
-import '../../utility/providers.dart';
 import 'local_widgets/user_input.dart';
 
 class ChooseHistory extends ConsumerStatefulWidget {
@@ -26,12 +26,6 @@ class ChooseHistory extends ConsumerStatefulWidget {
 class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
   final List<int> chosen = [];
   late final List<History> reversedHistories;
-
-  @override
-  void initState() {
-    super.initState();
-    reversedHistories = ref.read(historyProvider).reversed.toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +182,7 @@ class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
         return false;
       }
       final int topRow = 2;
-      final histories = ref.watch(historyProvider);
+      final histories = ref.watch(historiesProvider);
       final Setting _setting = histories[endIndex].setting;
 
       CellIndex cell(int col, int row) {
@@ -391,5 +385,11 @@ class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    reversedHistories = ref.read(historiesProvider).reversed.toList();
   }
 }

@@ -22,15 +22,6 @@ class _RonPointState extends State<RonPoint> {
   final Map<Position, int> _hans = {}, _fus = {};
 
   @override
-  void initState() {
-    super.initState();
-    for (Position position in Position.values) {
-      _hans[position] = 1;
-      _fus[position] = 30;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     final InputDecoration _inputDecoration = InputDecoration(
@@ -151,5 +142,14 @@ class _RonPointState extends State<RonPoint> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    for (Position position in Position.values) {
+      _hans[position] = 1;
+      _fus[position] = 30;
+    }
   }
 }

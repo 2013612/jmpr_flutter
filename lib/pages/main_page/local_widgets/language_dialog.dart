@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/locale.dart';
 import 'package:jmpr_flutter/utility/constant.dart';
-import 'package:jmpr_flutter/utility/providers.dart';
 
 import '../../../utility/locale.dart';
 
@@ -13,12 +13,6 @@ class LanguageDialog extends ConsumerStatefulWidget {
 
 class _LanguageDialogState extends ConsumerState<LanguageDialog> {
   late String _selectedLanguage;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedLanguage = ref.read(localeProvider).state.languageCode;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,5 +57,11 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
       ],
       scrollable: true,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = ref.read(localeProvider).state.languageCode;
   }
 }

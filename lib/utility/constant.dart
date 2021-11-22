@@ -3,21 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class Constant {
-  static void changeLanguage(BuildContext context) {
-    positionTexts = {
-      Position.bottom: AppLocalizations.of(context)!.bottom,
-      Position.right: AppLocalizations.of(context)!.right,
-      Position.top: AppLocalizations.of(context)!.top,
-      Position.left: AppLocalizations.of(context)!.left,
-    };
-    sittingTexts = [
-      AppLocalizations.of(context)!.east,
-      AppLocalizations.of(context)!.south,
-      AppLocalizations.of(context)!.west,
-      AppLocalizations.of(context)!.north
-    ];
-  }
-
   static late Map<Position, String> positionTexts;
 
   static late List<String> sittingTexts;
@@ -76,6 +61,21 @@ class Constant {
     Position.top: Icons.arrow_upward,
     Position.left: Icons.arrow_back
   };
+
+  static void changeLanguage(BuildContext context) {
+    positionTexts = {
+      Position.bottom: AppLocalizations.of(context)!.bottom,
+      Position.right: AppLocalizations.of(context)!.right,
+      Position.top: AppLocalizations.of(context)!.top,
+      Position.left: AppLocalizations.of(context)!.left,
+    };
+    sittingTexts = [
+      AppLocalizations.of(context)!.east,
+      AppLocalizations.of(context)!.south,
+      AppLocalizations.of(context)!.west,
+      AppLocalizations.of(context)!.north
+    ];
+  }
 }
 
 enum Position {

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/histories.dart';
+import 'package:jmpr_flutter/providers/point_setting.dart';
+import 'package:jmpr_flutter/providers/setting.dart';
 
 import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart' as class_ps;
 import '../../../classes/setting.dart' as class_s;
-import '../../../utility/providers.dart';
 import '../../about/about.dart';
 import '../../export_excel/export_excel.dart';
 import '../../history/history.dart';
@@ -16,12 +18,13 @@ import 'language_dialog.dart';
 
 class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var setting = ref.watch(settingProvider).state;
-    var pointSetting = ref.watch(pointSettingProvider);
     var index = ref.watch(historyIndexProvider).state;
-    final histories = ref.watch(historyProvider);
+    final histories = ref.watch(historiesProvider);
 
     void addHistory() {
       if (index < histories.length) {
@@ -59,7 +62,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
 
     void savePointSetting(class_ps.PointSetting pointSetting) {
-      pointSetting = pointSetting;
+      ref.read(pointSettingProvider.notifier).newPointSetting(pointSetting);
       addHistory();
       setRiichiFalse();
     }
@@ -155,7 +158,4 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       ],
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

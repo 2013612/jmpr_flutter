@@ -28,14 +28,6 @@ class _TsumoState extends State<Tsumo> {
   );
 
   @override
-  void initState() {
-    super.initState();
-    _han = 1;
-    _fu = 30;
-    _tsumoPlayer = Position.bottom;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     Widget tsumoPlayerRadioListTile(Position position) {
@@ -166,5 +158,13 @@ class _TsumoState extends State<Tsumo> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _han = 1;
+    _fu = 30;
+    _tsumoPlayer = Position.bottom;
   }
 }

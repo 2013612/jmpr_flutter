@@ -1,13 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/classes/history.dart';
-import 'package:jmpr_flutter/utility/constant.dart';
-import 'package:jmpr_flutter/utility/providers.dart';
+import 'package:jmpr_flutter/providers/histories.dart';
+import 'package:jmpr_flutter/providers/point_setting.dart';
+import 'package:jmpr_flutter/providers/setting.dart';
 
+import '../../../classes/history.dart';
 import '../../../common_widgets/base_bar_button.dart';
+import '../../../utility/constant.dart';
 import '../../ron/ron.dart';
 import '../../ryukyoku/ryukyoku.dart';
 import '../../tsumo/tsumo.dart';
@@ -16,15 +16,8 @@ class MyBottomAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var setting = ref.watch(settingProvider).state;
-    var pointSetting = ref.watch(pointSettingProvider);
     var index = ref.watch(historyIndexProvider).state;
-    final histories = ref.watch(historyProvider);
-
-    Position currentOya() {
-      return Position
-          .values[(setting.firstOya.index + pointSetting.currentKyoku) % 4];
-    }
+    final histories = ref.watch(historiesProvider);
 
     void setRiichiFalse() {
       ref.read(pointSettingProvider.notifier).setRiichiFalse();
@@ -34,23 +27,13 @@ class MyBottomAppBar extends ConsumerWidget {
       if (index < histories.length) {
         histories.removeRange(index, histories.length);
       }
-      ref.watch(historyProvider).add(
+      ref.watch(historiesProvider).add(
             History(
               pointSetting: ref.watch(pointSettingProvider).clone(),
               setting: ref.watch(settingProvider).state.clone(),
             ),
           );
       index++;
-    }
-
-    int calPoint(int han, int fu) {
-      int point = (pow(2, han + 2) * fu).toInt();
-      if (point > 1920) {
-        point = Constant.points[han]!;
-      } else if (point == 1920 && setting.isKiriage) {
-        point = 2000;
-      }
-      return point;
     }
 
     void reset() {
@@ -65,56 +48,17 @@ class MyBottomAppBar extends ConsumerWidget {
       addHistory();
     }
 
-    void updatePlayerPointTsumo(int point, Position position) {
-      ref
-          .read(pointSettingProvider.notifier)
-          .updatePlayerPointTsumo(point, position, setting);
-    }
-
     void saveTsumo(Position tsumoPlayer, int han, int fu) {
-      int point = calPoint(han, fu);
-      Position oya = currentOya();
-      updatePlayerPointTsumo(point, tsumoPlayer);
-      if (tsumoPlayer == oya) {
-        pointSetting.bonba++;
-      } else {
-        pointSetting.bonba = 0;
-        pointSetting.currentKyoku = (pointSetting.currentKyoku + 1) % 16;
-      }
+      ref.read(pointSettingProvider.notifier).saveTsumo(tsumoPlayer, han, fu);
       addHistory();
       setRiichiFalse();
     }
 
     void saveRon(Position ronedPlayer, Map<Position, bool> ronPlayers,
         Map<Position, int> hans, Map<Position, int> fus) {
-      Position oya = currentOya();
-      int nearIndex = 100;
-      ronPlayers.forEach((key, value) {
-        if (value) {
-          int point = calPoint(hans[key]!, fus[key]!);
-          if (key == oya) {
-            point = (point * 6 + 99) ~/ 100 * 100;
-          } else {
-            point = (point * 4 + 99) ~/ 100 * 100;
-          }
-          pointSetting.players[key]!.point += point;
-          pointSetting.players[ronedPlayer]!.point -= point;
-          nearIndex = min(nearIndex, ((key.index - ronedPlayer.index) + 4) % 4);
-        }
-      });
-      nearIndex = (nearIndex + ronedPlayer.index) % 4;
-      pointSetting.players[ronedPlayer]!.point -=
-          pointSetting.bonba * setting.bonbaPoint;
-      pointSetting.players[Position.values[nearIndex]]!.point +=
-          pointSetting.bonba * setting.bonbaPoint +
-              pointSetting.riichibou * setting.riichibouPoint;
-      pointSetting.riichibou = 0;
-      if (ronPlayers[oya]!) {
-        pointSetting.bonba++;
-      } else {
-        pointSetting.bonba = 0;
-        pointSetting.currentKyoku = (pointSetting.currentKyoku + 1) % 16;
-      }
+      ref
+          .read(pointSettingProvider.notifier)
+          .saveRon(ronedPlayer, ronPlayers, hans, fus);
       addHistory();
       setRiichiFalse();
     }
@@ -123,7 +67,7 @@ class MyBottomAppBar extends ConsumerWidget {
         Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
       ref
           .read(pointSettingProvider.notifier)
-          .saveRyukyoku(tenpai, nagashimangan, setting);
+          .saveRyukyoku(tenpai, nagashimangan);
       addHistory();
       setRiichiFalse();
     }

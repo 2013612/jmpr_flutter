@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/histories.dart';
+import 'package:jmpr_flutter/providers/point_setting.dart';
+import 'package:jmpr_flutter/providers/setting.dart';
 
 import '../../utility/constant.dart';
-import '../../utility/providers.dart';
 
 class HistoryPage extends ConsumerWidget {
   @override
@@ -12,7 +14,7 @@ class HistoryPage extends ConsumerWidget {
     final ShapeBorder _shapeBorder = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     );
-    final histories = ref.watch(historyProvider);
+    final histories = ref.watch(historiesProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(i18n.history),

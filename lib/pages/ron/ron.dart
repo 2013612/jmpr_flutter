@@ -21,30 +21,6 @@ class _RonState extends State<Ron> {
   final Map<Position, bool> _isRonPlayers = {};
 
   @override
-  void initState() {
-    super.initState();
-    for (Position position in Position.values) {
-      _isRonPlayers[position] = false;
-    }
-  }
-
-  void radioOnChanged(Position? position) {
-    setState(() {
-      _ronedPlayer = position ?? Position.bottom;
-    });
-  }
-
-  void Function(bool?) checkBoxOnChanged(Position position) {
-    return (bool? val) {
-      setState(
-        () {
-          _isRonPlayers[position] = val ?? false;
-        },
-      );
-    };
-  }
-
-  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return WillPopScope(
@@ -182,5 +158,29 @@ class _RonState extends State<Ron> {
         ),
       ),
     );
+  }
+
+  void Function(bool?) checkBoxOnChanged(Position position) {
+    return (bool? val) {
+      setState(
+        () {
+          _isRonPlayers[position] = val ?? false;
+        },
+      );
+    };
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    for (Position position in Position.values) {
+      _isRonPlayers[position] = false;
+    }
+  }
+
+  void radioOnChanged(Position? position) {
+    setState(() {
+      _ronedPlayer = position ?? Position.bottom;
+    });
   }
 }

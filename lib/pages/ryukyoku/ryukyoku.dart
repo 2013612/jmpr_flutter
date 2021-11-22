@@ -20,17 +20,6 @@ class _RyokyokuState extends State<Ryukyoku> {
   late Map<Position, bool> _tenpai, _nagashimangan;
 
   @override
-  void initState() {
-    super.initState();
-    _tenpai = {};
-    _nagashimangan = {};
-    for (Position position in Position.values) {
-      _tenpai[position] = false;
-      _nagashimangan[position] = false;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return WillPopScope(
@@ -128,5 +117,16 @@ class _RyokyokuState extends State<Ryukyoku> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tenpai = {};
+    _nagashimangan = {};
+    for (Position position in Position.values) {
+      _tenpai[position] = false;
+      _nagashimangan[position] = false;
+    }
   }
 }

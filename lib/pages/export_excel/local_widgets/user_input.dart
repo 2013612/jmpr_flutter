@@ -29,14 +29,6 @@ class _UserInputState extends State<UserInput> {
   String? folder, fileName, sheetName;
 
   @override
-  void initState() {
-    super.initState();
-    for (Position position in Position.values) {
-      playerNames[position] = Constant.positionTexts[position]!;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     final InputDecoration _inputDecoration = InputDecoration(
@@ -151,5 +143,13 @@ class _UserInputState extends State<UserInput> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    for (Position position in Position.values) {
+      playerNames[position] = Constant.positionTexts[position]!;
+    }
   }
 }
