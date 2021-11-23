@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/histories.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
-import 'package:jmpr_flutter/providers/setting.dart';
 
 import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart' as class_ps;
 import '../../../classes/setting.dart' as class_s;
+import '../../../providers/histories.dart';
+import '../../../providers/point_setting.dart';
+import '../../../providers/setting.dart';
 import '../../about/about.dart';
 import '../../export_excel/export_excel.dart';
 import '../../history/history.dart';
@@ -36,17 +36,10 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
           setting: ref.watch(settingProvider).state.clone(),
         ),
       );
-      index++;
+      ref.watch(historyIndexProvider).state++;
     }
 
     void reset() {
-      // for (Position position in Position.values) {
-      //   pointSetting.players[position]!.riichi = false;
-      //   pointSetting.players[position]!.point = setting.givenStartingPoint;
-      // }
-      // pointSetting.currentKyoku = 0;
-      // pointSetting.bonba = 0;
-      // pointSetting.riichibou = 0;
       ref.refresh(pointSettingProvider);
       addHistory();
     }
@@ -56,7 +49,6 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
 
     void saveSetting(class_s.Setting newSetting) {
-      // cannot use setting declared before
       ref.watch(settingProvider).state = newSetting;
       reset();
     }

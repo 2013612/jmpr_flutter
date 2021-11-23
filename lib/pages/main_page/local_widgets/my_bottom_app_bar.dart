@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/histories.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
-import 'package:jmpr_flutter/providers/setting.dart';
 
 import '../../../classes/history.dart';
 import '../../../common_widgets/base_bar_button.dart';
+import '../../../providers/histories.dart';
+import '../../../providers/point_setting.dart';
+import '../../../providers/setting.dart';
 import '../../../utility/constant.dart';
 import '../../ron/ron.dart';
 import '../../ryukyoku/ryukyoku.dart';
@@ -33,18 +33,11 @@ class MyBottomAppBar extends ConsumerWidget {
               setting: ref.watch(settingProvider).state.clone(),
             ),
           );
-      index++;
+      ref.watch(historyIndexProvider).state++;
     }
 
     void reset() {
       ref.refresh(pointSettingProvider);
-      // for (Position position in Position.values) {
-      //   pointSetting.players[position]!.riichi = false;
-      //   pointSetting.players[position]!.point = setting.givenStartingPoint;
-      // }
-      // pointSetting.currentKyoku = 0;
-      // pointSetting.bonba = 0;
-      // pointSetting.riichibou = 0;
       addHistory();
     }
 

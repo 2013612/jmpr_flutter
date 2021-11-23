@@ -52,12 +52,12 @@ class HistoryPage extends ConsumerWidget {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
+                              ref.watch(settingProvider).state =
+                                  history.setting.clone();
                               ref
                                   .read(pointSettingProvider.notifier)
                                   .newPointSetting(
                                       history.pointSetting.clone());
-                              ref.watch(settingProvider).state =
-                                  history.setting.clone();
                               ref.watch(historyIndexProvider).state =
                                   histories.indexOf(history) + 1;
                               Navigator.of(context).pop();
