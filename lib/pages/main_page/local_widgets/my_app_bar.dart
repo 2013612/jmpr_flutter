@@ -3,12 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart' as class_ps;
 import '../../../classes/setting.dart' as class_s;
 import '../../../providers/histories.dart';
-import '../../../providers/point_setting.dart';
-import '../../../providers/setting.dart';
 import '../../about/about.dart';
 import '../../export_excel/export_excel.dart';
 import '../../history/history.dart';
@@ -30,33 +27,19 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       if (index + 1 < histories.length) {
         histories.removeRange(index + 1, histories.length);
       }
-      histories.add(
-        History(
-          pointSetting: ref.watch(pointSettingProvider).clone(),
-          setting: ref.watch(settingProvider).state.clone(),
-        ),
-      );
+      histories.add(histories[index].clone());
       ref.watch(historyIndexProvider).state++;
     }
 
-    void reset() {
-      ref.refresh(pointSettingProvider);
-      addHistory();
-    }
-
-    void setRiichiFalse() {
-      ref.read(pointSettingProvider.notifier).setRiichiFalse();
-    }
-
     void saveSetting(class_s.Setting newSetting) {
-      ref.watch(settingProvider).state = newSetting;
-      reset();
+      addHistory();
+      histories[index + 1].setting = newSetting;
+      histories[index + 1].resetPoint();
     }
 
     void savePointSetting(class_ps.PointSetting pointSetting) {
-      ref.read(pointSettingProvider.notifier).newPointSetting(pointSetting);
       addHistory();
-      setRiichiFalse();
+      histories[index + 1].pointSetting = pointSetting;
     }
 
     Map<String, String> choices = {

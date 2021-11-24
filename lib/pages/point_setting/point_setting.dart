@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
 
 import '../../classes/point_setting.dart' as ps;
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/position_point_setting.dart';
@@ -28,6 +28,23 @@ class _PointSettingState extends ConsumerState<PointSetting> {
   late ps.PointSetting _currentPointSetting;
   late Map<Position, TextEditingController> _positionControllers;
   late TextEditingController _bonbaController, _riichibouController;
+
+  @override
+  void initState() {
+    super.initState();
+    final histories = ref.read(historiesProvider);
+    final index = ref.read(historyIndexProvider).state;
+    _currentPointSetting = histories[index].pointSetting.clone();
+    _positionControllers = {};
+    for (Position position in Position.values) {
+      _positionControllers[position] = TextEditingController(
+          text: _currentPointSetting.players[position]!.point.toString());
+    }
+    _bonbaController =
+        TextEditingController(text: _currentPointSetting.bonba.toString());
+    _riichibouController =
+        TextEditingController(text: _currentPointSetting.riichibou.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,8 +145,10 @@ class _PointSettingState extends ConsumerState<PointSetting> {
             children: [
               BaseBarButton(
                 name: i18n.currentPointSetting,
-                onPress: () =>
-                    copyPointSetting(ref.watch(pointSettingProvider)),
+                onPress: () => copyPointSetting(ref
+                    .watch(historiesProvider)[
+                        ref.watch(historyIndexProvider).state]
+                    .pointSetting),
               ),
               BaseBarButton(
                 name: i18n.cancel,
@@ -150,20 +169,5 @@ class _PointSettingState extends ConsumerState<PointSetting> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _currentPointSetting = ref.read(pointSettingProvider);
-    _positionControllers = {};
-    for (Position position in Position.values) {
-      _positionControllers[position] = TextEditingController(
-          text: _currentPointSetting.players[position]!.point.toString());
-    }
-    _bonbaController =
-        TextEditingController(text: _currentPointSetting.bonba.toString());
-    _riichibouController =
-        TextEditingController(text: _currentPointSetting.riichibou.toString());
   }
 }

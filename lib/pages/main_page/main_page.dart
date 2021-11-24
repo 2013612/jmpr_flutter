@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../classes/history.dart';
+import '../../classes/point_setting.dart';
+import '../../classes/setting.dart';
 import '../../providers/histories.dart';
-import '../../providers/point_setting.dart';
-import '../../providers/setting.dart';
 import '../../utility/constant.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/main_landscape.dart';
@@ -20,8 +20,8 @@ class MainPage extends ConsumerWidget {
     Constant.changeLanguage(context);
     if (ref.watch(historiesProvider).isEmpty) {
       ref.watch(historiesProvider).add(History(
-            pointSetting: ref.watch(pointSettingProvider).clone(),
-            setting: ref.watch(settingProvider).state.clone(),
+            pointSetting: PointSetting.fromSetting(Setting()),
+            setting: Setting(),
           ));
     }
     if (MediaQuery.of(context).orientation == Orientation.portrait) {

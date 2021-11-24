@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/setting.dart';
 
 import '../../classes/setting.dart' as class_s;
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_check_box_tile.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 
 class Setting extends ConsumerStatefulWidget {
@@ -35,6 +35,28 @@ class _SettingState extends ConsumerState<Setting> {
       _ryukyokuPointController,
       _umaBigController,
       _umaSmallController;
+
+  @override
+  void initState() {
+    super.initState();
+    final histories = ref.read(historiesProvider);
+    final index = ref.read(historyIndexProvider).state;
+    _editingSetting = histories[index].setting.clone();
+    _givenStartingPointController = TextEditingController(
+        text: _editingSetting.givenStartingPoint.toString());
+    _startingPointController =
+        TextEditingController(text: _editingSetting.startingPoint.toString());
+    _riichibouPointController =
+        TextEditingController(text: _editingSetting.riichibouPoint.toString());
+    _bonbaPointController =
+        TextEditingController(text: _editingSetting.bonbaPoint.toString());
+    _ryukyokuPointController =
+        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
+    _umaBigController =
+        TextEditingController(text: _editingSetting.umaBig.toString());
+    _umaSmallController =
+        TextEditingController(text: _editingSetting.umaSmall.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -240,15 +262,6 @@ class _SettingState extends ConsumerState<Setting> {
               // This ElevatedButton is used just for the size and shape, does not used as a button
               ElevatedButton(
                 onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  onPrimary: Colors.black,
-                  primary: Colors.white,
-                  elevation: 0.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  minimumSize: Size(88, 36),
-                ),
                 child: PopupMenuButton<String>(
                   itemBuilder: (BuildContext context) {
                     return _usualSettings.entries.map((setting) {
@@ -262,7 +275,11 @@ class _SettingState extends ConsumerState<Setting> {
                     switch (setting) {
                       case "currentSetting":
                         setState(() {
-                          _editingSetting = ref.watch(settingProvider).state;
+                          _editingSetting = ref
+                              .watch(historiesProvider)[
+                                  ref.watch(historyIndexProvider).state]
+                              .setting
+                              .clone();
                         });
                         break;
                       case "RMU A/B RULE":
@@ -300,25 +317,5 @@ class _SettingState extends ConsumerState<Setting> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _editingSetting = ref.read(settingProvider).state.clone();
-    _givenStartingPointController = TextEditingController(
-        text: _editingSetting.givenStartingPoint.toString());
-    _startingPointController =
-        TextEditingController(text: _editingSetting.startingPoint.toString());
-    _riichibouPointController =
-        TextEditingController(text: _editingSetting.riichibouPoint.toString());
-    _bonbaPointController =
-        TextEditingController(text: _editingSetting.bonbaPoint.toString());
-    _ryukyokuPointController =
-        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
-    _umaBigController =
-        TextEditingController(text: _editingSetting.umaBig.toString());
-    _umaSmallController =
-        TextEditingController(text: _editingSetting.umaSmall.toString());
   }
 }

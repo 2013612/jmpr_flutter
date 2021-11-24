@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/histories.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
-import 'package:jmpr_flutter/providers/setting.dart';
 
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
+import '../../utility/iterable_methods.dart';
 
 class HistoryPage extends ConsumerWidget {
   @override
@@ -21,8 +20,8 @@ class HistoryPage extends ConsumerWidget {
       ),
       body: ListView(
         children: histories.reversed
-            .map(
-              (history) => ListTile(
+            .mapIndexed(
+              (history, index) => ListTile(
                 leading: Text(
                     "${Constant.kyokus[history.pointSetting.currentKyoku]} - ${history.pointSetting.bonba}"),
                 title: FittedBox(
@@ -52,14 +51,8 @@ class HistoryPage extends ConsumerWidget {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
-                              ref.watch(settingProvider).state =
-                                  history.setting.clone();
-                              ref
-                                  .read(pointSettingProvider.notifier)
-                                  .newPointSetting(
-                                      history.pointSetting.clone());
                               ref.watch(historyIndexProvider).state =
-                                  histories.indexOf(history) + 1;
+                                  histories.length - index - 1;
                               Navigator.of(context).pop();
                             },
                             child: Text("OK"),
