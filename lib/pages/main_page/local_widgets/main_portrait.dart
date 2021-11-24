@@ -15,7 +15,7 @@ class MainPortrait extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
     final histories = ref.watch(historiesProvider);
-    final index = ref.watch(historyIndexProvider).state;
+    final index = ref.watch(historyIndexProvider);
     final Color _textColor = Colors.white;
 
     Map<Position, double> calResult(History history) {

@@ -13,7 +13,7 @@ class MyBottomAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final index = ref.watch(historyIndexProvider).state;
+    final index = ref.watch(historyIndexProvider);
     final histories = ref.watch(historiesProvider);
 
     void addHistory() {
@@ -21,7 +21,7 @@ class MyBottomAppBar extends ConsumerWidget {
         histories.removeRange(index + 1, histories.length);
       }
       histories.add(histories[index].clone());
-      ref.watch(historyIndexProvider).state++;
+      ref.watch(historyIndexProvider.state).state++;
     }
 
     void reset() {

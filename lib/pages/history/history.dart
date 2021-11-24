@@ -51,7 +51,7 @@ class HistoryPage extends ConsumerWidget {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
-                              ref.watch(historyIndexProvider).state =
+                              ref.watch(historyIndexProvider.state).state =
                                   histories.length - index - 1;
                               Navigator.of(context).pop();
                             },

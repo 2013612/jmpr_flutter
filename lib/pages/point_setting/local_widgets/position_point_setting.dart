@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jmpr_flutter/utility/validators.dart';
 
 import '../../../common_widgets/row_input.dart';
 import '../../../common_widgets/text_input.dart';
 import '../../../utility/constant.dart';
+import '../../../utility/validators.dart';
 
 class PositionPointSetting extends StatelessWidget {
   final Position position;

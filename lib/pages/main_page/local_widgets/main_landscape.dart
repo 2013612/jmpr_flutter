@@ -14,7 +14,7 @@ class MainLandscape extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
     final histories = ref.watch(historiesProvider);
-    final index = ref.watch(historyIndexProvider).state;
+    final index = ref.watch(historyIndexProvider);
     final pointSetting = histories[index].pointSetting;
     final Color _textColor = Colors.white;
 

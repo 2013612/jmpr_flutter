@@ -17,19 +17,21 @@ class Tsumo extends StatefulWidget {
 }
 
 class _TsumoState extends State<Tsumo> {
-  late int _han, _fu;
-  late Position _tsumoPlayer;
-  final InputDecoration _inputDecoration = InputDecoration(
-    isDense: true,
-    contentPadding: EdgeInsets.all(8.0),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-  );
+  int _han = 1, _fu = 30;
+  Position _tsumoPlayer = Position.bottom;
 
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+
+    final InputDecoration _inputDecoration = InputDecoration(
+      isDense: true,
+      contentPadding: EdgeInsets.all(8.0),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
+
     Widget tsumoPlayerRadioListTile(Position position) {
       return Flexible(
         child: CustomRadioTile(
@@ -158,13 +160,5 @@ class _TsumoState extends State<Tsumo> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _han = 1;
-    _fu = 30;
-    _tsumoPlayer = Position.bottom;
   }
 }

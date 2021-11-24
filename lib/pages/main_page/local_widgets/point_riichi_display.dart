@@ -17,7 +17,7 @@ class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
   @override
   Widget build(BuildContext context) {
     final histories = ref.watch(historiesProvider);
-    final index = ref.watch(historyIndexProvider).state;
+    final index = ref.watch(historyIndexProvider);
     final setting = histories[index].setting;
     final pointSetting = histories[index].pointSetting;
     final Color _firstOyaColor = Colors.yellow;

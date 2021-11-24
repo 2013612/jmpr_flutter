@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jmpr_flutter/common_widgets/custom_radio_tile.dart';
-import 'package:jmpr_flutter/utility/constant.dart';
+
+import '../../../common_widgets/custom_radio_tile.dart';
+import '../../../utility/constant.dart';
 
 class RonedPlayerRadioListTile extends StatelessWidget {
   final Position position;

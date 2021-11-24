@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/locale.dart';
-import 'package:jmpr_flutter/utility/constant.dart';
 
+import '../../../providers/locale.dart';
+import '../../../utility/constant.dart';
 import '../../../utility/locale.dart';
 
 class LanguageDialog extends ConsumerStatefulWidget {
@@ -47,7 +47,7 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
         ),
         TextButton(
           onPressed: () {
-            ref.watch(localeProvider).state =
+            ref.watch(localeProvider.state).state =
                 supportedLocales[_selectedLanguage]!;
             Constant.changeLanguage(context);
             Navigator.pop(context);
@@ -62,6 +62,6 @@ class _LanguageDialogState extends ConsumerState<LanguageDialog> {
   @override
   void initState() {
     super.initState();
-    _selectedLanguage = ref.read(localeProvider).state.languageCode;
+    _selectedLanguage = ref.read(localeProvider).languageCode;
   }
 }
