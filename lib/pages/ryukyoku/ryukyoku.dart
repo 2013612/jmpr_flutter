@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common_widgets/base_bar_button.dart';
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import 'local_widgets/flexible_custom_check_box_tile.dart';
 
-class Ryukyoku extends StatefulWidget {
-  final Function save;
-
-  Ryukyoku({
-    required this.save,
-  });
-
+class Ryukyoku extends ConsumerStatefulWidget {
   @override
-  State<Ryukyoku> createState() => _RyokyokuState();
+  ConsumerState<Ryukyoku> createState() => _RyokyokuState();
 }
 
-class _RyokyokuState extends State<Ryukyoku> {
+class _RyokyokuState extends ConsumerState<Ryukyoku> {
   late Map<Position, bool> _tenpai, _nagashimangan;
+
+  @override
+  void initState() {
+    super.initState();
+    _tenpai = {};
+    _nagashimangan = {};
+    for (Position position in Position.values) {
+      _tenpai[position] = false;
+      _nagashimangan[position] = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +115,18 @@ class _RyokyokuState extends State<Ryukyoku> {
               BaseBarButton(
                 name: i18n.save,
                 onPress: () {
-                  widget.save(_tenpai, _nagashimangan);
+                  final histories = ref.watch(historiesProvider);
+                  final index = ref.watch(historyIndexProvider);
+
+                  if (index + 1 < histories.length) {
+                    histories.removeRange(index + 1, histories.length);
+                  }
+                  histories.add(histories[index].clone());
+                  ref.watch(historyIndexProvider.state).state++;
+
+                  histories[index + 1].saveRyukyoku(_tenpai, _nagashimangan);
+                  histories[index + 1].setRiichiFalse();
+
                   Navigator.pop(context);
                 },
               ),
@@ -117,16 +135,5 @@ class _RyokyokuState extends State<Ryukyoku> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _tenpai = {};
-    _nagashimangan = {};
-    for (Position position in Position.values) {
-      _tenpai[position] = false;
-      _nagashimangan[position] = false;
-    }
   }
 }
