@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_radio_tile.dart';
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 
-class Tsumo extends StatefulWidget {
-  final Function save;
-
-  Tsumo({
-    required this.save,
-  });
-
+class Tsumo extends ConsumerStatefulWidget {
   @override
-  State<Tsumo> createState() => _TsumoState();
+  ConsumerState<Tsumo> createState() => _TsumoState();
 }
 
-class _TsumoState extends State<Tsumo> {
+class _TsumoState extends ConsumerState<Tsumo> {
   int _han = 1, _fu = 30;
   Position _tsumoPlayer = Position.bottom;
 
@@ -151,7 +147,18 @@ class _TsumoState extends State<Tsumo> {
               BaseBarButton(
                 name: i18n.save,
                 onPress: () {
-                  widget.save(_tsumoPlayer, _han, _fu);
+                  final histories = ref.watch(historiesProvider);
+                  final index = ref.watch(historyIndexProvider);
+
+                  if (index + 1 < histories.length) {
+                    histories.removeRange(index + 1, histories.length);
+                  }
+                  histories.add(histories[index].clone());
+                  ref.watch(historyIndexProvider.state).state++;
+
+                  histories[index + 1].saveTsumo(_tsumoPlayer, _han, _fu);
+                  histories[index + 1].setRiichiFalse();
+
                   Navigator.pop(context);
                 },
               ),
