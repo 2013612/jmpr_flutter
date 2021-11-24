@@ -267,19 +267,6 @@ class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
       );
       OpenFile.open(join(folder, "$fileName.xlsx"));
 
-      // excel.encode().then((onValue) {
-      //   File(join(folder, "$fileName.xlsx"))
-      //     ..createSync(recursive: true)
-      //     ..writeAsBytesSync(onValue);
-      //   Fluttertoast.showToast(
-      //     msg: i18n.generateSuccess(fileName),
-      //     backgroundColor: Colors.blue,
-      //   );
-      //   OpenFile.open(join(folder, "$fileName.xlsx"));
-      // }).catchError((error) {
-      //   Fluttertoast.showToast(
-      //       msg: "${i18n.error}${": $error"}", backgroundColor: Colors.red);
-      // });
       return true;
     }
 
