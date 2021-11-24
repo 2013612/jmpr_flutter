@@ -59,7 +59,6 @@ class PointSettingNotifier extends StateNotifier<PointSetting> {
       Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
     int numOfTenpai = 0;
     int numOfNagashimagan = 0;
-    var setting = Setting();
     tenpai.forEach((key, value) {
       if (value) numOfTenpai++;
     });

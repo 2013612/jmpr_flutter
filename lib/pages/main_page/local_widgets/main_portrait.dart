@@ -7,7 +7,6 @@ import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart';
 import '../../../classes/setting.dart';
 import '../../../providers/histories.dart';
-import '../../../providers/point_setting.dart';
 import '../../../utility/constant.dart';
 import 'point_riichi_display.dart';
 
@@ -15,8 +14,8 @@ class MainPortrait extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var pointSetting = ref.watch(pointSettingProvider);
     final histories = ref.watch(historiesProvider);
+    final index = ref.watch(historyIndexProvider).state;
     final Color _textColor = Colors.white;
 
     Map<Position, double> calResult(History history) {
@@ -165,21 +164,21 @@ class MainPortrait extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  Constant.kyokus[pointSetting.currentKyoku],
+                  Constant.kyokus[histories[index].pointSetting.currentKyoku],
                   style: TextStyle(
                     color: _textColor,
                     fontSize: 20.0,
                   ),
                 ),
                 Text(
-                  "${pointSetting.bonba} 本場",
+                  "${histories[index].pointSetting.bonba} 本場",
                   style: TextStyle(
                     color: _textColor,
                     fontSize: 20.0,
                   ),
                 ),
                 Text(
-                  "供托: ${pointSetting.riichibou}",
+                  "供托: ${histories[index].pointSetting.riichibou}",
                   style: TextStyle(
                     color: _textColor,
                     fontSize: 20.0,

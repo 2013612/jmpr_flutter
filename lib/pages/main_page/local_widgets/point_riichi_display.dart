@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
-import 'package:jmpr_flutter/providers/setting.dart';
-import 'package:jmpr_flutter/utility/constant.dart';
+
+import '../../../providers/histories.dart';
+import '../../../utility/constant.dart';
 
 class PointRiichiDisplay extends ConsumerStatefulWidget {
   final Position position;
@@ -17,8 +16,10 @@ class PointRiichiDisplay extends ConsumerStatefulWidget {
 class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
   @override
   Widget build(BuildContext context) {
-    var setting = ref.watch(settingProvider).state;
-    var pointSetting = ref.watch(pointSettingProvider);
+    final histories = ref.watch(historiesProvider);
+    final index = ref.watch(historyIndexProvider).state;
+    final setting = histories[index].setting;
+    final pointSetting = histories[index].pointSetting;
     final Color _firstOyaColor = Colors.yellow;
     final Color _textColor = Colors.white;
     final position = widget.position;

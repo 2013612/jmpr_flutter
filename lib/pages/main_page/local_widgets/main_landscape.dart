@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/histories.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
 
 import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart';
 import '../../../classes/setting.dart';
+import '../../../providers/histories.dart';
 import '../../../utility/constant.dart';
 import 'point_riichi_display.dart';
 
@@ -14,8 +13,9 @@ class MainLandscape extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var pointSetting = ref.watch(pointSettingProvider);
     final histories = ref.watch(historiesProvider);
+    final index = ref.watch(historyIndexProvider).state;
+    final pointSetting = histories[index].pointSetting;
     final Color _textColor = Colors.white;
 
     Map<Position, double> calResult(History history) {

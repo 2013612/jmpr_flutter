@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../classes/history.dart';
 import '../../../common_widgets/base_bar_button.dart';
 import '../../../providers/histories.dart';
-import '../../../providers/point_setting.dart';
-import '../../../providers/setting.dart';
 import '../../../utility/constant.dart';
 import '../../ron/ron.dart';
 import '../../ryukyoku/ryukyoku.dart';
@@ -16,53 +13,40 @@ class MyBottomAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var index = ref.watch(historyIndexProvider).state;
+    final index = ref.watch(historyIndexProvider).state;
     final histories = ref.watch(historiesProvider);
 
-    void setRiichiFalse() {
-      ref.read(pointSettingProvider.notifier).setRiichiFalse();
-    }
-
     void addHistory() {
-      if (index < histories.length) {
-        histories.removeRange(index, histories.length);
+      if (index + 1 < histories.length) {
+        histories.removeRange(index + 1, histories.length);
       }
-      ref.watch(historiesProvider).add(
-            History(
-              pointSetting: ref.watch(pointSettingProvider).clone(),
-              setting: ref.watch(settingProvider).state.clone(),
-            ),
-          );
+      histories.add(histories[index].clone());
       ref.watch(historyIndexProvider).state++;
     }
 
     void reset() {
-      ref.refresh(pointSettingProvider);
       addHistory();
+      histories[index + 1].resetPoint();
     }
 
     void saveTsumo(Position tsumoPlayer, int han, int fu) {
-      ref.read(pointSettingProvider.notifier).saveTsumo(tsumoPlayer, han, fu);
       addHistory();
-      setRiichiFalse();
+      histories[index + 1].saveTsumo(tsumoPlayer, han, fu);
+      histories[index + 1].setRiichiFalse();
     }
 
     void saveRon(Position ronedPlayer, Map<Position, bool> ronPlayers,
         Map<Position, int> hans, Map<Position, int> fus) {
-      ref
-          .read(pointSettingProvider.notifier)
-          .saveRon(ronedPlayer, ronPlayers, hans, fus);
       addHistory();
-      setRiichiFalse();
+      histories[index + 1].saveRon(ronedPlayer, ronPlayers, hans, fus);
+      histories[index + 1].setRiichiFalse();
     }
 
     void saveRyukyoku(
         Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
-      ref
-          .read(pointSettingProvider.notifier)
-          .saveRyukyoku(tenpai, nagashimangan);
       addHistory();
-      setRiichiFalse();
+      histories[index + 1].saveRyukyoku(tenpai, nagashimangan);
+      histories[index + 1].setRiichiFalse();
     }
 
     return BottomAppBar(

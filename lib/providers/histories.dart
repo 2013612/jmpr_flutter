@@ -6,4 +6,4 @@ final historiesProvider = Provider<List<History>>(
   (ref) => [],
 );
 
-final historyIndexProvider = StateProvider((_) => 1);
+final historyIndexProvider = StateProvider((_) => 0);

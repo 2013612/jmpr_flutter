@@ -23,12 +23,12 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    var index = ref.watch(historyIndexProvider).state;
+    final index = ref.watch(historyIndexProvider).state;
     final histories = ref.watch(historiesProvider);
 
     void addHistory() {
-      if (index < histories.length) {
-        histories.removeRange(index, histories.length);
+      if (index + 1 < histories.length) {
+        histories.removeRange(index + 1, histories.length);
       }
       histories.add(
         History(
