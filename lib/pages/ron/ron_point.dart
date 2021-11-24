@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common_widgets/base_bar_button.dart';
+import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/iterable_methods.dart';
 
-class RonPoint extends StatefulWidget {
+class RonPoint extends ConsumerStatefulWidget {
   final Map<Position, bool> isRonPlayers;
-  final Function save;
+  final Position ronedPlayer;
 
   RonPoint({
     required this.isRonPlayers,
-    required this.save,
+    required this.ronedPlayer,
   });
 
   @override
-  State<RonPoint> createState() => _RonPointState();
+  ConsumerState<RonPoint> createState() => _RonPointState();
 }
 
-class _RonPointState extends State<RonPoint> {
+class _RonPointState extends ConsumerState<RonPoint> {
   final Map<Position, int> _hans = {}, _fus = {};
+
+  @override
+  void initState() {
+    super.initState();
+    for (Position position in Position.values) {
+      _hans[position] = 1;
+      _fus[position] = 30;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,26 +141,32 @@ class _RonPointState extends State<RonPoint> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               BaseBarButton(
-                  name: i18n.cancel, onPress: () => Navigator.pop(context)),
+                name: i18n.cancel,
+                onPress: () => Navigator.pop(context),
+              ),
               BaseBarButton(
-                  name: i18n.save,
-                  onPress: () {
-                    widget.save(_hans, _fus);
-                    Navigator.pop(context);
-                  }),
+                name: i18n.save,
+                onPress: () {
+                  final histories = ref.watch(historiesProvider);
+                  final index = ref.watch(historyIndexProvider);
+
+                  if (index + 1 < histories.length) {
+                    histories.removeRange(index + 1, histories.length);
+                  }
+                  histories.add(histories[index].clone());
+                  ref.watch(historyIndexProvider.state).state++;
+
+                  histories[index + 1].saveRon(
+                      widget.ronedPlayer, widget.isRonPlayers, _hans, _fus);
+                  histories[index + 1].setRiichiFalse();
+
+                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                },
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    for (Position position in Position.values) {
-      _hans[position] = 1;
-      _fus[position] = 30;
-    }
   }
 }

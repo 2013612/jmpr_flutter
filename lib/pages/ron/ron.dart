@@ -8,10 +8,6 @@ import 'local_widgets/roned_player_radio_list_tile.dart';
 import 'ron_point.dart';
 
 class Ron extends StatefulWidget {
-  final Function next;
-
-  Ron({required this.next});
-
   @override
   State<Ron> createState() => _RonState();
 }
@@ -21,8 +17,33 @@ class _RonState extends State<Ron> {
   final Map<Position, bool> _isRonPlayers = {};
 
   @override
+  void initState() {
+    super.initState();
+    for (Position position in Position.values) {
+      _isRonPlayers[position] = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+
+    void Function(bool?) checkBoxOnChanged(Position position) {
+      return (bool? val) {
+        setState(
+          () {
+            _isRonPlayers[position] = val ?? false;
+          },
+        );
+      };
+    }
+
+    void radioOnChanged(Position? position) {
+      setState(() {
+        _ronedPlayer = position ?? Position.bottom;
+      });
+    }
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -143,11 +164,7 @@ class _RonState extends State<Ron> {
                     MaterialPageRoute(
                       builder: (context) => RonPoint(
                         isRonPlayers: _isRonPlayers,
-                        save:
-                            (Map<Position, int> hans, Map<Position, int> fus) {
-                          widget.next(_ronedPlayer, _isRonPlayers, hans, fus);
-                          Navigator.pop(context);
-                        },
+                        ronedPlayer: _ronedPlayer,
                       ),
                     ),
                   );
@@ -158,29 +175,5 @@ class _RonState extends State<Ron> {
         ),
       ),
     );
-  }
-
-  void Function(bool?) checkBoxOnChanged(Position position) {
-    return (bool? val) {
-      setState(
-        () {
-          _isRonPlayers[position] = val ?? false;
-        },
-      );
-    };
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    for (Position position in Position.values) {
-      _isRonPlayers[position] = false;
-    }
-  }
-
-  void radioOnChanged(Position? position) {
-    setState(() {
-      _ronedPlayer = position ?? Position.bottom;
-    });
   }
 }
