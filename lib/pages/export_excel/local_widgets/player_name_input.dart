@@ -4,11 +4,11 @@ import '../../../common_widgets/row_input.dart';
 import '../../../common_widgets/text_input.dart';
 import '../../../utility/constant.dart';
 
-class PositionPointSetting extends StatelessWidget {
+class PlayerNameInput extends StatelessWidget {
   final Position position;
   final Map<Position, String> playerNames;
 
-  const PositionPointSetting(
+  const PlayerNameInput(
       {Key? key, required this.position, required this.playerNames})
       : super(key: key);
   @override
