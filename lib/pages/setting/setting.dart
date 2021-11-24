@@ -37,6 +37,29 @@ class _SettingState extends ConsumerState<Setting> {
       _umaSmallController;
 
   @override
+  void initState() {
+    super.initState();
+    final histories = ref.read(historiesProvider);
+    final index = ref.read(historyIndexProvider);
+    _editingSetting = histories[index].setting.clone();
+
+    _givenStartingPointController = TextEditingController(
+        text: _editingSetting.givenStartingPoint.toString());
+    _startingPointController =
+        TextEditingController(text: _editingSetting.startingPoint.toString());
+    _riichibouPointController =
+        TextEditingController(text: _editingSetting.riichibouPoint.toString());
+    _bonbaPointController =
+        TextEditingController(text: _editingSetting.bonbaPoint.toString());
+    _ryukyokuPointController =
+        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
+    _umaBigController =
+        TextEditingController(text: _editingSetting.umaBig.toString());
+    _umaSmallController =
+        TextEditingController(text: _editingSetting.umaSmall.toString());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
 
@@ -295,27 +318,5 @@ class _SettingState extends ConsumerState<Setting> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final histories = ref.read(historiesProvider);
-    final index = ref.read(historyIndexProvider);
-    _editingSetting = histories[index].setting.clone();
-    _givenStartingPointController = TextEditingController(
-        text: _editingSetting.givenStartingPoint.toString());
-    _startingPointController =
-        TextEditingController(text: _editingSetting.startingPoint.toString());
-    _riichibouPointController =
-        TextEditingController(text: _editingSetting.riichibouPoint.toString());
-    _bonbaPointController =
-        TextEditingController(text: _editingSetting.bonbaPoint.toString());
-    _ryukyokuPointController =
-        TextEditingController(text: _editingSetting.ryukyokuPoint.toString());
-    _umaBigController =
-        TextEditingController(text: _editingSetting.umaBig.toString());
-    _umaSmallController =
-        TextEditingController(text: _editingSetting.umaSmall.toString());
   }
 }

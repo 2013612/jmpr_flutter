@@ -30,6 +30,23 @@ class _PointSettingState extends ConsumerState<PointSetting> {
   late TextEditingController _bonbaController, _riichibouController;
 
   @override
+  void initState() {
+    super.initState();
+    final histories = ref.read(historiesProvider);
+    final index = ref.read(historyIndexProvider);
+    _currentPointSetting = histories[index].pointSetting.clone();
+    _positionControllers = {};
+    for (Position position in Position.values) {
+      _positionControllers[position] = TextEditingController(
+          text: _currentPointSetting.players[position]!.point.toString());
+    }
+    _bonbaController =
+        TextEditingController(text: _currentPointSetting.bonba.toString());
+    _riichibouController =
+        TextEditingController(text: _currentPointSetting.riichibou.toString());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     final InputDecoration _inputDecoration = InputDecoration(
@@ -151,22 +168,5 @@ class _PointSettingState extends ConsumerState<PointSetting> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final histories = ref.read(historiesProvider);
-    final index = ref.read(historyIndexProvider);
-    _currentPointSetting = histories[index].pointSetting.clone();
-    _positionControllers = {};
-    for (Position position in Position.values) {
-      _positionControllers[position] = TextEditingController(
-          text: _currentPointSetting.players[position]!.point.toString());
-    }
-    _bonbaController =
-        TextEditingController(text: _currentPointSetting.bonba.toString());
-    _riichibouController =
-        TextEditingController(text: _currentPointSetting.riichibou.toString());
   }
 }
