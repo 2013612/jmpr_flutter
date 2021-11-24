@@ -19,6 +19,94 @@ class History {
     pointSetting = PointSetting.fromSetting(setting);
   }
 
+  Map<Position, double> calResult() {
+    final List<List<int>> cal = [];
+    Position position(int index) {
+      return Position.values[(setting.firstOya.index + cal[index][1]) % 4];
+    }
+
+    for (Position position in Position.values) {
+      cal.add([
+        pointSetting.players[position]!.point - setting.startingPoint,
+        (Position.values.indexOf(position) -
+                Position.values.indexOf(setting.firstOya) +
+                4) %
+            4,
+      ]);
+    }
+
+    cal.sort((List<int> a, List<int> b) {
+      if (a[0] == b[0]) {
+        return a[1] - b[1];
+      } else {
+        return b[0] - a[0];
+      }
+    });
+
+    final Map<Position, double> marks = {};
+    final double topBonus =
+        4 * (setting.startingPoint - setting.givenStartingPoint) / 1000;
+    if (setting.isDouten) {
+      if (cal[0][0] == cal[1][0] &&
+          cal[1][0] == cal[2][0] &&
+          cal[2][0] == cal[3][0]) {
+        marks[position(0)] = cal[0][0] / 1000 + topBonus / 4;
+        marks[position(1)] = cal[1][0] / 1000 + topBonus / 4;
+        marks[position(2)] = cal[2][0] / 1000 + topBonus / 4;
+        marks[position(3)] = cal[3][0] / 1000 + topBonus / 4;
+      } else if (cal[0][0] == cal[1][0] && cal[1][0] == cal[2][0]) {
+        marks[position(0)] = cal[0][0] / 1000 + (topBonus + setting.umaBig) / 3;
+        marks[position(1)] = cal[1][0] / 1000 + (topBonus + setting.umaBig) / 3;
+        marks[position(2)] = cal[2][0] / 1000 + (topBonus + setting.umaBig) / 3;
+        marks[position(3)] = cal[3][0] / 1000 - setting.umaBig;
+      } else if (cal[1][0] == cal[2][0] && cal[2][0] == cal[3][0]) {
+        marks[position(0)] = cal[0][0] / 1000 + topBonus + setting.umaBig;
+        marks[position(1)] = cal[1][0] / 1000 - setting.umaBig / 3;
+        marks[position(2)] = cal[2][0] / 1000 - setting.umaBig / 3;
+        marks[position(3)] = cal[3][0] / 1000 - setting.umaBig / 3;
+      } else if (cal[0][0] == cal[1][0] && cal[2][0] == cal[3][0]) {
+        marks[position(0)] = cal[0][0] / 1000 +
+            (topBonus + setting.umaBig + setting.umaSmall) / 2;
+        marks[position(1)] = cal[1][0] / 1000 +
+            (topBonus + setting.umaBig + setting.umaSmall) / 2;
+        marks[position(2)] =
+            cal[2][0] / 1000 - (setting.umaBig + setting.umaSmall) / 2;
+        marks[position(3)] =
+            cal[3][0] / 1000 - (setting.umaBig + setting.umaSmall) / 2;
+      } else if (cal[0][0] == cal[1][0]) {
+        marks[position(0)] = cal[0][0] / 1000 +
+            (topBonus + setting.umaBig + setting.umaSmall) / 2;
+        marks[position(1)] = cal[1][0] / 1000 +
+            (topBonus + setting.umaBig + setting.umaSmall) / 2;
+        marks[position(2)] = cal[2][0] / 1000 - setting.umaSmall;
+        marks[position(3)] = cal[3][0] / 1000 - setting.umaBig;
+      } else if (cal[1][0] == cal[2][0]) {
+        marks[position(0)] = cal[0][0] / 1000 + topBonus + setting.umaBig;
+        marks[position(1)] = cal[1][0] / 1000;
+        marks[position(2)] = cal[2][0] / 1000;
+        marks[position(3)] = cal[3][0] / 1000 - setting.umaBig;
+      } else if (cal[2][0] == cal[3][0]) {
+        marks[position(0)] = cal[0][0] / 1000 + topBonus + setting.umaBig;
+        marks[position(1)] = cal[1][0] / 1000 + setting.umaSmall;
+        marks[position(2)] =
+            cal[2][0] / 1000 - (setting.umaBig + setting.umaSmall) / 2;
+        marks[position(3)] =
+            cal[3][0] / 1000 - (setting.umaBig + setting.umaSmall) / 2;
+      } else {
+        marks[position(0)] = cal[0][0] / 1000 + topBonus + setting.umaBig;
+        marks[position(1)] = cal[1][0] / 1000 + setting.umaSmall;
+        marks[position(2)] = cal[2][0] / 1000 - setting.umaSmall;
+        marks[position(3)] = cal[3][0] / 1000 - setting.umaBig;
+      }
+    } else {
+      marks[position(0)] = cal[0][0] / 1000 + topBonus + setting.umaBig;
+      marks[position(1)] = cal[1][0] / 1000 + setting.umaSmall;
+      marks[position(2)] = cal[2][0] / 1000 - setting.umaSmall;
+      marks[position(3)] = cal[3][0] / 1000 - setting.umaBig;
+    }
+    return marks;
+  }
+
   void saveRon(Position ronedPlayer, Map<Position, bool> ronPlayers,
       Map<Position, int> hans, Map<Position, int> fus) {
     Position oya = _currentOya();
