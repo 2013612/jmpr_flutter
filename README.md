@@ -1,16 +1,9 @@
 # jmpr_flutter
 
-Japanese Mahjong Point Recorder write in flutter
+Japanese Mahjong Point Recorder write in flutter.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# what can the app do
+1. Keep track of every player's point and Obtain result easily.
+2. Autosave to history for every hand. You can Check and Go back to those hand.
+3. Customize settings to fit any rules.
+4. Export a consecutive number of hands with same setting to a .xlsx file.
