@@ -7,3 +7,8 @@ Japanese Mahjong Point Recorder write in flutter.
 2. Autosave to history for every hand. You can Check and Go back to those hand.
 3. Customize settings to fit any rules.
 4. Export a consecutive number of hands with same setting to a .xlsx file.
+
+# language support
+1. Japanese (main)
+2. Chinese
+3. English
