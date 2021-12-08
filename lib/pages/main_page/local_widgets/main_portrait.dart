@@ -5,6 +5,7 @@ import 'package:nil/nil.dart';
 
 import '../../../providers/histories.dart';
 import '../../../utility/constant.dart';
+import '../../../utility/enum/position.dart';
 import 'point_riichi_display.dart';
 
 class MainPortrait extends ConsumerWidget {
@@ -93,6 +94,10 @@ class MainPortrait extends ConsumerWidget {
             ),
           ),
           nil,
+          // ElevatedButton(
+          //     onPressed: () => Navigator.of(context)
+          //         .push(MaterialPageRoute(builder: (_) => Test())),
+          //     child: Text("firebase")),
           Center(
             child: PointRiichiDisplay(Position.bottom),
           ),
@@ -109,3 +114,49 @@ class MainPortrait extends ConsumerWidget {
     );
   }
 }
+//
+// StreamBuilder<QuerySnapshot> testFirebase() {
+//   return StreamBuilder<QuerySnapshot>(
+//     stream: FirebaseFirestore.instance.collection('test').snapshots(),
+//     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//       if (!snapshot.hasData) {
+//         return Center(
+//           child: CircularProgressIndicator(),
+//         );
+//       }
+//       final int commentCount = snapshot.data!.docs.length;
+//       if (commentCount > 0) {
+//         return ListView.builder(
+//           physics: NeverScrollableScrollPhysics(),
+//           shrinkWrap: true,
+//           itemCount: commentCount,
+//           itemBuilder: (_, int index) {
+//             final DocumentSnapshot document = snapshot.data!.docs[index];
+//             snapshot.data!.docs[0].data();
+//             print(document.data());
+//             return Text(document["name"]?.toString() ?? "");
+//           },
+//         );
+//       } else {
+//         return Container(
+//           padding: EdgeInsets.symmetric(vertical: 10.0),
+//           alignment: Alignment.center,
+//           child: Text(
+//             'no comments...',
+//             style: TextStyle(fontSize: 20),
+//           ),
+//         );
+//       }
+//     },
+//   );
+// }
+//
+// class Test extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(),
+//       body: testFirebase(),
+//     );
+//   }
+// }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common_widgets/custom_check_box_tile.dart';
 import '../../../utility/constant.dart';
+import '../../../utility/enum/position.dart';
 
 class FlexibleCustomCheckBoxTile extends StatefulWidget {
   final Map<Position, bool> map;

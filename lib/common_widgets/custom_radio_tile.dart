@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utility/constant.dart';
+import '../utility/enum/position.dart';
 
 class CustomRadioTile extends StatelessWidget {
   final Position value;

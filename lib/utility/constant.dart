@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'enum/position.dart';
+
 // ignore: avoid_classes_with_only_static_members
 class Constant {
   static late Map<Position, String> positionTexts;
@@ -76,11 +78,4 @@ class Constant {
       AppLocalizations.of(context)!.north
     ];
   }
-}
-
-enum Position {
-  bottom,
-  right,
-  top,
-  left,
 }

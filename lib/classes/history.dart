@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../utility/constant.dart';
+import '../utility/enum/position.dart';
 import 'point_setting.dart';
 import 'setting.dart';
 

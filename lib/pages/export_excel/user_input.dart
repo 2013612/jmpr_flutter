@@ -17,6 +17,7 @@ import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
+import '../../utility/enum/position.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/player_name_input.dart';
 

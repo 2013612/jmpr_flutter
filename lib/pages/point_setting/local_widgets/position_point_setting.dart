@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../common_widgets/row_input.dart';
 import '../../../common_widgets/text_input.dart';
 import '../../../utility/constant.dart';
+import '../../../utility/enum/position.dart';
 import '../../../utility/validators.dart';
 
 class PositionPointSetting extends StatelessWidget {

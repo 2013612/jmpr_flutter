@@ -1,4 +1,4 @@
-import '../utility/constant.dart';
+import '../utility/enum/position.dart';
 
 class Setting {
   int givenStartingPoint;

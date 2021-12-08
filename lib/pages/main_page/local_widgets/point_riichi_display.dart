@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../providers/histories.dart';
 import '../../../utility/constant.dart';
+import '../../../utility/enum/position.dart';
 
 class PointRiichiDisplay extends ConsumerStatefulWidget {
   final Position position;

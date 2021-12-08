@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
+import '../../utility/enum/position.dart';
 import '../../utility/iterable_methods.dart';
 
 class RonPoint extends ConsumerStatefulWidget {

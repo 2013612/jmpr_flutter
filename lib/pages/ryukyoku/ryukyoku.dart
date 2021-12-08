@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/histories.dart';
-import '../../utility/constant.dart';
+import '../../utility/enum/position.dart';
 import 'local_widgets/flexible_custom_check_box_tile.dart';
 
 class Ryukyoku extends ConsumerStatefulWidget {

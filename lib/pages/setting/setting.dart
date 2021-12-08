@@ -10,6 +10,7 @@ import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
+import '../../utility/enum/position.dart';
 
 class Setting extends ConsumerStatefulWidget {
   final Function save;

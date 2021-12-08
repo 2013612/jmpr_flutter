@@ -1,7 +1,6 @@
-import 'package:jmpr_flutter/classes/setting.dart';
-
-import '../utility/constant.dart';
+import '../utility/enum/position.dart';
 import 'player.dart';
+import 'setting.dart';
 
 class PointSetting {
   Map<Position, Player> players;

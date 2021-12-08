@@ -6,6 +6,7 @@ import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_radio_tile.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
+import '../../utility/enum/position.dart';
 
 class Tsumo extends ConsumerStatefulWidget {
   @override
