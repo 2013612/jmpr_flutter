@@ -13,12 +13,6 @@ import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
 
 class Setting extends ConsumerStatefulWidget {
-  final Function save;
-
-  Setting({
-    required this.save,
-  });
-
   @override
   _SettingState createState() => _SettingState();
 }
@@ -309,7 +303,15 @@ class _SettingState extends ConsumerState<Setting> {
                 onPress: () {
                   if (_settingFormKey.currentState!.validate()) {
                     _settingFormKey.currentState!.save();
-                    widget.save(_editingSetting);
+                    final histories = ref.watch(historiesProvider);
+                    final index = ref.watch(historyIndexProvider);
+                    if (index + 1 < histories.length) {
+                      histories.removeRange(index + 1, histories.length);
+                    }
+                    histories.add(histories[index].clone());
+                    ref.watch(historyIndexProvider.state).state++;
+                    histories[index + 1].setting = _editingSetting;
+                    histories[index + 1].resetPoint();
                     Navigator.pop(context);
                   }
                 },

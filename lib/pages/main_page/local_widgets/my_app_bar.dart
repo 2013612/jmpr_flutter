@@ -3,8 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../classes/point_setting.dart' as class_ps;
-import '../../../classes/setting.dart' as class_s;
 import '../../../providers/histories.dart';
 import '../../about/about.dart';
 import '../../export_excel/export_excel.dart';
@@ -20,27 +18,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final index = ref.watch(historyIndexProvider);
     final histories = ref.watch(historiesProvider);
-
-    void addHistory() {
-      if (index + 1 < histories.length) {
-        histories.removeRange(index + 1, histories.length);
-      }
-      histories.add(histories[index].clone());
-      ref.watch(historyIndexProvider.state).state++;
-    }
-
-    void saveSetting(class_s.Setting newSetting) {
-      addHistory();
-      histories[index + 1].setting = newSetting;
-      histories[index + 1].resetPoint();
-    }
-
-    void savePointSetting(class_ps.PointSetting pointSetting) {
-      addHistory();
-      histories[index + 1].pointSetting = pointSetting;
-    }
 
     Map<String, String> choices = {
       "pointSetting": i18n.pointSetting,
@@ -73,9 +51,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PointSetting(
-                      save: savePointSetting,
-                    ),
+                    builder: (context) => PointSetting(),
                   ),
                 );
                 break;
@@ -83,9 +59,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Setting(
-                      save: saveSetting,
-                    ),
+                    builder: (context) => Setting(),
                   ),
                 );
                 break;

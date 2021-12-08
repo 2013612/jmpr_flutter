@@ -14,12 +14,6 @@ import '../../utility/validators.dart';
 import 'local_widgets/position_point_setting.dart';
 
 class PointSetting extends ConsumerStatefulWidget {
-  final Function save;
-
-  PointSetting({
-    required this.save,
-  });
-
   @override
   _PointSettingState createState() => _PointSettingState();
 }
@@ -159,7 +153,14 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                 onPress: () {
                   if (_pointSettingFormKey.currentState!.validate()) {
                     _pointSettingFormKey.currentState!.save();
-                    widget.save(_currentPointSetting);
+                    final histories = ref.watch(historiesProvider);
+                    final index = ref.watch(historyIndexProvider);
+                    if (index + 1 < histories.length) {
+                      histories.removeRange(index + 1, histories.length);
+                    }
+                    histories.add(histories[index].clone());
+                    ref.watch(historyIndexProvider.state).state++;
+                    histories[index + 1].pointSetting = _currentPointSetting;
                     Navigator.pop(context);
                   }
                 },
