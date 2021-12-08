@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../utility/constant.dart';
+import '../utility/enum/ending.dart';
 import '../utility/enum/position.dart';
 import 'point_setting.dart';
 import 'setting.dart';
@@ -8,16 +9,29 @@ import 'setting.dart';
 class History {
   PointSetting pointSetting;
   Setting setting;
+  int index;
+  Ending ending;
 
-  History({required this.pointSetting, required this.setting});
+  History({
+    required this.pointSetting,
+    required this.setting,
+    required this.index,
+    required this.ending,
+  });
 
   History clone() {
     return History(
-        pointSetting: pointSetting.clone(), setting: setting.clone());
+      pointSetting: pointSetting.clone(),
+      setting: setting.clone(),
+      index: index,
+      ending: ending,
+    );
   }
 
   void resetPoint() {
     pointSetting = PointSetting.fromSetting(setting);
+    ending = Ending.start;
+    index++;
   }
 
   Map<Position, double> calResult() {
@@ -138,6 +152,7 @@ class History {
       pointSetting.bonba = 0;
       pointSetting.currentKyoku = (pointSetting.currentKyoku + 1) % 16;
     }
+    ending = Ending.ron;
   }
 
   void saveTsumo(Position tsumoPlayer, int han, int fu) {
@@ -150,6 +165,7 @@ class History {
       pointSetting.bonba = 0;
       pointSetting.currentKyoku = (pointSetting.currentKyoku + 1) % 16;
     }
+    ending = Ending.tsumo;
   }
 
   void saveRyukyoku(
@@ -192,6 +208,7 @@ class History {
       pointSetting.currentKyoku = (pointSetting.currentKyoku + 1) % 16;
     }
     pointSetting.bonba++;
+    ending = Ending.ryukyoku;
   }
 
   void setRiichiFalse() {
@@ -253,6 +270,8 @@ class History {
   String toString() {
     return '''
     {
+      index: $index,
+      ending: $ending,
       pointSetting: $pointSetting,
       setting: $setting,
     }

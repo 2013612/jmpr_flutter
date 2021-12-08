@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/classes/history.dart';
 
+import '../../classes/history.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
@@ -30,6 +30,10 @@ class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+    final List<Color> colors = [
+      Colors.black26,
+      Colors.black12,
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -49,9 +53,12 @@ class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
                         "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
               ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
-            ),
+            tileColor: colors[reversedHistories[index].index % colors.length],
+            selectedTileColor:
+                colors[reversedHistories[index].index % colors.length],
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.circular(50.0),
+            // ),
             dense: true,
             selected: chosen.contains(index),
             onTap: () {
@@ -89,9 +96,8 @@ class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
                     backgroundColor: Colors.red,
                   );
                   return;
-                } else if (!reversedHistories[chosen[0]]
-                    .setting
-                    .equal(reversedHistories[chosen[1]].setting)) {
+                } else if (reversedHistories[chosen[0]].index !=
+                    reversedHistories[chosen[1]].index) {
                   Fluttertoast.showToast(
                     msg: i18n.errorSettingsAreDifferent,
                     backgroundColor: Colors.red,

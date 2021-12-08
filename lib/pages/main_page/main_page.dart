@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/utility/enum/ending.dart';
 
 import '../../classes/history.dart';
 import '../../classes/point_setting.dart';
@@ -19,10 +20,14 @@ class MainPage extends ConsumerWidget {
     Validators.context = context;
     Constant.changeLanguage(context);
     if (ref.watch(historiesProvider).isEmpty) {
-      ref.watch(historiesProvider).add(History(
-            pointSetting: PointSetting.fromSetting(Setting()),
-            setting: Setting(),
-          ));
+      ref.watch(historiesProvider).add(
+            History(
+              pointSetting: PointSetting.fromSetting(Setting()),
+              setting: Setting(),
+              ending: Ending.start,
+              index: 0,
+            ),
+          );
     }
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return Scaffold(

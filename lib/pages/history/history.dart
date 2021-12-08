@@ -10,10 +10,11 @@ class HistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final ShapeBorder _shapeBorder = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-    );
     final histories = ref.watch(historiesProvider);
+    final List<Color> colors = [
+      Colors.black26,
+      Colors.black12,
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(i18n.history),
@@ -32,7 +33,7 @@ class HistoryPage extends ConsumerWidget {
                             "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
                   ),
                 ),
-                shape: _shapeBorder,
+                tileColor: colors[history.index % colors.length],
                 dense: true,
                 onTap: () {
                   showDialog(
