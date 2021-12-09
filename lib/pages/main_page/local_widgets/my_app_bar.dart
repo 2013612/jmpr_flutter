@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/pages/user_info/sign_in_page.dart';
 
 import '../../../providers/histories.dart';
 import '../../about/about.dart';
@@ -27,6 +28,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
       "exportToXlsx": i18n.exportToXlsx,
       "language": i18n.language,
       "about": i18n.about,
+      "userInfo": "userInfo",
     };
     return AppBar(
       title: FittedBox(
@@ -98,6 +100,13 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => About(),
+                  ),
+                );
+                break;
+              case "userInfo":
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SignInPage(),
                   ),
                 );
                 break;

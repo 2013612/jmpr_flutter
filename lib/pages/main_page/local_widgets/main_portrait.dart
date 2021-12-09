@@ -94,10 +94,6 @@ class MainPortrait extends ConsumerWidget {
             ),
           ),
           nil,
-          // ElevatedButton(
-          //     onPressed: () => Navigator.of(context)
-          //         .push(MaterialPageRoute(builder: (_) => Test())),
-          //     child: Text("firebase")),
           Center(
             child: PointRiichiDisplay(Position.bottom),
           ),
