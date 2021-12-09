@@ -55,6 +55,36 @@ class Setting {
     );
   }
 
+  factory Setting.fromJson(Map<String, dynamic> json) {
+    return Setting(
+      startingPoint: json["starting_point"] as int,
+      givenStartingPoint: json["given_starting_point"] as int,
+      riichibouPoint: json["riichibou_point"] as int,
+      bonbaPoint: json["bonba_point"] as int,
+      ryukyokuPoint: json["ryukyoku_point"] as int,
+      umaBig: json["uma_big"] as int,
+      umaSmall: json["uma_small"] as int,
+      isKiriage: json["is_kiriage"] as bool,
+      isDouten: json["is_douten"] as bool,
+      firstOya: Position.values[json["first_oya"] as int],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "given_starting_point": givenStartingPoint,
+      "starting_point": startingPoint,
+      "riichibou_point": riichibouPoint,
+      "bonba_point": bonbaPoint,
+      "ryukyoku_point": ryukyokuPoint,
+      "uma_big": umaBig,
+      "uma_small": umaSmall,
+      "is_kiriage": isKiriage,
+      "is_douten": isDouten,
+      "first_oya": firstOya,
+    };
+  }
+
   Setting clone() {
     return Setting(
       givenStartingPoint: givenStartingPoint,

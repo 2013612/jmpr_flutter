@@ -1,4 +1,5 @@
 import '../utility/enum/position.dart';
+import '../utility/iterable_methods.dart';
 import 'player.dart';
 import 'setting.dart';
 
@@ -25,6 +26,33 @@ class PointSetting {
       );
     }
     players = newPlayers;
+  }
+
+  factory PointSetting.fromJson(Map<String, dynamic> json) {
+    Map<Position, Player> newPlayers = {};
+    (json["players"] as List<Map<String, dynamic>>)
+        .forEachIndexed((player, index) {
+      newPlayers[Position.values[index]] = Player.fromJson(player);
+    });
+    return PointSetting(
+      players: newPlayers,
+      currentKyoku: json["current_kyoku"] as int,
+      bonba: json["bonba"] as int,
+      riichibou: json["riichibou"] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> playersJson = List.filled(4, {});
+    players.forEach((key, value) {
+      playersJson[Position.values.indexOf(key)] = value.toJson();
+    });
+    return {
+      "players": playersJson,
+      "current_kyoku": currentKyoku,
+      "bonba": bonba,
+      "riichibou": riichibou,
+    };
   }
 
   PointSetting clone() {

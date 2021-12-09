@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../utility/constant.dart';
 import '../utility/enum/ending.dart';
 import '../utility/enum/position.dart';
@@ -18,6 +20,29 @@ class History {
     required this.index,
     required this.ending,
   });
+
+  factory History.fromJson(Map<String, dynamic> json) {
+    return History(
+      pointSetting:
+          PointSetting.fromJson(json["point_setting"] as Map<String, dynamic>),
+      setting: Setting.fromJson(json["setting"] as Map<String, dynamic>),
+      index: json["index"] as int,
+      ending: Ending.values[json["ending"] as int],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "point_setting": pointSetting.toJson(),
+      "setting": setting.toJson(),
+      "index": index,
+      "ending": Ending.values.indexOf(ending),
+    };
+  }
+
+  factory History.fromSnapshot(DocumentSnapshot snapshot) {
+    return History.fromJson(snapshot.data() as Map<String, dynamic>);
+  }
 
   History clone() {
     return History(
