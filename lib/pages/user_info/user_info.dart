@@ -1,136 +1,137 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../classes/user.dart' as fs_user;
+import '../../classes/user_repository.dart';
+import '../../providers/user_stream.dart';
 import '../../utility/authentication.dart';
 
-class UserInfoScreen extends StatefulWidget {
+class UserInfoPage extends ConsumerStatefulWidget {
   final User user;
 
-  const UserInfoScreen({Key? key, required this.user}) : super(key: key);
+  const UserInfoPage({Key? key, required this.user}) : super(key: key);
   @override
-  _UserInfoScreenState createState() => _UserInfoScreenState();
+  _UserInfoPageState createState() => _UserInfoPageState();
 }
 
-class _UserInfoScreenState extends State<UserInfoScreen> {
-  late User _user;
+class _UserInfoPageState extends ConsumerState<UserInfoPage> {
+  final UserRepository userRepository = UserRepository();
   bool _isSigningOut = false;
 
   @override
-  void initState() {
-    _user = widget.user;
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text("User Info"),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            bottom: 20.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(),
-              if (_user.photoURL != null)
-                ClipOval(
-                  child: Material(
-                    child: Image.network(
-                      _user.photoURL!,
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
-                )
-              else
-                ClipOval(
-                  child: Material(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Icon(
-                        Icons.person,
-                        size: 60,
+    final userStream = ref.watch(userStreamProvider(widget.user.uid));
+    return userStream.when(
+      data: (snapshot) {
+        if (snapshot.docs.isEmpty) {
+          userRepository.addUser(fs_user.User.fromFireAuth(widget.user));
+        } else {
+          final user = snapshot.docs[0].data();
+
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              title: Text("User Info"),
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  bottom: 20.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(),
+                    if (user.photoURL != null)
+                      ClipOval(
+                        child: Material(
+                          child: Image.network(
+                            user.photoURL!,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      )
+                    else
+                      ClipOval(
+                        child: Material(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Icon(
+                              Icons.person,
+                              size: 60,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              SizedBox(height: 16.0),
-              Text(
-                'Hello',
-                style: TextStyle(
-                  fontSize: 26,
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                _user.displayName!,
-                style: TextStyle(
-                  fontSize: 26,
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                '( ${_user.email!} )',
-                style: TextStyle(
-                  fontSize: 20,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              SizedBox(height: 24.0),
-              Text(
-                'You are now signed in using your Google account. To sign out of your account, click the "Sign Out" button below.',
-                style: TextStyle(fontSize: 14, letterSpacing: 0.2),
-              ),
-              SizedBox(height: 16.0),
-              if (_isSigningOut)
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
-              else
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.redAccent,
-                    ),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  onPressed: () async {
-                    setState(() {
-                      _isSigningOut = true;
-                    });
-                    await Authentication.signOut(context: context);
-                    setState(() {
-                      _isSigningOut = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Text(
-                      'Sign Out',
+                    SizedBox(height: 16.0),
+                    Text(
+                      'Hello',
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
+                        fontSize: 26,
                       ),
                     ),
-                  ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      user.displayName!,
+                      style: TextStyle(
+                        fontSize: 26,
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    ElevatedButton(
+                        onPressed: () {}, child: Text("to Firestore")),
+                    if (_isSigningOut)
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    else
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.redAccent,
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            _isSigningOut = true;
+                          });
+                          await Authentication.signOut(context: context);
+                          setState(() {
+                            _isSigningOut = false;
+                          });
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Text(
+                            'Sign Out',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    //SignOutButton(),
+                  ],
                 ),
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
+          );
+        }
+        return const CircularProgressIndicator();
+      },
+      error: (err, stack) => Text('Error: $err'),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 }
