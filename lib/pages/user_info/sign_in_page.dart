@@ -11,7 +11,7 @@ class SignInPage extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
         if (snapshot.hasData) {
-          return UserInfoScreen(user: snapshot.data!);
+          return UserInfoPage(user: snapshot.data!);
         }
         return Scaffold(
           appBar: AppBar(
