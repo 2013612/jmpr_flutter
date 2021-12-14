@@ -1,23 +1,22 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/history.dart';
-import '../../common_widgets/base_bar_button.dart';
-import '../../providers/histories.dart';
-import '../../utility/constant.dart';
-import 'user_input.dart';
+import '../classes/history.dart';
+import '../pages/export_excel/user_input.dart';
+import '../providers/histories.dart';
+import '../utility/constant.dart';
+import 'base_bar_button.dart';
 
-class ChooseHistory extends ConsumerStatefulWidget {
+class ChooseGame extends ConsumerStatefulWidget {
   @override
-  _ChooseHistoryState createState() => _ChooseHistoryState();
+  _ChooseGameState createState() => _ChooseGameState();
 }
 
-class _ChooseHistoryState extends ConsumerState<ChooseHistory> {
+class _ChooseGameState extends ConsumerState<ChooseGame> {
   final List<int> chosen = [];
   late final List<History> reversedHistories;
 
