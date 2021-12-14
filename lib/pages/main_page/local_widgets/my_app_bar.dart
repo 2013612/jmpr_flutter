@@ -4,9 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/pages/user_info/sign_in_page.dart';
 
+import '../../../common_widgets/choose_game.dart';
 import '../../../providers/histories.dart';
 import '../../about/about.dart';
-import '../../export_excel/export_excel.dart';
 import '../../history/history.dart';
 import '../../point_setting/point_setting.dart';
 import '../../setting/setting.dart';
@@ -83,7 +83,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChooseHistory(),
+                    builder: (context) => ChooseGame(),
                   ),
                 );
                 break;
