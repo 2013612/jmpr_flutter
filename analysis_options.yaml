@@ -1,7 +1,11 @@
 include: package:effective_dart/analysis_options.yaml
 
 analyzer:
-  exclude: [build/**, l10n/**]
+  exclude:
+    - "build/**"
+    - "l10n/**"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
   strong-mode:
     implicit-casts: false
 
