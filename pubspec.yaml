@@ -44,7 +44,7 @@ dependencies:
   firebase_auth: ^3.3.3
   google_sign_in: ^5.0.3
   font_awesome_flutter: ^9.0.0
-  flutterfire_ui: ^0.2.0+2
+  flutterfire_ui: ^0.3.0
   auto_size_text: ^3.0.0
   freezed_annotation: ^1.0.0
   json_annotation: ^4.3.0
