@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../classes/history.dart';
 import 'game_player.dart';
-import 'history.dart';
 
 part 'game.freezed.dart';
 part 'game.g.dart';
