@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'user.dart';
+import '../models/user.dart';
 
 class UserRepository {
   final CollectionReference<User> collection = FirebaseFirestore.instance
@@ -24,7 +24,7 @@ class UserRepository {
   Future<DocumentReference> addUser(User user) async {
     final existUser = await getUserByName(user.displayName ?? "");
     if (existUser.docs.isNotEmpty) {
-      user.displayName = "${user.displayName!}#2";
+      user = user.copyWith(displayName: "${user.displayName!}#2");
     }
     return collection.add(user);
   }
