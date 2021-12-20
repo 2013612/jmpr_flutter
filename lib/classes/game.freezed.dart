@@ -23,10 +23,12 @@ class _$GameTearOff {
 
   _Game call(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
-      required List<History> histories}) {
+      required List<History> histories,
+      @JsonKey(name: 'created_at') required DateTime createdAt}) {
     return _Game(
       gamePlayers: gamePlayers,
       histories: histories,
+      createdAt: createdAt,
     );
   }
 
@@ -43,6 +45,8 @@ mixin _$Game {
   @JsonKey(name: 'game_players')
   List<GamePlayer> get gamePlayers => throw _privateConstructorUsedError;
   List<History> get histories => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,7 +59,8 @@ abstract class $GameCopyWith<$Res> {
       _$GameCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
-      List<History> histories});
+      List<History> histories,
+      @JsonKey(name: 'created_at') DateTime createdAt});
 }
 
 /// @nodoc
@@ -70,6 +75,7 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
   $Res call({
     Object? gamePlayers = freezed,
     Object? histories = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
       gamePlayers: gamePlayers == freezed
@@ -80,6 +86,10 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
           ? _value.histories
           : histories // ignore: cast_nullable_to_non_nullable
               as List<History>,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -91,7 +101,8 @@ abstract class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
   @override
   $Res call(
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
-      List<History> histories});
+      List<History> histories,
+      @JsonKey(name: 'created_at') DateTime createdAt});
 }
 
 /// @nodoc
@@ -107,6 +118,7 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
   $Res call({
     Object? gamePlayers = freezed,
     Object? histories = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(_Game(
       gamePlayers: gamePlayers == freezed
@@ -117,16 +129,21 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
           ? _value.histories
           : histories // ignore: cast_nullable_to_non_nullable
               as List<History>,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_Game implements _Game {
+class _$_Game with DiagnosticableTreeMixin implements _Game {
   const _$_Game(
       {@JsonKey(name: 'game_players') required this.gamePlayers,
-      required this.histories});
+      required this.histories,
+      @JsonKey(name: 'created_at') required this.createdAt});
 
   factory _$_Game.fromJson(Map<String, dynamic> json) => _$$_GameFromJson(json);
 
@@ -135,10 +152,23 @@ class _$_Game implements _Game {
   final List<GamePlayer> gamePlayers;
   @override
   final List<History> histories;
+  @override
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
 
   @override
-  String toString() {
-    return 'Game(gamePlayers: $gamePlayers, histories: $histories)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'Game(gamePlayers: $gamePlayers, histories: $histories, createdAt: $createdAt)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Game'))
+      ..add(DiagnosticsProperty('gamePlayers', gamePlayers))
+      ..add(DiagnosticsProperty('histories', histories))
+      ..add(DiagnosticsProperty('createdAt', createdAt));
   }
 
   @override
@@ -148,14 +178,16 @@ class _$_Game implements _Game {
             other is _Game &&
             const DeepCollectionEquality()
                 .equals(other.gamePlayers, gamePlayers) &&
-            const DeepCollectionEquality().equals(other.histories, histories));
+            const DeepCollectionEquality().equals(other.histories, histories) &&
+            const DeepCollectionEquality().equals(other.createdAt, createdAt));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(gamePlayers),
-      const DeepCollectionEquality().hash(histories));
+      const DeepCollectionEquality().hash(histories),
+      const DeepCollectionEquality().hash(createdAt));
 
   @JsonKey(ignore: true)
   @override
@@ -171,7 +203,8 @@ class _$_Game implements _Game {
 abstract class _Game implements Game {
   const factory _Game(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
-      required List<History> histories}) = _$_Game;
+      required List<History> histories,
+      @JsonKey(name: 'created_at') required DateTime createdAt}) = _$_Game;
 
   factory _Game.fromJson(Map<String, dynamic> json) = _$_Game.fromJson;
 
@@ -180,6 +213,9 @@ abstract class _Game implements Game {
   List<GamePlayer> get gamePlayers;
   @override
   List<History> get histories;
+  @override
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt;
   @override
   @JsonKey(ignore: true)
   _$GameCopyWith<_Game> get copyWith => throw _privateConstructorUsedError;
