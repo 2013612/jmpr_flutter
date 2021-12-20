@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,9 +19,9 @@ class Setting extends ConsumerStatefulWidget {
 class _SettingState extends ConsumerState<Setting> {
   final _settingFormKey = GlobalKey<FormState>();
   late class_s.Setting _editingSetting;
-  final class_s.Setting _tenhouSetting = class_s.Setting.tenhou();
+  final class_s.Setting _tenhouSetting = Constant.tenhouSetting;
   // ignore: non_constant_identifier_names
-  final class_s.Setting _RMUSetting = class_s.Setting.RMU();
+  final class_s.Setting _bRuleSetting = Constant.bRuleSetting;
   late TextEditingController _givenStartingPointController,
       _startingPointController,
       _riichibouPointController,
@@ -68,7 +67,7 @@ class _SettingState extends ConsumerState<Setting> {
 
     final Map<String, String> _usualSettings = {
       "currentSetting": i18n.currentSetting,
-      "RMU A/B RULE": i18n.rmu,
+      "bRule": i18n.bRule,
       "tenhou": i18n.tenhou
     };
 
@@ -278,9 +277,9 @@ class _SettingState extends ConsumerState<Setting> {
                               .clone();
                         });
                         break;
-                      case "RMU A/B RULE":
+                      case "bRule":
                         setState(() {
-                          _editingSetting = _RMUSetting;
+                          _editingSetting = _bRuleSetting;
                         });
                         break;
                       case "tenhou":

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../classes/setting.dart';
 
 import 'enum/position.dart';
 
@@ -63,6 +64,32 @@ class Constant {
     Position.top: Icons.arrow_upward,
     Position.left: Icons.arrow_back
   };
+
+  static final Setting bRuleSetting = Setting(
+    startingPoint: 30000,
+    givenStartingPoint: 30000,
+    riichibouPoint: 1000,
+    bonbaPoint: 300,
+    ryukyokuPoint: 3000,
+    umaBig: 30,
+    umaSmall: 10,
+    isKiriage: true,
+    isDouten: true,
+    firstOya: Position.bottom,
+  );
+
+  static final Setting tenhouSetting = Setting(
+    startingPoint: 30000,
+    givenStartingPoint: 25000,
+    riichibouPoint: 1000,
+    bonbaPoint: 300,
+    ryukyokuPoint: 3000,
+    umaBig: 20,
+    umaSmall: 10,
+    isKiriage: false,
+    isDouten: false,
+    firstOya: Position.bottom,
+  );
 
   static void changeLanguage(BuildContext context) {
     positionTexts = {

@@ -25,36 +25,6 @@ class Setting {
     this.firstOya = Position.bottom,
   });
 
-  factory Setting.RMU() {
-    return Setting(
-      startingPoint: 30000,
-      givenStartingPoint: 30000,
-      riichibouPoint: 1000,
-      bonbaPoint: 300,
-      ryukyokuPoint: 3000,
-      umaBig: 30,
-      umaSmall: 10,
-      isKiriage: true,
-      isDouten: true,
-      firstOya: Position.bottom,
-    );
-  }
-
-  factory Setting.tenhou() {
-    return Setting(
-      startingPoint: 30000,
-      givenStartingPoint: 25000,
-      riichibouPoint: 1000,
-      bonbaPoint: 300,
-      ryukyokuPoint: 3000,
-      umaBig: 20,
-      umaSmall: 10,
-      isKiriage: false,
-      isDouten: false,
-      firstOya: Position.bottom,
-    );
-  }
-
   factory Setting.fromJson(Map<String, dynamic> json) {
     return Setting(
       startingPoint: json["starting_point"] as int,

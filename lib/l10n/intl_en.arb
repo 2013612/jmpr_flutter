@@ -167,8 +167,8 @@
   "@currentSetting": {
     "type": "text"
   },
-  "rmu": "RMU A/B RULE",
-  "@rmu": {
+  "bRule": "B RULE",
+  "@bRule": {
     "type": "text"
   },
   "tenhou": "Tenhou",
