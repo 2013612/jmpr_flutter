@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../classes/history.dart';
-import '../pages/export_excel/user_input.dart';
+import '../pages/user_info/firestore_upload_input.dart';
 import '../providers/histories.dart';
 import '../utility/constant.dart';
 import 'base_bar_button.dart';
@@ -108,7 +108,7 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UserInput(
+                      builder: (context) => FirestoreUploadInput(
                         min(chosen[0], chosen[1]),
                         max(chosen[0], chosen[1]),
                       ),

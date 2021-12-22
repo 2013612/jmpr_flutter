@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/user.dart' as fs_user;
 import '../../classes/user_repository.dart';
+import '../../common_widgets/choose_game.dart';
+import '../../models/user.dart' as fs_user;
 import '../../providers/user_stream.dart';
 import '../../utility/authentication.dart';
 
@@ -82,7 +83,9 @@ class _UserInfoPageState extends ConsumerState<UserInfoPage> {
                     ),
                     SizedBox(height: 8.0),
                     ElevatedButton(
-                        onPressed: () {}, child: Text("to Firestore")),
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => ChooseGame())),
+                        child: Text("to Firestore")),
                     if (_isSigningOut)
                       CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
