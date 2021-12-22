@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/setting.dart' as class_s;
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_check_box_tile.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
+import '../../models/setting.dart' as class_s;
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
@@ -35,7 +35,7 @@ class _SettingState extends ConsumerState<Setting> {
     super.initState();
     final histories = ref.read(historiesProvider);
     final index = ref.read(historyIndexProvider);
-    _editingSetting = histories[index].setting.clone();
+    _editingSetting = histories[index].setting.copyWith();
 
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
@@ -113,8 +113,9 @@ class _SettingState extends ConsumerState<Setting> {
                     name: i18n.startingPoint,
                     widget: TextInput(
                       onSaved: (String? startingPoint) =>
-                          _editingSetting.startingPoint =
-                              int.tryParse(startingPoint ?? "") ?? 0,
+                          _editingSetting.copyWith(
+                              startingPoint:
+                                  int.tryParse(startingPoint ?? "") ?? 0),
                       controller: _startingPointController,
                     ),
                   ),
@@ -122,8 +123,9 @@ class _SettingState extends ConsumerState<Setting> {
                     name: i18n.givenStartingPoint,
                     widget: TextInput(
                       onSaved: (String? givenStartingPoint) =>
-                          _editingSetting.givenStartingPoint =
-                              int.tryParse(givenStartingPoint ?? "") ?? 0,
+                          _editingSetting.copyWith(
+                              givenStartingPoint:
+                                  int.tryParse(givenStartingPoint ?? "") ?? 0),
                       controller: _givenStartingPointController,
                     ),
                   ),
@@ -131,16 +133,17 @@ class _SettingState extends ConsumerState<Setting> {
                     name: i18n.riichibouPoint,
                     widget: TextInput(
                       onSaved: (String? riichibouPoint) =>
-                          _editingSetting.riichibouPoint =
-                              int.tryParse(riichibouPoint ?? "") ?? 0,
+                          _editingSetting.copyWith(
+                              riichibouPoint:
+                                  int.tryParse(riichibouPoint ?? "") ?? 0),
                       controller: _riichibouPointController,
                     ),
                   ),
                   RowInput(
                     name: i18n.bonbaPoint,
                     widget: TextInput(
-                      onSaved: (String? bonbaPoint) => _editingSetting
-                          .bonbaPoint = int.tryParse(bonbaPoint ?? "") ?? 0,
+                      onSaved: (String? bonbaPoint) => _editingSetting.copyWith(
+                          bonbaPoint: int.tryParse(bonbaPoint ?? "") ?? 0),
                       controller: _bonbaPointController,
                     ),
                   ),
@@ -148,8 +151,9 @@ class _SettingState extends ConsumerState<Setting> {
                     name: i18n.ryukyokuPoint,
                     widget: TextInput(
                       onSaved: (String? ryukyokuPoint) =>
-                          _editingSetting.ryukyokuPoint =
-                              int.tryParse(ryukyokuPoint ?? "") ?? 0,
+                          _editingSetting.copyWith(
+                              ryukyokuPoint:
+                                  int.tryParse(ryukyokuPoint ?? "") ?? 0),
                       controller: _ryukyokuPointController,
                     ),
                   ),
@@ -166,8 +170,8 @@ class _SettingState extends ConsumerState<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                          onSaved: (String? umaBig) => _editingSetting.umaBig =
-                              int.tryParse(umaBig ?? "") ?? 0,
+                          onSaved: (String? umaBig) => _editingSetting.copyWith(
+                              umaBig: int.tryParse(umaBig ?? "") ?? 0),
                           controller: _umaBigController,
                           validator: _umaValidator,
                         ),
@@ -176,8 +180,9 @@ class _SettingState extends ConsumerState<Setting> {
                         width: 100,
                         padding: EdgeInsets.all(8.0),
                         child: TextInput(
-                          onSaved: (String? umaSmall) => _editingSetting
-                              .umaSmall = int.tryParse(umaSmall ?? "") ?? 0,
+                          onSaved: (String? umaSmall) =>
+                              _editingSetting.copyWith(
+                                  umaSmall: int.tryParse(umaSmall ?? "") ?? 0),
                           controller: _umaSmallController,
                           validator: _umaValidator,
                         ),
@@ -205,13 +210,13 @@ class _SettingState extends ConsumerState<Setting> {
                           decoration: _inputDecoration,
                           onChanged: (Position? firstOya) {
                             setState(() {
-                              _editingSetting.firstOya =
-                                  firstOya ?? Position.bottom;
+                              _editingSetting.copyWith(
+                                  firstOya: firstOya ?? Position.bottom);
                             });
                           },
                           onSaved: (Position? firstOya) {
-                            _editingSetting.firstOya =
-                                firstOya ?? Position.bottom;
+                            _editingSetting.copyWith(
+                                firstOya: firstOya ?? Position.bottom);
                           },
                         ),
                       ),
@@ -225,7 +230,8 @@ class _SettingState extends ConsumerState<Setting> {
                         title: i18n.kiriage,
                         onChanged: (bool? isKiriage) {
                           setState(() {
-                            _editingSetting.isKiriage = isKiriage ?? false;
+                            _editingSetting.copyWith(
+                                isKiriage: isKiriage ?? false);
                           });
                         },
                       ),
@@ -239,7 +245,8 @@ class _SettingState extends ConsumerState<Setting> {
                         title: i18n.samePoint,
                         onChanged: (bool? isDouten) {
                           setState(() {
-                            _editingSetting.isDouten = isDouten ?? false;
+                            _editingSetting.copyWith(
+                                isDouten: isDouten ?? false);
                           });
                         },
                       ),
@@ -274,7 +281,7 @@ class _SettingState extends ConsumerState<Setting> {
                               .watch(historiesProvider)[
                                   ref.watch(historyIndexProvider)]
                               .setting
-                              .clone();
+                              .copyWith();
                         });
                         break;
                       case "bRule":

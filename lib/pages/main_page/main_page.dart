@@ -5,7 +5,7 @@ import 'package:jmpr_flutter/utility/enum/ending.dart';
 
 import '../../classes/history.dart';
 import '../../classes/point_setting.dart';
-import '../../classes/setting.dart';
+import '../../models/setting.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/validators.dart';

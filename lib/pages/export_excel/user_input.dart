@@ -11,10 +11,10 @@ import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../classes/setting.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
+import '../../models/setting.dart';
 import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';

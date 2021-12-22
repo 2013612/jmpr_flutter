@@ -1,7 +1,8 @@
+import '../models/setting.dart';
+
 import '../utility/enum/position.dart';
 import '../utility/iterable_methods.dart';
 import 'player.dart';
-import 'setting.dart';
 
 class PointSetting {
   Map<Position, Player> players;
@@ -43,7 +44,7 @@ class PointSetting {
   }
 
   Map<String, dynamic> toJson() {
-    List<Map<String, dynamic>> playersJson = List.filled(4, {});
+    List<Map<String, dynamic>> playersJson = List.generate(4, (index) => {});
     players.forEach((key, value) {
       playersJson[Position.values.indexOf(key)] = value.toJson();
     });

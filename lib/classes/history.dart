@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/setting.dart';
 
 import '../utility/constant.dart';
 import '../utility/enum/ending.dart';
 import '../utility/enum/position.dart';
 import 'point_setting.dart';
-import 'setting.dart';
 
 class History {
   PointSetting pointSetting;
@@ -47,7 +47,7 @@ class History {
   History clone() {
     return History(
       pointSetting: pointSetting.clone(),
-      setting: setting.clone(),
+      setting: setting.copyWith(),
       index: index,
       ending: ending,
     );

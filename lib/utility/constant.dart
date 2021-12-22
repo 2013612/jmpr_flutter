@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../classes/setting.dart';
+import '../models/setting.dart';
 
 import 'enum/position.dart';
 
