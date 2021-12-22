@@ -24,11 +24,13 @@ class _$GameTearOff {
   _Game call(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
       required List<History> histories,
-      @JsonKey(name: 'created_at') required DateTime createdAt}) {
+      @JsonKey(name: 'created_at') required DateTime createdAt,
+      required Setting setting}) {
     return _Game(
       gamePlayers: gamePlayers,
       histories: histories,
       createdAt: createdAt,
+      setting: setting,
     );
   }
 
@@ -47,6 +49,7 @@ mixin _$Game {
   List<History> get histories => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
+  Setting get setting => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,7 +63,10 @@ abstract class $GameCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
       List<History> histories,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      Setting setting});
+
+  $SettingCopyWith<$Res> get setting;
 }
 
 /// @nodoc
@@ -76,6 +82,7 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
     Object? gamePlayers = freezed,
     Object? histories = freezed,
     Object? createdAt = freezed,
+    Object? setting = freezed,
   }) {
     return _then(_value.copyWith(
       gamePlayers: gamePlayers == freezed
@@ -90,7 +97,18 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      setting: setting == freezed
+          ? _value.setting
+          : setting // ignore: cast_nullable_to_non_nullable
+              as Setting,
     ));
+  }
+
+  @override
+  $SettingCopyWith<$Res> get setting {
+    return $SettingCopyWith<$Res>(_value.setting, (value) {
+      return _then(_value.copyWith(setting: value));
+    });
   }
 }
 
@@ -102,7 +120,11 @@ abstract class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
       List<History> histories,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      Setting setting});
+
+  @override
+  $SettingCopyWith<$Res> get setting;
 }
 
 /// @nodoc
@@ -119,6 +141,7 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
     Object? gamePlayers = freezed,
     Object? histories = freezed,
     Object? createdAt = freezed,
+    Object? setting = freezed,
   }) {
     return _then(_Game(
       gamePlayers: gamePlayers == freezed
@@ -133,6 +156,10 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      setting: setting == freezed
+          ? _value.setting
+          : setting // ignore: cast_nullable_to_non_nullable
+              as Setting,
     ));
   }
 }
@@ -143,7 +170,8 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
   const _$_Game(
       {@JsonKey(name: 'game_players') required this.gamePlayers,
       required this.histories,
-      @JsonKey(name: 'created_at') required this.createdAt});
+      @JsonKey(name: 'created_at') required this.createdAt,
+      required this.setting});
 
   factory _$_Game.fromJson(Map<String, dynamic> json) => _$$_GameFromJson(json);
 
@@ -155,10 +183,12 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
   @override
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
+  @override
+  final Setting setting;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Game(gamePlayers: $gamePlayers, histories: $histories, createdAt: $createdAt)';
+    return 'Game(gamePlayers: $gamePlayers, histories: $histories, createdAt: $createdAt, setting: $setting)';
   }
 
   @override
@@ -168,7 +198,8 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
       ..add(DiagnosticsProperty('type', 'Game'))
       ..add(DiagnosticsProperty('gamePlayers', gamePlayers))
       ..add(DiagnosticsProperty('histories', histories))
-      ..add(DiagnosticsProperty('createdAt', createdAt));
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('setting', setting));
   }
 
   @override
@@ -179,7 +210,8 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
             const DeepCollectionEquality()
                 .equals(other.gamePlayers, gamePlayers) &&
             const DeepCollectionEquality().equals(other.histories, histories) &&
-            const DeepCollectionEquality().equals(other.createdAt, createdAt));
+            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
+            const DeepCollectionEquality().equals(other.setting, setting));
   }
 
   @override
@@ -187,7 +219,8 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
       runtimeType,
       const DeepCollectionEquality().hash(gamePlayers),
       const DeepCollectionEquality().hash(histories),
-      const DeepCollectionEquality().hash(createdAt));
+      const DeepCollectionEquality().hash(createdAt),
+      const DeepCollectionEquality().hash(setting));
 
   @JsonKey(ignore: true)
   @override
@@ -204,7 +237,8 @@ abstract class _Game implements Game {
   const factory _Game(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
       required List<History> histories,
-      @JsonKey(name: 'created_at') required DateTime createdAt}) = _$_Game;
+      @JsonKey(name: 'created_at') required DateTime createdAt,
+      required Setting setting}) = _$_Game;
 
   factory _Game.fromJson(Map<String, dynamic> json) = _$_Game.fromJson;
 
@@ -216,6 +250,8 @@ abstract class _Game implements Game {
   @override
   @JsonKey(name: 'created_at')
   DateTime get createdAt;
+  @override
+  Setting get setting;
   @override
   @JsonKey(ignore: true)
   _$GameCopyWith<_Game> get copyWith => throw _privateConstructorUsedError;

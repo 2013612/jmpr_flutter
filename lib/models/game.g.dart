@@ -14,10 +14,12 @@ _$_Game _$$_GameFromJson(Map<String, dynamic> json) => _$_Game(
           .map((e) => History.fromJson(e as Map<String, dynamic>))
           .toList(),
       createdAt: DateTime.parse(json['created_at'] as String),
+      setting: Setting.fromJson(json['setting'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_GameToJson(_$_Game instance) => <String, dynamic>{
-      'game_players': instance.gamePlayers,
-      'histories': instance.histories,
+      'game_players': instance.gamePlayers.map((e) => e.toJson()).toList(),
+      'histories': instance.histories.map((e) => e.toJson()).toList(),
       'created_at': instance.createdAt.toIso8601String(),
+      'setting': instance.setting.toJson(),
     };
