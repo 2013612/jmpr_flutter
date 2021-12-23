@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/games.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/histories.dart';
@@ -148,18 +149,19 @@ class _RonPointState extends ConsumerState<RonPoint> {
               BaseBarButton(
                 name: i18n.save,
                 onPress: () {
-                  final histories = ref.watch(historiesProvider);
-                  final index = ref.watch(historyIndexProvider);
+                  final index = ref.watch(indexProvider);
+                  final histories =
+                      ref.watch(gamesProvider)[index.item1].histories;
 
-                  if (index + 1 < histories.length) {
-                    histories.removeRange(index + 1, histories.length);
-                  }
-                  histories.add(histories[index].clone());
-                  ref.watch(historyIndexProvider.state).state++;
+                  removeUnusedHistory(ref);
 
-                  histories[index + 1].saveRon(
+                  histories.add(histories[index.item2].clone());
+                  ref.watch(indexProvider.state).state =
+                      index.withItem2(index.item2 + 1);
+
+                  histories[index.item2 + 1].saveRon(
                       widget.ronedPlayer, widget.isRonPlayers, _hans, _fus);
-                  histories[index + 1].setRiichiFalse();
+                  histories[index.item2 + 1].setRiichiFalse();
 
                   Navigator.of(context).popUntil(ModalRoute.withName('/'));
                 },

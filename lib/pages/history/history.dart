@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
-import '../../providers/histories.dart';
+import '../../providers/games.dart';
 import '../../utility/constant.dart';
 import '../../utility/iterable_methods.dart';
 
@@ -10,7 +11,7 @@ class HistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final histories = ref.watch(historiesProvider);
+    final games = ref.watch(gamesProvider);
     final List<Color> colors = [
       Colors.black26,
       Colors.black12,
@@ -20,52 +21,54 @@ class HistoryPage extends ConsumerWidget {
         title: Text(i18n.history),
       ),
       body: ListView(
-        children: histories.reversed
-            .mapIndexed(
-              (history, index) => ListTile(
-                leading: Text(
-                    "${Constant.kyokus[history.pointSetting.currentKyoku]} - ${history.pointSetting.bonba}"),
-                title: FittedBox(
-                  child: Text(
-                    history.pointSetting.players.entries.fold(
-                        "",
-                        (previousValue, player) =>
-                            "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
-                  ),
-                ),
-                tileColor: colors[history.index % colors.length],
-                dense: true,
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(i18n.confirm),
-                        content: Text(i18n.confirmHistory),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(i18n.cancel),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              ref.watch(historyIndexProvider.state).state =
-                                  histories.length - index - 1;
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("OK"),
-                          ),
-                        ],
+        children: games.reversed
+            .mapIndexed((game, gIndex) => game.histories.reversed.mapIndexed(
+                  (history, hIndex) => ListTile(
+                    leading: Text(
+                        "${Constant.kyokus[history.pointSetting.currentKyoku]} - ${history.pointSetting.bonba}"),
+                    title: FittedBox(
+                      child: Text(
+                        history.pointSetting.players.entries.fold(
+                            "",
+                            (previousValue, player) =>
+                                "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
+                      ),
+                    ),
+                    tileColor: colors[gIndex % colors.length],
+                    dense: true,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(i18n.confirm),
+                            content: Text(i18n.confirmHistory),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(i18n.cancel),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ref.watch(indexProvider.state).state = Tuple2(
+                                      games.length - gIndex - 1,
+                                      game.histories.length - hIndex - 1);
+                                  Navigator.of(context)
+                                      .popUntil(ModalRoute.withName('/'));
+                                },
+                                child: Text("OK"),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
-            )
-            .toList(),
+                  ),
+                ))
+            .fold<List<Widget>>(
+                [], (previousValue, element) => [...previousValue, ...element]),
       ),
     );
   }

@@ -14,10 +14,11 @@ import '../../utility/iterable_methods.dart';
 import 'local_widgets/player_name_input.dart';
 
 class FirestoreUploadInput extends ConsumerStatefulWidget {
+  final Game game;
   final int start;
   final int end;
 
-  FirestoreUploadInput(this.start, this.end);
+  FirestoreUploadInput(this.game, this.start, this.end);
 
   @override
   _FirestoreUploadInputState createState() => _FirestoreUploadInputState();
@@ -32,13 +33,13 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
   @override
   void initState() {
     super.initState();
-    final histories = ref.read(historiesProvider);
     game = Game(
       gamePlayers:
           List.generate(4, (_) => GamePlayer(displayName: '', uid: '')),
-      histories: histories.getRange(widget.start, widget.end).toList(),
+      histories:
+          widget.game.histories.getRange(widget.start, widget.end).toList(),
       createdAt: DateTime.now(),
-      setting: histories[widget.start].setting,
+      setting: widget.game.setting,
     );
   }
 

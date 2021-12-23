@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 import '../classes/history.dart';
 import '../pages/user_info/firestore_upload_input.dart';
-import '../providers/histories.dart';
+import '../providers/games.dart';
 import '../utility/constant.dart';
+import '../utility/iterable_methods.dart';
 import 'base_bar_button.dart';
 
 class ChooseGame extends ConsumerStatefulWidget {
@@ -17,13 +19,20 @@ class ChooseGame extends ConsumerStatefulWidget {
 }
 
 class _ChooseGameState extends ConsumerState<ChooseGame> {
-  final List<int> chosen = [];
-  late final List<History> reversedHistories;
+  final List<Tuple2<int, int>> chosen = [];
+  late final List<Tuple2<Tuple2<int, int>, History>> reversedHistories;
 
   @override
   void initState() {
     super.initState();
-    reversedHistories = ref.read(historiesProvider).reversed.toList();
+    reversedHistories = ref
+        .read(gamesProvider)
+        .mapIndexed((game, gIndex) => game.histories.mapIndexed(
+            (history, hIndex) => Tuple2(Tuple2(gIndex, hIndex), history)))
+        .fold<List<Tuple2<Tuple2<int, int>, History>>>(
+            [], (previousValue, element) => [...previousValue, ...element])
+        .reversed
+        .toList();
   }
 
   @override
@@ -43,34 +52,32 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             leading: Text(
-                "${Constant.kyokus[reversedHistories[index].pointSetting.currentKyoku]} - ${reversedHistories[index].pointSetting.bonba}"),
+                "${Constant.kyokus[reversedHistories[index].item2.pointSetting.currentKyoku]} - ${reversedHistories[index].item2.pointSetting.bonba}"),
             title: FittedBox(
               child: Text(
-                reversedHistories[index].pointSetting.players.entries.fold(
+                reversedHistories[index].item2.pointSetting.players.entries.fold(
                     "",
                     (previousValue, player) =>
                         "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
               ),
             ),
-            tileColor: colors[reversedHistories[index].index % colors.length],
+            tileColor:
+                colors[reversedHistories[index].item1.item1 % colors.length],
             selectedTileColor:
-                colors[reversedHistories[index].index % colors.length],
-            // shape: RoundedRectangleBorder(
-            //   borderRadius: BorderRadius.circular(50.0),
-            // ),
+                colors[reversedHistories[index].item1.item1 % colors.length],
             dense: true,
-            selected: chosen.contains(index),
+            selected: chosen.contains(reversedHistories[index].item1),
             onTap: () {
-              if (chosen.contains(index)) {
+              if (chosen.contains(reversedHistories[index].item1)) {
                 setState(() {
-                  chosen.remove(index);
+                  chosen.remove(reversedHistories[index].item1);
                 });
               } else {
                 if (chosen.length == 2) {
                   return;
                 } else {
                   setState(() {
-                    chosen.add(index);
+                    chosen.add(reversedHistories[index].item1);
                   });
                 }
               }
@@ -95,22 +102,20 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
                     backgroundColor: Colors.red,
                   );
                   return;
-                } else if (reversedHistories[chosen[0]].index !=
-                    reversedHistories[chosen[1]].index) {
+                } else if (chosen[0].item1 != chosen[1].item1) {
                   Fluttertoast.showToast(
                     msg: i18n.errorSettingsAreDifferent,
                     backgroundColor: Colors.red,
                   );
                   return;
                 } else {
-                  chosen[0] = reversedHistories.length - 1 - chosen[0];
-                  chosen[1] = reversedHistories.length - 1 - chosen[1];
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => FirestoreUploadInput(
-                        min(chosen[0], chosen[1]),
-                        max(chosen[0], chosen[1]),
+                        ref.watch(gamesProvider)[chosen[0].item1],
+                        min(chosen[0].item2, chosen[1].item2),
+                        max(chosen[0].item2, chosen[1].item2),
                       ),
                     ),
                   );

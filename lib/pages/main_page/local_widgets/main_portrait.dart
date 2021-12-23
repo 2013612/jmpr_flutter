@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nil/nil.dart';
 
-import '../../../providers/histories.dart';
+import '../../../providers/games.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
 import 'point_riichi_display.dart';
@@ -12,16 +12,17 @@ class MainPortrait extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final histories = ref.watch(historiesProvider);
-    final index = ref.watch(historyIndexProvider);
-    final pointSetting = histories[index].pointSetting;
+    final games = ref.watch(gamesProvider);
+    final index = ref.watch(indexProvider);
+    final pointSetting = games[index.item1].histories[index.item2].pointSetting;
     final middleTextStyle = TextStyle(
       color: Colors.white,
       fontSize: 20.0,
     );
 
     void showResult() {
-      Map<Position, double> marks = histories[index].calResult();
+      Map<Position, double> marks =
+          games[index.item1].histories[index.item2].calResult();
 
       showDialog(
         context: context,
@@ -110,49 +111,3 @@ class MainPortrait extends ConsumerWidget {
     );
   }
 }
-//
-// StreamBuilder<QuerySnapshot> testFirebase() {
-//   return StreamBuilder<QuerySnapshot>(
-//     stream: FirebaseFirestore.instance.collection('test').snapshots(),
-//     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//       if (!snapshot.hasData) {
-//         return Center(
-//           child: CircularProgressIndicator(),
-//         );
-//       }
-//       final int commentCount = snapshot.data!.docs.length;
-//       if (commentCount > 0) {
-//         return ListView.builder(
-//           physics: NeverScrollableScrollPhysics(),
-//           shrinkWrap: true,
-//           itemCount: commentCount,
-//           itemBuilder: (_, int index) {
-//             final DocumentSnapshot document = snapshot.data!.docs[index];
-//             snapshot.data!.docs[0].data();
-//             print(document.data());
-//             return Text(document["name"]?.toString() ?? "");
-//           },
-//         );
-//       } else {
-//         return Container(
-//           padding: EdgeInsets.symmetric(vertical: 10.0),
-//           alignment: Alignment.center,
-//           child: Text(
-//             'no comments...',
-//             style: TextStyle(fontSize: 20),
-//           ),
-//         );
-//       }
-//     },
-//   );
-// }
-//
-// class Test extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(),
-//       body: testFirebase(),
-//     );
-//   }
-// }

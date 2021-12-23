@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/pages/user_info/sign_in_page.dart';
+import 'package:jmpr_flutter/providers/games.dart';
 
 import '../../../common_widgets/choose_game.dart';
 import '../../../providers/histories.dart';
@@ -19,7 +20,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final histories = ref.watch(historiesProvider);
+    final games = ref.watch(gamesProvider);
 
     Map<String, String> choices = {
       "pointSetting": i18n.pointSetting,
@@ -73,7 +74,7 @@ class MyAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 );
                 break;
               case "exportToXlsx":
-                if (histories.length < 2) {
+                if (games.every((game) => game.histories.length < 2)) {
                   Fluttertoast.showToast(
                     msg: i18n.errorAtLeastTwoRecords,
                     backgroundColor: Colors.red,

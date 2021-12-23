@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/games.dart';
 
 import '../../classes/point_setting.dart' as ps;
 import '../../common_widgets/base_bar_button.dart';
@@ -27,9 +28,10 @@ class _PointSettingState extends ConsumerState<PointSetting> {
   @override
   void initState() {
     super.initState();
-    final histories = ref.read(historiesProvider);
-    final index = ref.read(historyIndexProvider);
-    _currentPointSetting = histories[index].pointSetting.clone();
+    final games = ref.read(gamesProvider);
+    final index = ref.read(indexProvider);
+    _currentPointSetting =
+        games[index.item1].histories[index.item2].pointSetting.clone();
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
@@ -140,9 +142,12 @@ class _PointSettingState extends ConsumerState<PointSetting> {
             children: [
               BaseBarButton(
                 name: i18n.currentPointSetting,
-                onPress: () => copyPointSetting(ref
-                    .watch(historiesProvider)[ref.watch(historyIndexProvider)]
-                    .pointSetting),
+                onPress: () {
+                  final games = ref.watch(gamesProvider);
+                  final index = ref.watch(indexProvider);
+                  copyPointSetting(
+                      games[index.item1].histories[index.item2].pointSetting);
+                },
               ),
               BaseBarButton(
                 name: i18n.cancel,
@@ -153,14 +158,18 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                 onPress: () {
                   if (_pointSettingFormKey.currentState!.validate()) {
                     _pointSettingFormKey.currentState!.save();
-                    final histories = ref.watch(historiesProvider);
-                    final index = ref.watch(historyIndexProvider);
-                    if (index + 1 < histories.length) {
-                      histories.removeRange(index + 1, histories.length);
-                    }
-                    histories.add(histories[index].clone());
-                    ref.watch(historyIndexProvider.state).state++;
-                    histories[index + 1].pointSetting = _currentPointSetting;
+                    final index = ref.watch(indexProvider);
+                    final histories =
+                        ref.watch(gamesProvider)[index.item1].histories;
+
+                    removeUnusedHistory(ref);
+
+                    histories.add(histories[index.item2].clone());
+                    ref.watch(indexProvider.state).state =
+                        index.withItem2(index.item2 + 1);
+
+                    histories[index.item2 + 1].pointSetting =
+                        _currentPointSetting;
                     Navigator.pop(context);
                   }
                 },

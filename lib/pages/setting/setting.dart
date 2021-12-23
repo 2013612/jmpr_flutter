@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
+import '../../classes/history.dart';
+import '../../classes/point_setting.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_check_box_tile.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
+import '../../models/game.dart';
 import '../../models/setting.dart' as class_s;
-import '../../providers/histories.dart';
+import '../../providers/games.dart';
 import '../../utility/constant.dart';
+import '../../utility/enum/ending.dart';
 import '../../utility/enum/position.dart';
 
 class Setting extends ConsumerStatefulWidget {
@@ -33,9 +38,10 @@ class _SettingState extends ConsumerState<Setting> {
   @override
   void initState() {
     super.initState();
-    final histories = ref.read(historiesProvider);
-    final index = ref.read(historyIndexProvider);
-    _editingSetting = histories[index].setting.copyWith();
+    final games = ref.read(gamesProvider);
+    final index = ref.read(indexProvider);
+    _editingSetting =
+        games[index.item1].histories[index.item2].setting.copyWith();
 
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
@@ -277,9 +283,10 @@ class _SettingState extends ConsumerState<Setting> {
                     switch (setting) {
                       case "currentSetting":
                         setState(() {
-                          _editingSetting = ref
-                              .watch(historiesProvider)[
-                                  ref.watch(historyIndexProvider)]
+                          final games = ref.watch(gamesProvider);
+                          final index = ref.watch(indexProvider);
+                          _editingSetting = games[index.item1]
+                              .histories[index.item2]
                               .setting
                               .copyWith();
                         });
@@ -309,15 +316,28 @@ class _SettingState extends ConsumerState<Setting> {
                 onPress: () {
                   if (_settingFormKey.currentState!.validate()) {
                     _settingFormKey.currentState!.save();
-                    final histories = ref.watch(historiesProvider);
-                    final index = ref.watch(historyIndexProvider);
-                    if (index + 1 < histories.length) {
-                      histories.removeRange(index + 1, histories.length);
-                    }
-                    histories.add(histories[index].clone());
-                    ref.watch(historyIndexProvider.state).state++;
-                    histories[index + 1].setting = _editingSetting;
-                    histories[index + 1].resetPoint();
+                    final index = ref.watch(indexProvider);
+
+                    removeUnusedHistory(ref);
+
+                    ref.watch(gamesProvider).add(
+                          Game(
+                            gamePlayers: [],
+                            histories: [
+                              History(
+                                pointSetting:
+                                    PointSetting.fromSetting(_editingSetting),
+                                setting: _editingSetting,
+                                ending: Ending.start,
+                                index: 0,
+                              )
+                            ],
+                            createdAt: DateTime.now(),
+                            setting: _editingSetting,
+                          ),
+                        );
+                    ref.watch(indexProvider.state).state =
+                        Tuple2(index.item1 + 1, 0);
                     Navigator.pop(context);
                   }
                 },

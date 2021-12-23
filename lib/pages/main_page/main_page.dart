@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/utility/enum/ending.dart';
 
 import '../../classes/history.dart';
 import '../../classes/point_setting.dart';
+import '../../models/game.dart';
 import '../../models/setting.dart';
-import '../../providers/histories.dart';
+import '../../providers/games.dart';
 import '../../utility/constant.dart';
+import '../../utility/enum/ending.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/main_landscape.dart';
 import 'local_widgets/main_portrait.dart';
@@ -19,13 +19,20 @@ class MainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Validators.context = context;
     Constant.changeLanguage(context);
-    if (ref.watch(historiesProvider).isEmpty) {
-      ref.watch(historiesProvider).add(
-            History(
-              pointSetting: PointSetting.fromSetting(Setting()),
+    if (ref.watch(gamesProvider).isEmpty) {
+      ref.watch(gamesProvider).add(
+            Game(
+              gamePlayers: [],
+              histories: [
+                History(
+                  pointSetting: PointSetting.fromSetting(Setting()),
+                  setting: Setting(),
+                  ending: Ending.start,
+                  index: 0,
+                )
+              ],
+              createdAt: DateTime.now(),
               setting: Setting(),
-              ending: Ending.start,
-              index: 0,
             ),
           );
     }

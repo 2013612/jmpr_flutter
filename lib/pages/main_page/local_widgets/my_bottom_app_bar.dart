@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
+import '../../../classes/history.dart';
+import '../../../classes/point_setting.dart';
 import '../../../common_widgets/base_bar_button.dart';
-import '../../../providers/histories.dart';
+import '../../../models/game.dart';
+import '../../../models/setting.dart';
+import '../../../providers/games.dart';
+import '../../../utility/enum/ending.dart';
 import '../../ron/ron.dart';
 import '../../ryukyoku/ryukyoku.dart';
 import '../../tsumo/tsumo.dart';
@@ -14,16 +20,26 @@ class MyBottomAppBar extends ConsumerWidget {
     final i18n = AppLocalizations.of(context)!;
 
     void reset() {
-      final index = ref.watch(historyIndexProvider);
-      final histories = ref.watch(historiesProvider);
+      final index = ref.watch(indexProvider);
 
-      if (index + 1 < histories.length) {
-        histories.removeRange(index + 1, histories.length);
-      }
-      histories.add(histories[index].clone());
-      ref.watch(historyIndexProvider.state).state++;
+      removeUnusedHistory(ref);
 
-      histories[index + 1].resetPoint();
+      ref.watch(gamesProvider).add(
+            Game(
+              gamePlayers: [],
+              histories: [
+                History(
+                  pointSetting: PointSetting.fromSetting(Setting()),
+                  setting: Setting(),
+                  ending: Ending.start,
+                  index: 0,
+                )
+              ],
+              createdAt: DateTime.now(),
+              setting: Setting(),
+            ),
+          );
+      ref.watch(indexProvider.state).state = Tuple2(index.item1 + 1, 0);
     }
 
     return BottomAppBar(
