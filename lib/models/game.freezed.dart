@@ -25,12 +25,16 @@ class _$GameTearOff {
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
       required List<History> histories,
       @JsonKey(name: 'created_at') required DateTime createdAt,
-      required Setting setting}) {
+      required Setting setting,
+      required List<PointSetting> pointSettings,
+      required List<Transaction> transactions}) {
     return _Game(
       gamePlayers: gamePlayers,
       histories: histories,
       createdAt: createdAt,
       setting: setting,
+      pointSettings: pointSettings,
+      transactions: transactions,
     );
   }
 
@@ -50,6 +54,8 @@ mixin _$Game {
   @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   Setting get setting => throw _privateConstructorUsedError;
+  List<PointSetting> get pointSettings => throw _privateConstructorUsedError;
+  List<Transaction> get transactions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -64,7 +70,9 @@ abstract class $GameCopyWith<$Res> {
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
       List<History> histories,
       @JsonKey(name: 'created_at') DateTime createdAt,
-      Setting setting});
+      Setting setting,
+      List<PointSetting> pointSettings,
+      List<Transaction> transactions});
 
   $SettingCopyWith<$Res> get setting;
 }
@@ -83,6 +91,8 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
     Object? histories = freezed,
     Object? createdAt = freezed,
     Object? setting = freezed,
+    Object? pointSettings = freezed,
+    Object? transactions = freezed,
   }) {
     return _then(_value.copyWith(
       gamePlayers: gamePlayers == freezed
@@ -101,6 +111,14 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
           ? _value.setting
           : setting // ignore: cast_nullable_to_non_nullable
               as Setting,
+      pointSettings: pointSettings == freezed
+          ? _value.pointSettings
+          : pointSettings // ignore: cast_nullable_to_non_nullable
+              as List<PointSetting>,
+      transactions: transactions == freezed
+          ? _value.transactions
+          : transactions // ignore: cast_nullable_to_non_nullable
+              as List<Transaction>,
     ));
   }
 
@@ -121,7 +139,9 @@ abstract class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
       List<History> histories,
       @JsonKey(name: 'created_at') DateTime createdAt,
-      Setting setting});
+      Setting setting,
+      List<PointSetting> pointSettings,
+      List<Transaction> transactions});
 
   @override
   $SettingCopyWith<$Res> get setting;
@@ -142,6 +162,8 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
     Object? histories = freezed,
     Object? createdAt = freezed,
     Object? setting = freezed,
+    Object? pointSettings = freezed,
+    Object? transactions = freezed,
   }) {
     return _then(_Game(
       gamePlayers: gamePlayers == freezed
@@ -160,18 +182,29 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
           ? _value.setting
           : setting // ignore: cast_nullable_to_non_nullable
               as Setting,
+      pointSettings: pointSettings == freezed
+          ? _value.pointSettings
+          : pointSettings // ignore: cast_nullable_to_non_nullable
+              as List<PointSetting>,
+      transactions: transactions == freezed
+          ? _value.transactions
+          : transactions // ignore: cast_nullable_to_non_nullable
+              as List<Transaction>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_Game with DiagnosticableTreeMixin implements _Game {
+class _$_Game extends _Game with DiagnosticableTreeMixin {
   const _$_Game(
       {@JsonKey(name: 'game_players') required this.gamePlayers,
       required this.histories,
       @JsonKey(name: 'created_at') required this.createdAt,
-      required this.setting});
+      required this.setting,
+      required this.pointSettings,
+      required this.transactions})
+      : super._();
 
   factory _$_Game.fromJson(Map<String, dynamic> json) => _$$_GameFromJson(json);
 
@@ -185,10 +218,14 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
   final DateTime createdAt;
   @override
   final Setting setting;
+  @override
+  final List<PointSetting> pointSettings;
+  @override
+  final List<Transaction> transactions;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Game(gamePlayers: $gamePlayers, histories: $histories, createdAt: $createdAt, setting: $setting)';
+    return 'Game(gamePlayers: $gamePlayers, histories: $histories, createdAt: $createdAt, setting: $setting, pointSettings: $pointSettings, transactions: $transactions)';
   }
 
   @override
@@ -199,7 +236,9 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
       ..add(DiagnosticsProperty('gamePlayers', gamePlayers))
       ..add(DiagnosticsProperty('histories', histories))
       ..add(DiagnosticsProperty('createdAt', createdAt))
-      ..add(DiagnosticsProperty('setting', setting));
+      ..add(DiagnosticsProperty('setting', setting))
+      ..add(DiagnosticsProperty('pointSettings', pointSettings))
+      ..add(DiagnosticsProperty('transactions', transactions));
   }
 
   @override
@@ -211,7 +250,11 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
                 .equals(other.gamePlayers, gamePlayers) &&
             const DeepCollectionEquality().equals(other.histories, histories) &&
             const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
-            const DeepCollectionEquality().equals(other.setting, setting));
+            const DeepCollectionEquality().equals(other.setting, setting) &&
+            const DeepCollectionEquality()
+                .equals(other.pointSettings, pointSettings) &&
+            const DeepCollectionEquality()
+                .equals(other.transactions, transactions));
   }
 
   @override
@@ -220,7 +263,9 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
       const DeepCollectionEquality().hash(gamePlayers),
       const DeepCollectionEquality().hash(histories),
       const DeepCollectionEquality().hash(createdAt),
-      const DeepCollectionEquality().hash(setting));
+      const DeepCollectionEquality().hash(setting),
+      const DeepCollectionEquality().hash(pointSettings),
+      const DeepCollectionEquality().hash(transactions));
 
   @JsonKey(ignore: true)
   @override
@@ -233,12 +278,15 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
   }
 }
 
-abstract class _Game implements Game {
+abstract class _Game extends Game {
   const factory _Game(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
       required List<History> histories,
       @JsonKey(name: 'created_at') required DateTime createdAt,
-      required Setting setting}) = _$_Game;
+      required Setting setting,
+      required List<PointSetting> pointSettings,
+      required List<Transaction> transactions}) = _$_Game;
+  const _Game._() : super._();
 
   factory _Game.fromJson(Map<String, dynamic> json) = _$_Game.fromJson;
 
@@ -252,6 +300,10 @@ abstract class _Game implements Game {
   DateTime get createdAt;
   @override
   Setting get setting;
+  @override
+  List<PointSetting> get pointSettings;
+  @override
+  List<Transaction> get transactions;
   @override
   @JsonKey(ignore: true)
   _$GameCopyWith<_Game> get copyWith => throw _privateConstructorUsedError;
