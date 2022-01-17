@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tuple/tuple.dart';
 
-import '../classes/history.dart';
 import '../classes/point_setting.dart';
 import '../utility/constant.dart';
 import '../utility/enum/position.dart';
@@ -23,7 +22,6 @@ class Game with _$Game {
 
   const factory Game({
     @JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
-    required List<History> histories,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     required Setting setting,
     required List<PointSetting> pointSettings,
@@ -99,8 +97,7 @@ class Game with _$Game {
     return point;
   }
 
-  Position _currentOya() {
-    return Position
-        .values[(setting.firstOya.index + pointSettings.last.currentKyoku) % 4];
+  Map<Position, double> calResult(int index) {
+    return pointSettings[index].calResult(setting);
   }
 }

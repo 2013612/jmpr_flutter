@@ -23,14 +23,12 @@ class _$GameTearOff {
 
   _Game call(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
-      required List<History> histories,
       @JsonKey(name: 'created_at') required DateTime createdAt,
       required Setting setting,
       required List<PointSetting> pointSettings,
       required List<Transaction> transactions}) {
     return _Game(
       gamePlayers: gamePlayers,
-      histories: histories,
       createdAt: createdAt,
       setting: setting,
       pointSettings: pointSettings,
@@ -50,7 +48,6 @@ const $Game = _$GameTearOff();
 mixin _$Game {
   @JsonKey(name: 'game_players')
   List<GamePlayer> get gamePlayers => throw _privateConstructorUsedError;
-  List<History> get histories => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   Setting get setting => throw _privateConstructorUsedError;
@@ -68,7 +65,6 @@ abstract class $GameCopyWith<$Res> {
       _$GameCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
-      List<History> histories,
       @JsonKey(name: 'created_at') DateTime createdAt,
       Setting setting,
       List<PointSetting> pointSettings,
@@ -88,7 +84,6 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
   @override
   $Res call({
     Object? gamePlayers = freezed,
-    Object? histories = freezed,
     Object? createdAt = freezed,
     Object? setting = freezed,
     Object? pointSettings = freezed,
@@ -99,10 +94,6 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
           ? _value.gamePlayers
           : gamePlayers // ignore: cast_nullable_to_non_nullable
               as List<GamePlayer>,
-      histories: histories == freezed
-          ? _value.histories
-          : histories // ignore: cast_nullable_to_non_nullable
-              as List<History>,
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -137,7 +128,6 @@ abstract class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
   @override
   $Res call(
       {@JsonKey(name: 'game_players') List<GamePlayer> gamePlayers,
-      List<History> histories,
       @JsonKey(name: 'created_at') DateTime createdAt,
       Setting setting,
       List<PointSetting> pointSettings,
@@ -159,7 +149,6 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
   @override
   $Res call({
     Object? gamePlayers = freezed,
-    Object? histories = freezed,
     Object? createdAt = freezed,
     Object? setting = freezed,
     Object? pointSettings = freezed,
@@ -170,10 +159,6 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
           ? _value.gamePlayers
           : gamePlayers // ignore: cast_nullable_to_non_nullable
               as List<GamePlayer>,
-      histories: histories == freezed
-          ? _value.histories
-          : histories // ignore: cast_nullable_to_non_nullable
-              as List<History>,
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -199,7 +184,6 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
 class _$_Game extends _Game with DiagnosticableTreeMixin {
   const _$_Game(
       {@JsonKey(name: 'game_players') required this.gamePlayers,
-      required this.histories,
       @JsonKey(name: 'created_at') required this.createdAt,
       required this.setting,
       required this.pointSettings,
@@ -212,8 +196,6 @@ class _$_Game extends _Game with DiagnosticableTreeMixin {
   @JsonKey(name: 'game_players')
   final List<GamePlayer> gamePlayers;
   @override
-  final List<History> histories;
-  @override
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @override
@@ -225,7 +207,7 @@ class _$_Game extends _Game with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Game(gamePlayers: $gamePlayers, histories: $histories, createdAt: $createdAt, setting: $setting, pointSettings: $pointSettings, transactions: $transactions)';
+    return 'Game(gamePlayers: $gamePlayers, createdAt: $createdAt, setting: $setting, pointSettings: $pointSettings, transactions: $transactions)';
   }
 
   @override
@@ -234,7 +216,6 @@ class _$_Game extends _Game with DiagnosticableTreeMixin {
     properties
       ..add(DiagnosticsProperty('type', 'Game'))
       ..add(DiagnosticsProperty('gamePlayers', gamePlayers))
-      ..add(DiagnosticsProperty('histories', histories))
       ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('setting', setting))
       ..add(DiagnosticsProperty('pointSettings', pointSettings))
@@ -248,7 +229,6 @@ class _$_Game extends _Game with DiagnosticableTreeMixin {
             other is _Game &&
             const DeepCollectionEquality()
                 .equals(other.gamePlayers, gamePlayers) &&
-            const DeepCollectionEquality().equals(other.histories, histories) &&
             const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
             const DeepCollectionEquality().equals(other.setting, setting) &&
             const DeepCollectionEquality()
@@ -261,7 +241,6 @@ class _$_Game extends _Game with DiagnosticableTreeMixin {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(gamePlayers),
-      const DeepCollectionEquality().hash(histories),
       const DeepCollectionEquality().hash(createdAt),
       const DeepCollectionEquality().hash(setting),
       const DeepCollectionEquality().hash(pointSettings),
@@ -281,7 +260,6 @@ class _$_Game extends _Game with DiagnosticableTreeMixin {
 abstract class _Game extends Game {
   const factory _Game(
       {@JsonKey(name: 'game_players') required List<GamePlayer> gamePlayers,
-      required List<History> histories,
       @JsonKey(name: 'created_at') required DateTime createdAt,
       required Setting setting,
       required List<PointSetting> pointSettings,
@@ -293,8 +271,6 @@ abstract class _Game extends Game {
   @override
   @JsonKey(name: 'game_players')
   List<GamePlayer> get gamePlayers;
-  @override
-  List<History> get histories;
   @override
   @JsonKey(name: 'created_at')
   DateTime get createdAt;
