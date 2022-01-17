@@ -13,15 +13,14 @@ class MainLandscape extends ConsumerWidget {
     final i18n = AppLocalizations.of(context)!;
     final games = ref.watch(gamesProvider);
     final index = ref.watch(indexProvider);
-    final pointSetting = games[index.item1].histories[index.item2].pointSetting;
+    final pointSetting = games[index.item1].pointSettings[index.item2];
     final middleTextStyle = TextStyle(
       color: Colors.white,
       fontSize: 20.0,
     );
 
     void showResult() {
-      Map<Position, double> marks =
-          games[index.item1].histories[index.item2].calResult();
+      Map<Position, double> marks = games[index.item1].calResult(index.item2);
 
       showDialog(
         context: context,

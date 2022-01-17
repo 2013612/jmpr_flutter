@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../classes/history.dart';
+import '../classes/point_setting.dart';
 import '../pages/user_info/firestore_upload_input.dart';
 import '../providers/games.dart';
 import '../utility/constant.dart';
@@ -20,16 +20,17 @@ class ChooseGame extends ConsumerStatefulWidget {
 
 class _ChooseGameState extends ConsumerState<ChooseGame> {
   final List<Tuple2<int, int>> chosen = [];
-  late final List<Tuple2<Tuple2<int, int>, History>> reversedHistories;
+  late final List<Tuple2<Tuple2<int, int>, PointSetting>> reversedPointSettings;
 
   @override
   void initState() {
     super.initState();
-    reversedHistories = ref
+    reversedPointSettings = ref
         .read(gamesProvider)
-        .mapIndexed((game, gIndex) => game.histories.mapIndexed(
-            (history, hIndex) => Tuple2(Tuple2(gIndex, hIndex), history)))
-        .fold<List<Tuple2<Tuple2<int, int>, History>>>(
+        .mapIndexed((game, gIndex) => game.pointSettings.mapIndexed(
+            (pointSetting, pIndex) =>
+                Tuple2(Tuple2(gIndex, pIndex), pointSetting)))
+        .fold<List<Tuple2<Tuple2<int, int>, PointSetting>>>(
             [], (previousValue, element) => [...previousValue, ...element])
         .reversed
         .toList();
@@ -48,36 +49,36 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
         title: Text(i18n.history),
       ),
       body: ListView.builder(
-        itemCount: reversedHistories.length,
+        itemCount: reversedPointSettings.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             leading: Text(
-                "${Constant.kyokus[reversedHistories[index].item2.pointSetting.currentKyoku]} - ${reversedHistories[index].item2.pointSetting.bonba}"),
+                "${Constant.kyokus[reversedPointSettings[index].item2.currentKyoku]} - ${reversedPointSettings[index].item2.bonba}"),
             title: FittedBox(
               child: Text(
-                reversedHistories[index].item2.pointSetting.players.entries.fold(
+                reversedPointSettings[index].item2.players.entries.fold(
                     "",
                     (previousValue, player) =>
                         "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
               ),
             ),
-            tileColor:
-                colors[reversedHistories[index].item1.item1 % colors.length],
-            selectedTileColor:
-                colors[reversedHistories[index].item1.item1 % colors.length],
+            tileColor: colors[
+                reversedPointSettings[index].item1.item1 % colors.length],
+            selectedTileColor: colors[
+                reversedPointSettings[index].item1.item1 % colors.length],
             dense: true,
-            selected: chosen.contains(reversedHistories[index].item1),
+            selected: chosen.contains(reversedPointSettings[index].item1),
             onTap: () {
-              if (chosen.contains(reversedHistories[index].item1)) {
+              if (chosen.contains(reversedPointSettings[index].item1)) {
                 setState(() {
-                  chosen.remove(reversedHistories[index].item1);
+                  chosen.remove(reversedPointSettings[index].item1);
                 });
               } else {
                 if (chosen.length == 2) {
                   return;
                 } else {
                   setState(() {
-                    chosen.add(reversedHistories[index].item1);
+                    chosen.add(reversedPointSettings[index].item1);
                   });
                 }
               }

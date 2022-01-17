@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../models/player.dart';
 import '../../../providers/games.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
@@ -19,9 +20,8 @@ class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
   Widget build(BuildContext context) {
     final games = ref.watch(gamesProvider);
     final index = ref.watch(indexProvider);
-    final history = games[index.item1].histories[index.item2];
-    final setting = history.setting;
-    final pointSetting = history.pointSetting;
+    final pointSetting = games[index.item1].pointSettings[index.item2];
+    final setting = ref.watch(gamesProvider)[index.item1].setting;
     final Color _firstOyaColor = Colors.yellow;
     final Color _textColor = Colors.white;
     final position = widget.position;
@@ -34,21 +34,27 @@ class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (!pointSetting.players[position]!.riichi) {
+          if (!pointSetting.players[position]!.isRiichi) {
             pointSetting.riichibou++;
-            pointSetting.players[position]!.point -= 1000;
-            pointSetting.players[position]!.riichi = true;
+            var newPlayer = Player(
+              point: pointSetting.players[position]!.point - 1000,
+              isRiichi: true,
+            );
+            pointSetting.players[position] = newPlayer;
           } else {
             pointSetting.riichibou--;
-            pointSetting.players[position]!.point += 1000;
-            pointSetting.players[position]!.riichi = false;
+            var newPlayer = Player(
+              point: pointSetting.players[position]!.point + 1000,
+              isRiichi: false,
+            );
+            pointSetting.players[position] = newPlayer;
           }
         });
       },
       child: Column(
         children: [
           Spacer(),
-          Image.asset(pointSetting.players[position]!.riichi
+          Image.asset(pointSetting.players[position]!.isRiichi
               ? "assets/riichibou.png"
               : "assets/no_riichibou.png"),
           Text(

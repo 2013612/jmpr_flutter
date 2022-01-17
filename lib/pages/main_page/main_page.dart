@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/history.dart';
 import '../../classes/point_setting.dart';
 import '../../models/game.dart';
 import '../../models/setting.dart';
 import '../../providers/games.dart';
 import '../../utility/constant.dart';
-import '../../utility/enum/ending.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/main_landscape.dart';
 import 'local_widgets/main_portrait.dart';
@@ -23,16 +21,10 @@ class MainPage extends ConsumerWidget {
       ref.watch(gamesProvider).add(
             Game(
               gamePlayers: [],
-              histories: [
-                History(
-                  pointSetting: PointSetting.fromSetting(Setting()),
-                  setting: Setting(),
-                  ending: Ending.start,
-                  index: 0,
-                )
-              ],
               createdAt: DateTime.now(),
               setting: Setting(),
+              transactions: [],
+              pointSettings: [PointSetting.fromSetting(Setting())],
             ),
           );
     }

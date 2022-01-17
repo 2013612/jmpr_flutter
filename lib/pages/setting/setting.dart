@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../classes/history.dart';
 import '../../classes/point_setting.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_check_box_tile.dart';
@@ -40,8 +39,7 @@ class _SettingState extends ConsumerState<Setting> {
     super.initState();
     final games = ref.read(gamesProvider);
     final index = ref.read(indexProvider);
-    _editingSetting =
-        games[index.item1].histories[index.item2].setting.copyWith();
+    _editingSetting = games[index.item1].setting.copyWith();
 
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
@@ -285,10 +283,8 @@ class _SettingState extends ConsumerState<Setting> {
                         setState(() {
                           final games = ref.watch(gamesProvider);
                           final index = ref.watch(indexProvider);
-                          _editingSetting = games[index.item1]
-                              .histories[index.item2]
-                              .setting
-                              .copyWith();
+                          _editingSetting =
+                              games[index.item1].setting.copyWith();
                         });
                         break;
                       case "bRule":
@@ -318,26 +314,20 @@ class _SettingState extends ConsumerState<Setting> {
                     _settingFormKey.currentState!.save();
                     final index = ref.watch(indexProvider);
 
-                    removeUnusedHistory(ref);
-
                     ref.watch(gamesProvider).add(
                           Game(
                             gamePlayers: [],
-                            histories: [
-                              History(
-                                pointSetting:
-                                    PointSetting.fromSetting(_editingSetting),
-                                setting: _editingSetting,
-                                ending: Ending.start,
-                                index: 0,
-                              )
-                            ],
                             createdAt: DateTime.now(),
                             setting: _editingSetting,
+                            transactions: [],
+                            pointSettings: [
+                              PointSetting.fromSetting(_editingSetting)
+                            ],
                           ),
                         );
                     ref.watch(indexProvider.state).state =
                         Tuple2(index.item1 + 1, 0);
+
                     Navigator.pop(context);
                   }
                 },

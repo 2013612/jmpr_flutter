@@ -3,13 +3,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../../classes/history.dart';
 import '../../../classes/point_setting.dart';
 import '../../../common_widgets/base_bar_button.dart';
 import '../../../models/game.dart';
 import '../../../models/setting.dart';
 import '../../../providers/games.dart';
-import '../../../utility/enum/ending.dart';
 import '../../ron/ron.dart';
 import '../../ryukyoku/ryukyoku.dart';
 import '../../tsumo/tsumo.dart';
@@ -22,21 +20,13 @@ class MyBottomAppBar extends ConsumerWidget {
     void reset() {
       final index = ref.watch(indexProvider);
 
-      removeUnusedHistory(ref);
-
       ref.watch(gamesProvider).add(
             Game(
               gamePlayers: [],
-              histories: [
-                History(
-                  pointSetting: PointSetting.fromSetting(Setting()),
-                  setting: Setting(),
-                  ending: Ending.start,
-                  index: 0,
-                )
-              ],
               createdAt: DateTime.now(),
               setting: Setting(),
+              transactions: [],
+              pointSettings: [PointSetting.fromSetting(Setting())],
             ),
           );
       ref.watch(indexProvider.state).state = Tuple2(index.item1 + 1, 0);

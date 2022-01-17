@@ -22,13 +22,14 @@ class HistoryPage extends ConsumerWidget {
       ),
       body: ListView(
         children: games.reversed
-            .mapIndexed((game, gIndex) => game.histories.reversed.mapIndexed(
-                  (history, hIndex) => ListTile(
+            .mapIndexed((game, gIndex) =>
+                game.pointSettings.reversed.mapIndexed(
+                  (pointSetting, pIndex) => ListTile(
                     leading: Text(
-                        "${Constant.kyokus[history.pointSetting.currentKyoku]} - ${history.pointSetting.bonba}"),
+                        "${Constant.kyokus[pointSetting.currentKyoku]} - ${pointSetting.bonba}"),
                     title: FittedBox(
                       child: Text(
-                        history.pointSetting.players.entries.fold(
+                        pointSetting.players.entries.fold(
                             "",
                             (previousValue, player) =>
                                 "$previousValue ${Constant.positionTexts[player.key]}: ${player.value.point}"),
@@ -54,7 +55,7 @@ class HistoryPage extends ConsumerWidget {
                                 onPressed: () {
                                   ref.watch(indexProvider.state).state = Tuple2(
                                       games.length - gIndex - 1,
-                                      game.histories.length - hIndex - 1);
+                                      game.pointSettings.length - pIndex - 1);
                                   Navigator.of(context)
                                       .popUntil(ModalRoute.withName('/'));
                                 },
