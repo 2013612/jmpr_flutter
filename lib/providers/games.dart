@@ -9,7 +9,7 @@ final gamesProvider = Provider<List<Game>>(
 
 final indexProvider = StateProvider((_) => Tuple2<int, int>(0, 0));
 
-void removeUnusedHistory(WidgetRef ref) {
+void removeUnusedGameAndPointSetting(WidgetRef ref) {
   final games = ref.watch(gamesProvider);
   final index = ref.watch(indexProvider);
 
@@ -17,9 +17,9 @@ void removeUnusedHistory(WidgetRef ref) {
     games.removeRange(index.item1 + 1, games.length);
   }
 
-  if (index.item2 + 1 < games[index.item1].histories.length) {
+  if (index.item2 + 1 < games[index.item1].pointSettings.length) {
     games[index.item1]
-        .histories
-        .removeRange(index.item2 + 1, games[index.item1].histories.length);
+        .pointSettings
+        .removeRange(index.item2 + 1, games[index.item1].pointSettings.length);
   }
 }
