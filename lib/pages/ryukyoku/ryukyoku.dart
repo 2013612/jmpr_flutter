@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/providers/games.dart';
 
 import '../../common_widgets/base_bar_button.dart';
-import '../../providers/histories.dart';
 import '../../utility/enum/position.dart';
 import 'local_widgets/flexible_custom_check_box_tile.dart';
 
@@ -117,18 +116,14 @@ class _RyokyokuState extends ConsumerState<Ryukyoku> {
                 name: i18n.save,
                 onPress: () {
                   final index = ref.watch(indexProvider);
-                  final histories =
-                      ref.watch(gamesProvider)[index.item1].histories;
 
-                  removeUnusedHistory(ref);
+                  removeUnusedGameAndPointSetting(ref);
 
-                  histories.add(histories[index.item2].clone());
+                  ref
+                      .watch(gamesProvider)[index.item1]
+                      .saveRyukyoku(_tenpai, _nagashimangan);
                   ref.watch(indexProvider.state).state =
                       index.withItem2(index.item2 + 1);
-
-                  histories[index.item2 + 1]
-                      .saveRyukyoku(_tenpai, _nagashimangan);
-                  histories[index.item2 + 1].setRiichiFalse();
 
                   Navigator.pop(context);
                 },

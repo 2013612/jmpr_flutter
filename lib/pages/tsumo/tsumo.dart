@@ -5,7 +5,6 @@ import 'package:jmpr_flutter/providers/games.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_radio_tile.dart';
-import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
 
@@ -150,21 +149,14 @@ class _TsumoState extends ConsumerState<Tsumo> {
                 name: i18n.save,
                 onPress: () {
                   final index = ref.watch(indexProvider);
-                  final histories =
-                      ref.watch(gamesProvider)[index.item1].histories;
 
-                  removeUnusedHistory(ref);
+                  removeUnusedGameAndPointSetting(ref);
 
-                  histories.add(histories[index.item2].clone());
+                  ref
+                      .watch(gamesProvider)[index.item1]
+                      .saveTsumo(_tsumoPlayer, _han, _fu);
                   ref.watch(indexProvider.state).state =
                       index.withItem2(index.item2 + 1);
-
-                  histories[index.item2 + 1].saveTsumo(
-                    _tsumoPlayer,
-                    _han,
-                    _fu,
-                  );
-                  histories[index.item2 + 1].setRiichiFalse();
 
                   Navigator.pop(context);
                 },

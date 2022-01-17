@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/games.dart';
 
 import '../../classes/point_setting.dart' as ps;
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
-import '../../providers/histories.dart';
+import '../../models/player.dart';
+import '../../providers/games.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
 import '../../utility/validators.dart';
@@ -31,7 +30,7 @@ class _PointSettingState extends ConsumerState<PointSetting> {
     final games = ref.read(gamesProvider);
     final index = ref.read(indexProvider);
     _currentPointSetting =
-        games[index.item1].histories[index.item2].pointSetting.clone();
+        games[index.item1].pointSettings[index.item2].clone();
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
@@ -81,8 +80,10 @@ class _PointSettingState extends ConsumerState<PointSetting> {
     );
 
     void Function(String?) posPointSettingOnSave(Position position) {
-      return (String? point) =>
-          _currentPointSetting.players[position]!.point = int.tryParse(point!)!;
+      return (String? point) => _currentPointSetting.players[position] = Player(
+            isRiichi: false,
+            point: int.tryParse(point ?? "0") ?? 0,
+          );
     }
 
     return WillPopScope(
@@ -146,7 +147,7 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                   final games = ref.watch(gamesProvider);
                   final index = ref.watch(indexProvider);
                   copyPointSetting(
-                      games[index.item1].histories[index.item2].pointSetting);
+                      games[index.item1].pointSettings[index.item2]);
                 },
               ),
               BaseBarButton(
@@ -159,17 +160,15 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                   if (_pointSettingFormKey.currentState!.validate()) {
                     _pointSettingFormKey.currentState!.save();
                     final index = ref.watch(indexProvider);
-                    final histories =
-                        ref.watch(gamesProvider)[index.item1].histories;
 
-                    removeUnusedHistory(ref);
+                    removeUnusedGameAndPointSetting(ref);
 
-                    histories.add(histories[index.item2].clone());
+                    ref
+                        .watch(gamesProvider)[index.item1]
+                        .saveEdit(_currentPointSetting);
                     ref.watch(indexProvider.state).state =
                         index.withItem2(index.item2 + 1);
 
-                    histories[index.item2 + 1].pointSetting =
-                        _currentPointSetting;
                     Navigator.pop(context);
                   }
                 },

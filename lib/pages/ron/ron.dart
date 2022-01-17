@@ -164,7 +164,7 @@ class _RonState extends State<Ron> {
                     MaterialPageRoute(
                       builder: (context) => RonPoint(
                         isRonPlayers: _isRonPlayers,
-                        ronedPlayer: _ronedPlayer,
+                        losePlayer: _ronedPlayer,
                       ),
                     ),
                   );
