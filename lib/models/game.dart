@@ -4,11 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tuple/tuple.dart';
 
-import '../classes/point_setting.dart';
 import '../utility/constant.dart';
 import '../utility/enum/position.dart';
 import 'game_player.dart';
 import 'player.dart';
+import 'point_setting.dart';
 import 'setting.dart';
 import 'transaction.dart';
 import 'win_player.dart';
@@ -30,7 +30,9 @@ class Game with _$Game {
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 
-  void saveRon(Position losePlayer, Map<Position, Tuple2<int, int>> hanfus) {
+  void saveRon(Position losePlayer, Map<Position, Tuple2<int, int>> hanfus,
+      PointSetting pointSetting) {
+    pointSettings.last = pointSetting;
     Tuple2<PointSetting, Map<Position, Player>> changes =
         pointSettings.last.saveRon(
       losePlayer,
@@ -52,7 +54,9 @@ class Game with _$Game {
     pointSettings.add(changes.item1);
   }
 
-  void saveTsumo(Position tsumoPlayer, int han, int fu) {
+  void saveTsumo(
+      Position tsumoPlayer, int han, int fu, PointSetting pointSetting) {
+    pointSettings.last = pointSetting;
     Tuple2<PointSetting, Map<Position, Player>> changes =
         pointSettings.last.saveTsumo(tsumoPlayer, _calPoint(han, fu), setting);
 
@@ -68,8 +72,9 @@ class Game with _$Game {
     pointSettings.add(changes.item1);
   }
 
-  void saveRyukyoku(
-      Map<Position, bool> tenpai, Map<Position, bool> nagashimangan) {
+  void saveRyukyoku(Map<Position, bool> tenpai,
+      Map<Position, bool> nagashimangan, PointSetting pointSetting) {
+    pointSettings.last = pointSetting;
     Tuple2<PointSetting, Map<Position, Player>> changes =
         pointSettings.last.saveRyukyoku(tenpai, nagashimangan, setting);
 

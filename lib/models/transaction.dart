@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../classes/point_setting.dart';
 import '../models/player.dart';
 import '../utility/enum/ending.dart';
 import '../utility/enum/position.dart';
+import 'point_setting.dart';
 import 'win_player.dart';
 
 part 'transaction.freezed.dart';
