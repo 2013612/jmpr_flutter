@@ -3,9 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../../classes/point_setting.dart';
 import '../../../common_widgets/base_bar_button.dart';
 import '../../../models/game.dart';
+import '../../../models/point_setting.dart';
 import '../../../models/setting.dart';
 import '../../../providers/games.dart';
 import '../../ron/ron.dart';

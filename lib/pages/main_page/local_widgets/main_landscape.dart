@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../providers/games.dart';
+import '../../../providers/point_setting.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
 import 'point_riichi_display.dart';
@@ -11,16 +12,16 @@ class MainLandscape extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = AppLocalizations.of(context)!;
-    final games = ref.watch(gamesProvider);
-    final index = ref.watch(indexProvider);
-    final pointSetting = games[index.item1].pointSettings[index.item2];
+    final pointSetting = ref.watch(pointSettingProvider);
     final middleTextStyle = TextStyle(
       color: Colors.white,
       fontSize: 20.0,
     );
 
     void showResult() {
-      Map<Position, double> marks = games[index.item1].calResult(index.item2);
+      final indexes = ref.watch(indexProvider);
+      Map<Position, double> marks =
+          ref.watch(gamesProvider)[indexes.item1].calResult(indexes.item2);
 
       showDialog(
         context: context,

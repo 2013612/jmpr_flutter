@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../models/player.dart';
 import '../../../providers/games.dart';
+import '../../../providers/point_setting.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
 
@@ -20,8 +20,8 @@ class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
   Widget build(BuildContext context) {
     final games = ref.watch(gamesProvider);
     final index = ref.watch(indexProvider);
-    final pointSetting = games[index.item1].pointSettings[index.item2];
-    final setting = ref.watch(gamesProvider)[index.item1].setting;
+    final pointSetting = ref.watch(pointSettingProvider);
+    final setting = games[index.item1].setting;
     final Color _firstOyaColor = Colors.yellow;
     final Color _textColor = Colors.white;
     final position = widget.position;
@@ -32,25 +32,9 @@ class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
         4];
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (!pointSetting.players[position]!.isRiichi) {
-            pointSetting.riichibou++;
-            var newPlayer = Player(
-              point: pointSetting.players[position]!.point - 1000,
-              isRiichi: true,
-            );
-            pointSetting.players[position] = newPlayer;
-          } else {
-            pointSetting.riichibou--;
-            var newPlayer = Player(
-              point: pointSetting.players[position]!.point + 1000,
-              isRiichi: false,
-            );
-            pointSetting.players[position] = newPlayer;
-          }
-        });
-      },
+      onTap: () => ref
+          .read(pointSettingProvider.notifier)
+          .toggleRiichi(position, setting.riichibouPoint),
       child: Column(
         children: [
           Spacer(),

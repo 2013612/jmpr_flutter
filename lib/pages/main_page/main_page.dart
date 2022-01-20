@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/point_setting.dart';
 import '../../models/game.dart';
+import '../../models/point_setting.dart';
 import '../../models/setting.dart';
 import '../../providers/games.dart';
 import '../../utility/constant.dart';
