@@ -3,16 +3,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../classes/point_setting.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_check_box_tile.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../models/game.dart';
+import '../../models/point_setting.dart';
 import '../../models/setting.dart' as class_s;
 import '../../providers/games.dart';
 import '../../utility/constant.dart';
-import '../../utility/enum/ending.dart';
 import '../../utility/enum/position.dart';
 
 class Setting extends ConsumerStatefulWidget {

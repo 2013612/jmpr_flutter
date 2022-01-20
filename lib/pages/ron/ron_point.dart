@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/point_setting.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../common_widgets/base_bar_button.dart';
@@ -29,7 +30,11 @@ class _RonPointState extends ConsumerState<RonPoint> {
   void initState() {
     super.initState();
     for (Position position in Position.values) {
-      _hanfus[position] = Tuple2(1, 30);
+      if (widget.isRonPlayers[position] ?? false) {
+        _hanfus[position] = Tuple2(1, 30);
+      } else {
+        _hanfus[position] = Tuple2(0, 0);
+      }
     }
   }
 
@@ -151,12 +156,13 @@ class _RonPointState extends ConsumerState<RonPoint> {
                 name: i18n.save,
                 onPress: () {
                   final index = ref.watch(indexProvider);
+                  final pointSetting = ref.watch(pointSettingProvider);
 
                   removeUnusedGameAndPointSetting(ref);
 
                   ref
                       .watch(gamesProvider)[index.item1]
-                      .saveRon(widget.losePlayer, _hanfus);
+                      .saveRon(widget.losePlayer, _hanfus, pointSetting);
                   ref.watch(indexProvider.state).state =
                       index.withItem2(index.item2 + 1);
 

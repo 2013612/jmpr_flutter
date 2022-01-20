@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/providers/games.dart';
+import 'package:jmpr_flutter/providers/point_setting.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../utility/enum/position.dart';
@@ -116,12 +117,13 @@ class _RyokyokuState extends ConsumerState<Ryukyoku> {
                 name: i18n.save,
                 onPress: () {
                   final index = ref.watch(indexProvider);
+                  final pointSetting = ref.watch(pointSettingProvider);
 
                   removeUnusedGameAndPointSetting(ref);
 
                   ref
                       .watch(gamesProvider)[index.item1]
-                      .saveRyukyoku(_tenpai, _nagashimangan);
+                      .saveRyukyoku(_tenpai, _nagashimangan, pointSetting);
                   ref.watch(indexProvider.state).state =
                       index.withItem2(index.item2 + 1);
 

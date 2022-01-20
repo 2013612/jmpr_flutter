@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../classes/point_setting.dart';
+import '../models/point_setting.dart';
 import '../pages/user_info/firestore_upload_input.dart';
 import '../providers/games.dart';
 import '../utility/constant.dart';

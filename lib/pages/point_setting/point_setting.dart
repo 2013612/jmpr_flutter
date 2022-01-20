@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/point_setting.dart' as ps;
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../models/player.dart';
+import '../../models/point_setting.dart' as ps;
 import '../../providers/games.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
@@ -30,7 +30,7 @@ class _PointSettingState extends ConsumerState<PointSetting> {
     final games = ref.read(gamesProvider);
     final index = ref.read(indexProvider);
     _currentPointSetting =
-        games[index.item1].pointSettings[index.item2].clone();
+        games[index.item1].pointSettings[index.item2].copyWith();
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
@@ -71,11 +71,13 @@ class _PointSettingState extends ConsumerState<PointSetting> {
       decoration: _inputDecoration,
       onChanged: (String? kyoku) {
         setState(() {
-          _currentPointSetting.currentKyoku = Constant.kyokus.indexOf(kyoku!);
+          _currentPointSetting = _currentPointSetting.copyWith(
+              currentKyoku: Constant.kyokus.indexOf(kyoku ?? "0"));
         });
       },
       onSaved: (String? kyoku) {
-        _currentPointSetting.currentKyoku = Constant.kyokus.indexOf(kyoku!);
+        _currentPointSetting = _currentPointSetting.copyWith(
+            currentKyoku: Constant.kyokus.indexOf(kyoku ?? "0"));
       },
     );
 
@@ -117,8 +119,9 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                   RowInput(
                     name: i18n.bonba,
                     widget: TextInput(
-                      onSaved: (String? bonba) =>
-                          _currentPointSetting.bonba = int.tryParse(bonba!)!,
+                      onSaved: (String? bonba) => _currentPointSetting =
+                          _currentPointSetting.copyWith(
+                              bonba: int.tryParse(bonba ?? "0") ?? 0),
                       controller: _bonbaController,
                       validator: Validators.nonNegativeInteger,
                     ),
@@ -126,8 +129,9 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                   RowInput(
                     name: i18n.kyoutaku,
                     widget: TextInput(
-                      onSaved: (String? kyoutaku) => _currentPointSetting
-                          .riichibou = int.tryParse(kyoutaku!)!,
+                      onSaved: (String? kyoutaku) => _currentPointSetting =
+                          _currentPointSetting.copyWith(
+                              riichibou: int.tryParse(kyoutaku ?? "0") ?? 0),
                       controller: _riichibouController,
                       validator: Validators.nonNegativeInteger,
                     ),
