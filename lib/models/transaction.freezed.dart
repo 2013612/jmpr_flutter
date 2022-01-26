@@ -79,10 +79,11 @@ class _$TransactionTearOff {
   }
 
   TransactionEdit edit(
-      {@JsonKey(name: 'point_setting') required PointSetting pointSetting,
+      {@JsonKey(name: 'player_points')
+          required Map<Position, Player> playerPoints,
       Ending ending = Ending.edit}) {
     return TransactionEdit(
-      pointSetting: pointSetting,
+      playerPoints: playerPoints,
       ending: ending,
     );
   }
@@ -97,6 +98,8 @@ const $Transaction = _$TransactionTearOff();
 
 /// @nodoc
 mixin _$Transaction {
+  @JsonKey(name: 'player_points')
+  Map<Position, Player> get playerPoints => throw _privateConstructorUsedError;
   Ending get ending => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
@@ -119,7 +122,7 @@ mixin _$Transaction {
             Map<Position, bool> nagashimangan)
         ryukyoku,
     required TResult Function(
-            @JsonKey(name: 'point_setting') PointSetting pointSetting,
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)
         edit,
   }) =>
@@ -143,7 +146,8 @@ mixin _$Transaction {
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
   }) =>
@@ -167,7 +171,8 @@ mixin _$Transaction {
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
     required TResult orElse(),
@@ -209,7 +214,9 @@ abstract class $TransactionCopyWith<$Res> {
   factory $TransactionCopyWith(
           Transaction value, $Res Function(Transaction) then) =
       _$TransactionCopyWithImpl<$Res>;
-  $Res call({Ending ending});
+  $Res call(
+      {@JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
+      Ending ending});
 }
 
 /// @nodoc
@@ -222,9 +229,14 @@ class _$TransactionCopyWithImpl<$Res> implements $TransactionCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? playerPoints = freezed,
     Object? ending = freezed,
   }) {
     return _then(_value.copyWith(
+      playerPoints: playerPoints == freezed
+          ? _value.playerPoints
+          : playerPoints // ignore: cast_nullable_to_non_nullable
+              as Map<Position, Player>,
       ending: ending == freezed
           ? _value.ending
           : ending // ignore: cast_nullable_to_non_nullable
@@ -379,7 +391,7 @@ class _$TransactionRon with DiagnosticableTreeMixin implements TransactionRon {
             Map<Position, bool> nagashimangan)
         ryukyoku,
     required TResult Function(
-            @JsonKey(name: 'point_setting') PointSetting pointSetting,
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)
         edit,
   }) {
@@ -406,7 +418,8 @@ class _$TransactionRon with DiagnosticableTreeMixin implements TransactionRon {
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
   }) {
@@ -433,7 +446,8 @@ class _$TransactionRon with DiagnosticableTreeMixin implements TransactionRon {
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
     required TResult orElse(),
@@ -500,6 +514,7 @@ abstract class TransactionRon implements Transaction {
   factory TransactionRon.fromJson(Map<String, dynamic> json) =
       _$TransactionRon.fromJson;
 
+  @override
   @JsonKey(name: 'player_points')
   Map<Position, Player> get playerPoints;
   @override
@@ -657,7 +672,7 @@ class _$TransactionTsumo
             Map<Position, bool> nagashimangan)
         ryukyoku,
     required TResult Function(
-            @JsonKey(name: 'point_setting') PointSetting pointSetting,
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)
         edit,
   }) {
@@ -684,7 +699,8 @@ class _$TransactionTsumo
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
   }) {
@@ -711,7 +727,8 @@ class _$TransactionTsumo
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
     required TResult orElse(),
@@ -776,6 +793,7 @@ abstract class TransactionTsumo implements Transaction {
   factory TransactionTsumo.fromJson(Map<String, dynamic> json) =
       _$TransactionTsumo.fromJson;
 
+  @override
   @JsonKey(name: 'player_points')
   Map<Position, Player> get playerPoints;
   @override
@@ -934,7 +952,7 @@ class _$TransactionRyukyoku
             Map<Position, bool> nagashimangan)
         ryukyoku,
     required TResult Function(
-            @JsonKey(name: 'point_setting') PointSetting pointSetting,
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)
         edit,
   }) {
@@ -961,7 +979,8 @@ class _$TransactionRyukyoku
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
   }) {
@@ -988,7 +1007,8 @@ class _$TransactionRyukyoku
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
     required TResult orElse(),
@@ -1053,6 +1073,7 @@ abstract class TransactionRyukyoku implements Transaction {
   factory TransactionRyukyoku.fromJson(Map<String, dynamic> json) =
       _$TransactionRyukyoku.fromJson;
 
+  @override
   @JsonKey(name: 'player_points')
   Map<Position, Player> get playerPoints;
   @override
@@ -1073,7 +1094,7 @@ abstract class $TransactionEditCopyWith<$Res>
       _$TransactionEditCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey(name: 'point_setting') PointSetting pointSetting,
+      {@JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
       Ending ending});
 }
 
@@ -1090,14 +1111,14 @@ class _$TransactionEditCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? pointSetting = freezed,
+    Object? playerPoints = freezed,
     Object? ending = freezed,
   }) {
     return _then(TransactionEdit(
-      pointSetting: pointSetting == freezed
-          ? _value.pointSetting
-          : pointSetting // ignore: cast_nullable_to_non_nullable
-              as PointSetting,
+      playerPoints: playerPoints == freezed
+          ? _value.playerPoints
+          : playerPoints // ignore: cast_nullable_to_non_nullable
+              as Map<Position, Player>,
       ending: ending == freezed
           ? _value.ending
           : ending // ignore: cast_nullable_to_non_nullable
@@ -1112,7 +1133,7 @@ class _$TransactionEdit
     with DiagnosticableTreeMixin
     implements TransactionEdit {
   const _$TransactionEdit(
-      {@JsonKey(name: 'point_setting') required this.pointSetting,
+      {@JsonKey(name: 'player_points') required this.playerPoints,
       this.ending = Ending.edit,
       String? $type})
       : $type = $type ?? 'edit';
@@ -1121,8 +1142,8 @@ class _$TransactionEdit
       _$$TransactionEditFromJson(json);
 
   @override
-  @JsonKey(name: 'point_setting')
-  final PointSetting pointSetting;
+  @JsonKey(name: 'player_points')
+  final Map<Position, Player> playerPoints;
   @JsonKey()
   @override
   final Ending ending;
@@ -1132,7 +1153,7 @@ class _$TransactionEdit
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Transaction.edit(pointSetting: $pointSetting, ending: $ending)';
+    return 'Transaction.edit(playerPoints: $playerPoints, ending: $ending)';
   }
 
   @override
@@ -1140,7 +1161,7 @@ class _$TransactionEdit
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Transaction.edit'))
-      ..add(DiagnosticsProperty('pointSetting', pointSetting))
+      ..add(DiagnosticsProperty('playerPoints', playerPoints))
       ..add(DiagnosticsProperty('ending', ending));
   }
 
@@ -1150,14 +1171,14 @@ class _$TransactionEdit
         (other.runtimeType == runtimeType &&
             other is TransactionEdit &&
             const DeepCollectionEquality()
-                .equals(other.pointSetting, pointSetting) &&
+                .equals(other.playerPoints, playerPoints) &&
             const DeepCollectionEquality().equals(other.ending, ending));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(pointSetting),
+      const DeepCollectionEquality().hash(playerPoints),
       const DeepCollectionEquality().hash(ending));
 
   @JsonKey(ignore: true)
@@ -1186,11 +1207,11 @@ class _$TransactionEdit
             Map<Position, bool> nagashimangan)
         ryukyoku,
     required TResult Function(
-            @JsonKey(name: 'point_setting') PointSetting pointSetting,
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)
         edit,
   }) {
-    return edit(pointSetting, ending);
+    return edit(playerPoints, ending);
   }
 
   @override
@@ -1213,11 +1234,12 @@ class _$TransactionEdit
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
   }) {
-    return edit?.call(pointSetting, ending);
+    return edit?.call(playerPoints, ending);
   }
 
   @override
@@ -1240,13 +1262,14 @@ class _$TransactionEdit
             Map<Position, bool> tenpai,
             Map<Position, bool> nagashimangan)?
         ryukyoku,
-    TResult Function(@JsonKey(name: 'point_setting') PointSetting pointSetting,
+    TResult Function(
+            @JsonKey(name: 'player_points') Map<Position, Player> playerPoints,
             Ending ending)?
         edit,
     required TResult orElse(),
   }) {
     if (edit != null) {
-      return edit(pointSetting, ending);
+      return edit(playerPoints, ending);
     }
     return orElse();
   }
@@ -1296,14 +1319,16 @@ class _$TransactionEdit
 
 abstract class TransactionEdit implements Transaction {
   const factory TransactionEdit(
-      {@JsonKey(name: 'point_setting') required PointSetting pointSetting,
+      {@JsonKey(name: 'player_points')
+          required Map<Position, Player> playerPoints,
       Ending ending}) = _$TransactionEdit;
 
   factory TransactionEdit.fromJson(Map<String, dynamic> json) =
       _$TransactionEdit.fromJson;
 
-  @JsonKey(name: 'point_setting')
-  PointSetting get pointSetting;
+  @override
+  @JsonKey(name: 'player_points')
+  Map<Position, Player> get playerPoints;
   @override
   Ending get ending;
   @override

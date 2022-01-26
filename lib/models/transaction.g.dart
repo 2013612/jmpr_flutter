@@ -100,8 +100,10 @@ Map<String, dynamic> _$$TransactionRyukyokuToJson(
 
 _$TransactionEdit _$$TransactionEditFromJson(Map<String, dynamic> json) =>
     _$TransactionEdit(
-      pointSetting:
-          PointSetting.fromJson(json['point_setting'] as Map<String, dynamic>),
+      playerPoints: (json['player_points'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry($enumDecode(_$PositionEnumMap, k),
+            Player.fromJson(e as Map<String, dynamic>)),
+      ),
       ending:
           $enumDecodeNullable(_$EndingEnumMap, json['ending']) ?? Ending.edit,
       $type: json['runtimeType'] as String?,
@@ -109,7 +111,8 @@ _$TransactionEdit _$$TransactionEditFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$TransactionEditToJson(_$TransactionEdit instance) =>
     <String, dynamic>{
-      'point_setting': instance.pointSetting.toJson(),
+      'player_points': instance.playerPoints
+          .map((k, e) => MapEntry(_$PositionEnumMap[k], e.toJson())),
       'ending': _$EndingEnumMap[instance.ending],
       'runtimeType': instance.$type,
     };

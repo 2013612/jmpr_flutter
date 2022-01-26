@@ -33,7 +33,7 @@ class Transaction with _$Transaction {
   }) = TransactionRyukyoku;
 
   const factory Transaction.edit({
-    @JsonKey(name: 'point_setting') required PointSetting pointSetting,
+    @JsonKey(name: 'player_points') required Map<Position, Player> playerPoints,
     @Default(Ending.edit) Ending ending,
   }) = TransactionEdit;
 
