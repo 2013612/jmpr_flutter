@@ -28,4 +28,8 @@ class UserRepository {
     }
     return collection.add(user);
   }
+
+  void updateUser(User user) {
+    collection.doc(user.uid).update(user.toJson()..remove('uid'));
+  }
 }
