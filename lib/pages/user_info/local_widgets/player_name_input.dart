@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jmpr_flutter/utility/validators.dart';
 
 import '../../../common_widgets/row_input.dart';
 import '../../../models/game_player.dart';
@@ -20,6 +21,17 @@ class PlayerNameInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final InputDecoration inputDecoration = InputDecoration(
+      isDense: true,
+      contentPadding: EdgeInsets.all(8.0),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      errorStyle: TextStyle(
+        height: 0.0,
+      ),
+    );
+
     return RowInput(
       name: Constant.positionTexts[Position.values[index]]!,
       widget: Autocomplete<User>(
@@ -54,9 +66,8 @@ class PlayerNameInput extends StatelessWidget {
           },
           onChanged: (input) =>
               gamePlayers[index] = GamePlayer(uid: "", displayName: input),
-          validator: (_) {
-            print(index);
-          },
+          validator: Validators.empty,
+          decoration: inputDecoration,
         ),
       ),
       icon: Constant.arrows[Position.values[index]],
