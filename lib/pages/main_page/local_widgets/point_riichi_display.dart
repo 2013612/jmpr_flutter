@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/providers/indexes_provider.dart';
 
 import '../../../providers/games.dart';
 import '../../../providers/point_setting.dart';

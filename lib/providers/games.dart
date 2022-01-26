@@ -1,13 +1,11 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../models/game.dart';
+import 'indexes_provider.dart';
 
 final gamesProvider = Provider<List<Game>>(
   (ref) => [],
 );
-
-final indexProvider = StateProvider((_) => Tuple2<int, int>(0, 0));
 
 void removeUnusedGameAndPointSetting(WidgetRef ref) {
   final games = ref.watch(gamesProvider);

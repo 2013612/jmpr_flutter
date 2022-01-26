@@ -4,6 +4,7 @@ import '../models/point_setting.dart';
 import '../utility/enum/position.dart';
 
 import 'games.dart';
+import 'indexes_provider.dart';
 
 final pointSettingProvider =
     StateNotifierProvider<PointSettingNotifier, PointSetting>((ref) {
