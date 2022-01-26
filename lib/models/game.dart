@@ -32,9 +32,7 @@ class Game with _$Game {
 
   void saveRon(Position losePlayer, Map<Position, Tuple2<int, int>> hanfus,
       PointSetting pointSetting) {
-    pointSettings.last = pointSetting;
-    Tuple2<PointSetting, Map<Position, Player>> changes =
-        pointSettings.last.saveRon(
+    Tuple2<PointSetting, Map<Position, Player>> changes = pointSetting.saveRon(
       losePlayer,
       hanfus.map((position, value) =>
           MapEntry(position, _calPoint(value.item1, value.item2))),
@@ -56,9 +54,8 @@ class Game with _$Game {
 
   void saveTsumo(
       Position tsumoPlayer, int han, int fu, PointSetting pointSetting) {
-    pointSettings.last = pointSetting;
     Tuple2<PointSetting, Map<Position, Player>> changes =
-        pointSettings.last.saveTsumo(tsumoPlayer, _calPoint(han, fu), setting);
+        pointSetting.saveTsumo(tsumoPlayer, _calPoint(han, fu), setting);
 
     transactions.add(TransactionTsumo(
       winPlayer: WinPlayer(
@@ -74,9 +71,8 @@ class Game with _$Game {
 
   void saveRyukyoku(Map<Position, bool> tenpai,
       Map<Position, bool> nagashimangan, PointSetting pointSetting) {
-    pointSettings.last = pointSetting;
     Tuple2<PointSetting, Map<Position, Player>> changes =
-        pointSettings.last.saveRyukyoku(tenpai, nagashimangan, setting);
+        pointSetting.saveRyukyoku(tenpai, nagashimangan, setting);
 
     transactions.add(TransactionRyukyoku(
       playerPoints: changes.item2,

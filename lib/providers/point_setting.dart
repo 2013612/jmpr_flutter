@@ -9,8 +9,11 @@ final pointSettingProvider =
     StateNotifierProvider<PointSettingNotifier, PointSetting>((ref) {
   final games = ref.watch(gamesProvider);
   final indexes = ref.watch(indexProvider);
-  return PointSettingNotifier(
-      games[indexes.item1].pointSettings[indexes.item2]);
+  final pointSetting =
+      games[indexes.item1].pointSettings[indexes.item2].copyWith();
+  return PointSettingNotifier(pointSetting.copyWith(
+      players: pointSetting.players
+          .map((key, player) => MapEntry(key, player.copyWith()))));
 });
 
 class PointSettingNotifier extends StateNotifier<PointSetting> {
