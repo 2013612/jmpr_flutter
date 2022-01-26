@@ -38,7 +38,6 @@ class PointSetting with _$PointSetting {
 
   Tuple2<PointSetting, Map<Position, Player>> saveRon(
       Position losePlayer, Map<Position, int> points, Setting setting) {
-    print("points $points");
     Position oya = _currentOya(setting);
     int nearIndex = 100;
     Map<Position, int> changes = {};
@@ -56,17 +55,12 @@ class PointSetting with _$PointSetting {
       }
     });
     nearIndex = (nearIndex + losePlayer.index) % 4;
-    print("before $changes");
-    print("bonba ${(changes[losePlayer] ?? 0) - bonba * setting.bonbaPoint}");
-    print(changes[losePlayer]);
     changes[losePlayer] =
         (changes[losePlayer] ?? 0) - bonba * setting.bonbaPoint;
-    print(changes[losePlayer]);
     changes[Position.values[nearIndex]] =
         (changes[Position.values[nearIndex]] ?? 0) +
             bonba * setting.bonbaPoint +
             riichibou * setting.riichibouPoint;
-    print("after $changes");
 
     Map<Position, Player> pointChanges = _newPointChanges(changes);
     Map<Position, Player> playerPoints = _newPlayerPoints(changes);
