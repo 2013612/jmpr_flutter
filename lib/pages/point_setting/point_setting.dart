@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/indexes_provider.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
@@ -9,8 +8,10 @@ import '../../common_widgets/text_input.dart';
 import '../../models/player.dart';
 import '../../models/point_setting.dart' as ps;
 import '../../providers/games.dart';
+import '../../providers/indexes_provider.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
+import '../../utility/indexes.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/position_point_setting.dart';
 
@@ -29,9 +30,10 @@ class _PointSettingState extends ConsumerState<PointSetting> {
   void initState() {
     super.initState();
     final games = ref.read(gamesProvider);
-    final index = ref.read(indexProvider);
-    _currentPointSetting =
-        games[index.item1].pointSettings[index.item2].copyWith();
+    final indexes = ref.read(indexesProvider);
+    _currentPointSetting = games[indexes.gameIndex]
+        .pointSettings[indexes.pointSettingIndex]
+        .copyWith();
     _positionControllers = {};
     for (Position position in Position.values) {
       _positionControllers[position] = TextEditingController(
@@ -150,9 +152,9 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                 name: i18n.currentPointSetting,
                 onPress: () {
                   final games = ref.watch(gamesProvider);
-                  final index = ref.watch(indexProvider);
-                  copyPointSetting(
-                      games[index.item1].pointSettings[index.item2]);
+                  final indexes = ref.watch(indexesProvider);
+                  copyPointSetting(games[indexes.gameIndex]
+                      .pointSettings[indexes.pointSettingIndex]);
                 },
               ),
               BaseBarButton(
@@ -164,15 +166,15 @@ class _PointSettingState extends ConsumerState<PointSetting> {
                 onPress: () {
                   if (_pointSettingFormKey.currentState!.validate()) {
                     _pointSettingFormKey.currentState!.save();
-                    final index = ref.watch(indexProvider);
+                    final indexes = ref.watch(indexesProvider);
 
                     removeUnusedGameAndPointSetting(ref);
 
                     ref
-                        .watch(gamesProvider)[index.item1]
+                        .watch(gamesProvider)[indexes.gameIndex]
                         .saveEdit(_currentPointSetting);
-                    ref.watch(indexProvider.state).state =
-                        index.withItem2(index.item2 + 1);
+                    ref.watch(indexesProvider.state).state = Indexes(
+                        indexes.gameIndex, indexes.pointSettingIndex + 1);
 
                     Navigator.pop(context);
                   }

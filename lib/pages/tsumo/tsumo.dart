@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/providers/games.dart';
 import 'package:jmpr_flutter/providers/indexes_provider.dart';
 import 'package:jmpr_flutter/providers/point_setting.dart';
+import 'package:jmpr_flutter/utility/indexes.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/custom_radio_tile.dart';
@@ -150,16 +151,16 @@ class _TsumoState extends ConsumerState<Tsumo> {
               BaseBarButton(
                 name: i18n.save,
                 onPress: () {
-                  final index = ref.watch(indexProvider);
+                  final indexes = ref.watch(indexesProvider);
                   final pointSetting = ref.watch(pointSettingProvider);
 
                   removeUnusedGameAndPointSetting(ref);
 
                   ref
-                      .watch(gamesProvider)[index.item1]
+                      .watch(gamesProvider)[indexes.gameIndex]
                       .saveTsumo(_tsumoPlayer, _han, _fu, pointSetting);
-                  ref.watch(indexProvider.state).state =
-                      index.withItem2(index.item2 + 1);
+                  ref.watch(indexesProvider.state).state =
+                      Indexes(indexes.gameIndex, indexes.pointSettingIndex + 1);
 
                   Navigator.pop(context);
                 },

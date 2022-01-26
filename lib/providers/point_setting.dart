@@ -9,9 +9,10 @@ import 'indexes_provider.dart';
 final pointSettingProvider =
     StateNotifierProvider<PointSettingNotifier, PointSetting>((ref) {
   final games = ref.watch(gamesProvider);
-  final indexes = ref.watch(indexProvider);
-  final pointSetting =
-      games[indexes.item1].pointSettings[indexes.item2].copyWith();
+  final indexes = ref.watch(indexesProvider);
+  final pointSetting = games[indexes.gameIndex]
+      .pointSettings[indexes.pointSettingIndex]
+      .copyWith();
   return PointSettingNotifier(pointSetting.copyWith(
       players: pointSetting.players
           .map((key, player) => MapEntry(key, player.copyWith()))));

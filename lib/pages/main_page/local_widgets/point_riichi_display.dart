@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/indexes_provider.dart';
 
 import '../../../providers/games.dart';
+import '../../../providers/indexes_provider.dart';
 import '../../../providers/point_setting.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
@@ -19,10 +19,9 @@ class PointRiichiDisplay extends ConsumerStatefulWidget {
 class _PointRiichiDisplayState extends ConsumerState<PointRiichiDisplay> {
   @override
   Widget build(BuildContext context) {
-    final games = ref.watch(gamesProvider);
-    final index = ref.watch(indexProvider);
     final pointSetting = ref.watch(pointSettingProvider);
-    final setting = games[index.item1].setting;
+    final setting =
+        ref.watch(gamesProvider)[ref.watch(indexesProvider).gameIndex].setting;
     final Color _firstOyaColor = Colors.yellow;
     final Color _textColor = Colors.white;
     final position = widget.position;

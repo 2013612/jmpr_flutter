@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/indexes_provider.dart';
 
 import '../../../providers/games.dart';
+import '../../../providers/indexes_provider.dart';
 import '../../../providers/point_setting.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
@@ -20,9 +20,10 @@ class MainLandscape extends ConsumerWidget {
     );
 
     void showResult() {
-      final indexes = ref.watch(indexProvider);
-      Map<Position, double> marks =
-          ref.watch(gamesProvider)[indexes.item1].calResult(indexes.item2);
+      final indexes = ref.watch(indexesProvider);
+      Map<Position, double> marks = ref
+          .watch(gamesProvider)[indexes.gameIndex]
+          .calResult(indexes.pointSettingIndex);
 
       showDialog(
         context: context,

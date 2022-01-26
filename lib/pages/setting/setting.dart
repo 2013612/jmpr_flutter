@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/providers/indexes_provider.dart';
+import 'package:jmpr_flutter/utility/indexes.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../common_widgets/base_bar_button.dart';
@@ -38,8 +39,8 @@ class _SettingState extends ConsumerState<Setting> {
   void initState() {
     super.initState();
     final games = ref.read(gamesProvider);
-    final index = ref.read(indexProvider);
-    _editingSetting = games[index.item1].setting.copyWith();
+    final indexes = ref.read(indexesProvider);
+    _editingSetting = games[indexes.gameIndex].setting.copyWith();
 
     _givenStartingPointController = TextEditingController(
         text: _editingSetting.givenStartingPoint.toString());
@@ -282,9 +283,9 @@ class _SettingState extends ConsumerState<Setting> {
                       case "currentSetting":
                         setState(() {
                           final games = ref.watch(gamesProvider);
-                          final index = ref.watch(indexProvider);
+                          final indexes = ref.watch(indexesProvider);
                           _editingSetting =
-                              games[index.item1].setting.copyWith();
+                              games[indexes.gameIndex].setting.copyWith();
                         });
                         break;
                       case "bRule":
@@ -312,7 +313,7 @@ class _SettingState extends ConsumerState<Setting> {
                 onPress: () {
                   if (_settingFormKey.currentState!.validate()) {
                     _settingFormKey.currentState!.save();
-                    final index = ref.watch(indexProvider);
+                    final indexes = ref.watch(indexesProvider);
 
                     ref.watch(gamesProvider).add(
                           Game(
@@ -325,8 +326,8 @@ class _SettingState extends ConsumerState<Setting> {
                             ],
                           ),
                         );
-                    ref.watch(indexProvider.state).state =
-                        Tuple2(index.item1 + 1, 0);
+                    ref.watch(indexesProvider.state).state =
+                        Indexes(indexes.gameIndex + 1, 0);
 
                     Navigator.pop(context);
                   }

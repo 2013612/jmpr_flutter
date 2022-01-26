@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jmpr_flutter/providers/indexes_provider.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/games.dart';
+import '../../providers/indexes_provider.dart';
+import '../../providers/point_setting.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
+import '../../utility/indexes.dart';
 import '../../utility/iterable_methods.dart';
 
 class RonPoint extends ConsumerStatefulWidget {
@@ -156,16 +157,16 @@ class _RonPointState extends ConsumerState<RonPoint> {
               BaseBarButton(
                 name: i18n.save,
                 onPress: () {
-                  final index = ref.watch(indexProvider);
+                  final indexes = ref.watch(indexesProvider);
                   final pointSetting = ref.watch(pointSettingProvider);
 
                   removeUnusedGameAndPointSetting(ref);
 
                   ref
-                      .watch(gamesProvider)[index.item1]
+                      .watch(gamesProvider)[indexes.gameIndex]
                       .saveRon(widget.losePlayer, _hanfus, pointSetting);
-                  ref.watch(indexProvider.state).state =
-                      index.withItem2(index.item2 + 1);
+                  ref.watch(indexesProvider.state).state =
+                      Indexes(indexes.gameIndex, indexes.pointSettingIndex + 1);
 
                   Navigator.of(context).popUntil(ModalRoute.withName('/'));
                 },

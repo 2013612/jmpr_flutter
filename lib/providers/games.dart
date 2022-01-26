@@ -9,15 +9,16 @@ final gamesProvider = Provider<List<Game>>(
 
 void removeUnusedGameAndPointSetting(WidgetRef ref) {
   final games = ref.watch(gamesProvider);
-  final index = ref.watch(indexProvider);
+  final indexes = ref.watch(indexesProvider);
 
-  if (index.item1 + 1 < games.length) {
-    games.removeRange(index.item1 + 1, games.length);
+  if (indexes.gameIndex + 1 < games.length) {
+    games.removeRange(indexes.gameIndex + 1, games.length);
   }
 
-  if (index.item2 + 1 < games[index.item1].pointSettings.length) {
-    games[index.item1]
-        .pointSettings
-        .removeRange(index.item2 + 1, games[index.item1].pointSettings.length);
+  if (indexes.pointSettingIndex + 1 <
+      games[indexes.gameIndex].pointSettings.length) {
+    games[indexes.gameIndex].pointSettings.removeRange(
+        indexes.pointSettingIndex + 1,
+        games[indexes.gameIndex].pointSettings.length);
   }
 }
