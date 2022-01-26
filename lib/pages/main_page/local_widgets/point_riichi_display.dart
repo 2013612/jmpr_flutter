@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../providers/games_provider.dart';
 import '../../../providers/indexes_provider.dart';
-import '../../../providers/point_setting.dart';
+import '../../../providers/point_setting_provider.dart';
 import '../../../utility/constant.dart';
 import '../../../utility/enum/position.dart';
 

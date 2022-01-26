@@ -6,7 +6,7 @@ import 'package:tuple/tuple.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/games_provider.dart';
 import '../../providers/indexes_provider.dart';
-import '../../providers/point_setting.dart';
+import '../../providers/point_setting_provider.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
 import '../../utility/indexes.dart';

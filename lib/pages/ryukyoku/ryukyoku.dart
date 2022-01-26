@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../providers/games_provider.dart';
 import '../../providers/indexes_provider.dart';
-import '../../providers/point_setting.dart';
+import '../../providers/point_setting_provider.dart';
 import '../../utility/enum/position.dart';
 import '../../utility/indexes.dart';
 import 'local_widgets/flexible_custom_check_box_tile.dart';

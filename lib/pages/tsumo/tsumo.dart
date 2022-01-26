@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jmpr_flutter/providers/games_provider.dart';
 import 'package:jmpr_flutter/providers/indexes_provider.dart';
-import 'package:jmpr_flutter/providers/point_setting.dart';
+import 'package:jmpr_flutter/providers/point_setting_provider.dart';
 import 'package:jmpr_flutter/utility/indexes.dart';
 
 import '../../common_widgets/base_bar_button.dart';
