@@ -18,7 +18,6 @@ import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../models/game.dart';
 import '../../models/game_player.dart';
-import '../../models/setting.dart';
 import '../../models/user.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
@@ -28,10 +27,8 @@ import 'local_widgets/player_name_input.dart';
 
 class FirestoreUploadInput extends ConsumerStatefulWidget {
   final Game game;
-  final int start;
-  final int end;
 
-  FirestoreUploadInput(this.game, this.start, this.end);
+  FirestoreUploadInput(this.game);
 
   @override
   _FirestoreUploadInputState createState() => _FirestoreUploadInputState();
@@ -49,17 +46,7 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
   @override
   void initState() {
     super.initState();
-    game = Game(
-      gamePlayers:
-          List.generate(4, (_) => GamePlayer(displayName: '', uid: '')),
-      createdAt: DateTime.now(),
-      setting: widget.game.setting,
-      transactions:
-          widget.game.transactions.getRange(widget.start, widget.end).toList(),
-      pointSettings: widget.game.pointSettings
-          .getRange(widget.start, widget.end + 1)
-          .toList(),
-    );
+    game = widget.game.copyWith();
   }
 
   @override
@@ -224,11 +211,21 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
                 if (_playerNameFormKey.currentState!.validate()) {
                   gameRepository
                       .addGame(game.copyWith(createdAt: DateTime.now()))
-                      .then((_) =>
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("success"),
-                          )))
-                      .catchError(print);
+                      .then(
+                    (_) => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("success"),
+                      ),
+                    ),
+                    onError: (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("fail"),
+                        ),
+                      );
+                      print(error);
+                    },
+                  );
                 }
               },
             ),

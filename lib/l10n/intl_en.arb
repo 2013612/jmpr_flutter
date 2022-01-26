@@ -104,8 +104,8 @@
   "@errorSamePlayer": {
     "type": "text"
   },
-  "errorSettingsAreDifferent": "You need to choose records with same setting",
-  "@errorSettingsAreDifferent": {
+  "errorDifferentGames": "You need to choose records belong to the same game",
+  "@errorDifferentGames": {
     "type": "text"
   },
   "exportToXlsx": "Export To .xlsx",

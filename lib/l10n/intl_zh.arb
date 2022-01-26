@@ -26,7 +26,7 @@
   "errorInteger": "請輸入整數",
   "errorNonnegative": "請輸入非負整數",
   "errorSamePlayer": "同一名玩家不可同時和了和放銃",
-  "errorSettingsAreDifferent": "您需要選擇有同一設定的記錄",
+  "errorDifferentGames": "您需要選擇在同一場遊戲內的記錄",
   "exportToXlsx": "匯出到.xlsx",
   "file": "檔案",
   "firstOya": "起家",

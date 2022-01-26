@@ -6,6 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
+import '../models/game.dart';
+import '../models/game_player.dart';
 import '../models/point_setting.dart';
 import '../pages/user_info/firestore_upload_input.dart';
 import '../providers/games.dart';
@@ -105,7 +107,7 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
                   return;
                 } else if (chosen[0].item1 != chosen[1].item1) {
                   Fluttertoast.showToast(
-                    msg: i18n.errorSettingsAreDifferent,
+                    msg: i18n.errorDifferentGames,
                     backgroundColor: Colors.red,
                   );
                   return;
@@ -114,9 +116,25 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => FirestoreUploadInput(
-                        ref.watch(gamesProvider)[chosen[0].item1],
-                        min(chosen[0].item2, chosen[1].item2),
-                        max(chosen[0].item2, chosen[1].item2),
+                        Game(
+                          gamePlayers: List.generate(
+                              4, (_) => GamePlayer(displayName: '', uid: '')),
+                          createdAt: DateTime.now(),
+                          setting:
+                              ref.watch(gamesProvider)[chosen[0].item1].setting,
+                          transactions: ref
+                              .watch(gamesProvider)[chosen[0].item1]
+                              .transactions
+                              .getRange(min(chosen[0].item2, chosen[1].item2),
+                                  max(chosen[0].item2, chosen[1].item2))
+                              .toList(),
+                          pointSettings: ref
+                              .watch(gamesProvider)[chosen[0].item1]
+                              .pointSettings
+                              .getRange(min(chosen[0].item2, chosen[1].item2),
+                                  max(chosen[0].item2, chosen[1].item2) + 1)
+                              .toList(),
+                        ),
                       ),
                     ),
                   );

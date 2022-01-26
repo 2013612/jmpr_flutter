@@ -26,7 +26,7 @@
   "errorInteger": "整数を入力してください",
   "errorNonnegative": "非負整数を入力してください",
   "errorSamePlayer": "和了か振り込むのどちらか一方しかできません",
-  "errorSettingsAreDifferent": "同じ設定のレコードを選択してください",
+  "errorDifferentGames": "同じゲームのレコードを選択してください",
   "exportToXlsx": ".xlsxへの書き出し",
   "file": "ファイル",
   "firstOya": "起家",
