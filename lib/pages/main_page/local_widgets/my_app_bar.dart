@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common_widgets/choose_game.dart';
-import '../../../providers/games.dart';
+import '../../../providers/games_provider.dart';
 import '../../about/about.dart';
 import '../../history/history.dart';
 import '../../point_setting/point_setting.dart';

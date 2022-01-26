@@ -6,7 +6,7 @@ import '../../../common_widgets/base_bar_button.dart';
 import '../../../models/game.dart';
 import '../../../models/point_setting.dart';
 import '../../../models/setting.dart';
-import '../../../providers/games.dart';
+import '../../../providers/games_provider.dart';
 import '../../../providers/indexes_provider.dart';
 import '../../../utility/indexes.dart';
 import '../../ron/ron.dart';

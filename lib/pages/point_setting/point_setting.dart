@@ -7,7 +7,7 @@ import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../models/player.dart';
 import '../../models/point_setting.dart' as ps;
-import '../../providers/games.dart';
+import '../../providers/games_provider.dart';
 import '../../providers/indexes_provider.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';

@@ -3,7 +3,7 @@ import '../models/player.dart';
 import '../models/point_setting.dart';
 import '../utility/enum/position.dart';
 
-import 'games.dart';
+import 'games_provider.dart';
 import 'indexes_provider.dart';
 
 final pointSettingProvider =

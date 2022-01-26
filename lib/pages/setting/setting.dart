@@ -12,7 +12,7 @@ import '../../common_widgets/text_input.dart';
 import '../../models/game.dart';
 import '../../models/point_setting.dart';
 import '../../models/setting.dart' as class_s;
-import '../../providers/games.dart';
+import '../../providers/games_provider.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
 

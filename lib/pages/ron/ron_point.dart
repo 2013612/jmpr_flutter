@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../common_widgets/base_bar_button.dart';
-import '../../providers/games.dart';
+import '../../providers/games_provider.dart';
 import '../../providers/indexes_provider.dart';
 import '../../providers/point_setting.dart';
 import '../../utility/constant.dart';

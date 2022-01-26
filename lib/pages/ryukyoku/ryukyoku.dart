@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common_widgets/base_bar_button.dart';
-import '../../providers/games.dart';
+import '../../providers/games_provider.dart';
 import '../../providers/indexes_provider.dart';
 import '../../providers/point_setting.dart';
 import '../../utility/enum/position.dart';

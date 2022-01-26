@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../providers/games.dart';
+import '../../providers/games_provider.dart';
 import '../../providers/indexes_provider.dart';
 import '../../utility/constant.dart';
 import '../../utility/indexes.dart';

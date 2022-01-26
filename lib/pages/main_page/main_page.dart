@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../models/game.dart';
 import '../../models/point_setting.dart';
 import '../../models/setting.dart';
-import '../../providers/games.dart';
+import '../../providers/games_provider.dart';
 import '../../utility/constant.dart';
 import '../../utility/validators.dart';
 import 'local_widgets/main_landscape.dart';

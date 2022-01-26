@@ -10,7 +10,7 @@ import '../models/game.dart';
 import '../models/game_player.dart';
 import '../models/point_setting.dart';
 import '../pages/user_info/firestore_upload_input.dart';
-import '../providers/games.dart';
+import '../providers/games_provider.dart';
 import '../utility/constant.dart';
 import '../utility/iterable_methods.dart';
 import 'base_bar_button.dart';
