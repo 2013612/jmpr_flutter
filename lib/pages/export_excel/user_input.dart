@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jmpr_flutter/models/game.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,7 +16,6 @@ import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
 import '../../models/setting.dart';
-import '../../providers/histories.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';
 import '../../utility/validators.dart';
@@ -105,6 +105,7 @@ class _UserInputState extends ConsumerState<UserInput> {
     }
 
     Future<bool> generateExcel(
+      Game game,
       int startIndex,
       int endIndex,
       String folder,
@@ -117,18 +118,19 @@ class _UserInputState extends ConsumerState<UserInput> {
         return false;
       }
       final int topRow = 2;
-      final histories = ref.watch(historiesProvider);
-      final Setting _setting = histories[endIndex].setting;
+      final pointSettings =
+          game.pointSettings.getRange(startIndex, endIndex + 1).toList();
+      final Setting setting = game.setting;
 
       CellIndex cell(int col, int row) {
         return CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row);
       }
 
       Position position(int index) {
-        return Position.values[(_setting.firstOya.index + index) % 4];
+        return Position.values[(setting.firstOya.index + index) % 4];
       }
 
-      Map<Position, double> marks = histories[endIndex].calResult();
+      Map<Position, double> marks = pointSettings.last.calResult(setting);
 
       excel.updateCell(
           sheetName, cell(0, 1), AppLocalizations.of(context)!.kyoku);
@@ -146,7 +148,7 @@ class _UserInputState extends ConsumerState<UserInput> {
         excel.updateCell(
             sheetName,
             cell(4 + 3 * index, endIndex - startIndex + topRow),
-            histories[endIndex].pointSetting.players[position(index)]!.point);
+            pointSettings.last.players[position(index)]!.point);
         excel.updateCell(
             sheetName,
             cell(4 + 3 * index, endIndex - startIndex + 1 + topRow),
@@ -159,35 +161,33 @@ class _UserInputState extends ConsumerState<UserInput> {
         excel.updateCell(
             sheetName,
             cell(2 + pos * 3, row + topRow - startIndex),
-            histories[row + 1]
-                .pointSetting
+            pointSettings[row + 1]
                 .players[position(pos)]!
-                .riichi
+                .isRiichi
                 .toString()
                 .toUpperCase());
         excel.updateCell(
             sheetName,
             cell(3 + pos * 3, row + topRow - startIndex),
-            histories[row + 1].pointSetting.players[position(pos)]!.point -
-                histories[row].pointSetting.players[position(pos)]!.point);
+            pointSettings[row + 1].players[position(pos)]!.point -
+                pointSettings[row].players[position(pos)]!.point);
         excel.updateCell(
             sheetName,
             cell(4 + pos * 3, row + topRow - startIndex),
-            histories[row].pointSetting.players[position(pos)]!.point);
+            pointSettings[row].players[position(pos)]!.point);
       }
 
-      for (int i = startIndex; i < endIndex; i++) {
-        excel.updateCell(sheetName, cell(0, i - startIndex + topRow),
-            "${Constant.kyokus[histories[i].pointSetting.currentKyoku]} ${histories[i].pointSetting.bonba}${AppLocalizations.of(context)!.bonba}");
+      for (int i = 0; i < endIndex - startIndex; i++) {
+        excel.updateCell(sheetName, cell(0, i + topRow),
+            "${Constant.kyokus[pointSettings[i].currentKyoku]} ${pointSettings[i].bonba}${AppLocalizations.of(context)!.bonba}");
         excel.updateCell(
             sheetName,
-            cell(1, i - startIndex + topRow),
-            playerNames[Position.values[(_setting.firstOya.index +
-                    histories[i].pointSetting.currentKyoku) %
-                4]]);
+            cell(1, i + topRow),
+            playerNames[Position.values[
+                (setting.firstOya.index + pointSettings[i].currentKyoku) % 4]]);
         List.generate(4, (index) => updateExcelKyoku(i, index));
-        excel.updateCell(sheetName, cell(14, i - startIndex + topRow),
-            histories[i + 1].pointSetting.riichibou * _setting.riichibouPoint);
+        excel.updateCell(sheetName, cell(14, i + topRow),
+            pointSettings[i + 1].riichibou * setting.riichibouPoint);
       }
 
       var fileBytes = excel.save();
@@ -292,18 +292,18 @@ class _UserInputState extends ConsumerState<UserInput> {
               onPress: () {
                 if (_userInputFormKey.currentState!.validate()) {
                   _userInputFormKey.currentState!.save();
-                  generateExcel(
-                    widget.start,
-                    widget.end,
-                    folder!,
-                    fileName!,
-                    sheetName!,
-                    playerNames,
-                  ).then((bool success) {
-                    if (success) {
-                      Navigator.of(context).popUntil(ModalRoute.withName('/'));
-                    }
-                  });
+                  // generateExcel(
+                  //   widget.start,
+                  //   widget.end,
+                  //   folder!,
+                  //   fileName!,
+                  //   sheetName!,
+                  //   playerNames,
+                  // ).then((bool success) {
+                  //   if (success) {
+                  //     Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                  //   }
+                  // });
                 }
               },
             ),
