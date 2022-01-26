@@ -62,7 +62,8 @@ class PointSetting with _$PointSetting {
             bonba * setting.bonbaPoint +
             riichibou * setting.riichibouPoint;
 
-    Map<Position, Player> pointChanges = _newPointChanges(changes);
+    Map<Position, Player> pointChanges =
+        _newPointChanges(changes, setting.riichibouPoint);
     Map<Position, Player> playerPoints = _newPlayerPoints(changes);
 
     int newBonba = bonba;
@@ -92,7 +93,8 @@ class PointSetting with _$PointSetting {
     var changes = _pointChangeTsumo(tsumoPlayer, point, oya,
         bonba * setting.bonbaPoint, riichibou * setting.riichibouPoint);
 
-    Map<Position, Player> pointChanges = _newPointChanges(changes);
+    Map<Position, Player> pointChanges =
+        _newPointChanges(changes, setting.riichibouPoint);
     Map<Position, Player> playerPoints = _newPlayerPoints(changes);
 
     int newBonba = bonba;
@@ -153,7 +155,8 @@ class PointSetting with _$PointSetting {
       }
     }
 
-    Map<Position, Player> pointChanges = _newPointChanges(changes);
+    Map<Position, Player> pointChanges =
+        _newPointChanges(changes, setting.riichibouPoint);
     Map<Position, Player> playerPoints = _newPlayerPoints(changes);
 
     int newKyoku = currentKyoku;
@@ -267,13 +270,15 @@ class PointSetting with _$PointSetting {
     return changes;
   }
 
-  Map<Position, Player> _newPointChanges(Map<Position, int> changes) {
+  Map<Position, Player> _newPointChanges(
+      Map<Position, int> changes, int riichibouPoint) {
     return changes.map(
       (position, change) => MapEntry(
         position,
         Player(
           isRiichi: players[position]?.isRiichi ?? false,
-          point: change,
+          point: change -
+              ((players[position]?.isRiichi ?? false) ? riichibouPoint : 0),
         ),
       ),
     );
