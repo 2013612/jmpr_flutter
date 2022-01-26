@@ -88,8 +88,17 @@ class Game with _$Game {
   }
 
   void saveEdit(PointSetting pointSetting) {
+    final changes = pointSetting.players.map(
+      (position, player) => MapEntry(
+        position,
+        Player(
+          isRiichi: false,
+          point: player.point - pointSettings.last.players[position]!.point,
+        ),
+      ),
+    );
     pointSettings.add(pointSetting);
-    transactions.add(TransactionEdit(pointSetting: pointSetting));
+    transactions.add(TransactionEdit(playerPoints: changes));
   }
 
   int _calPoint(int han, int fu) {
