@@ -64,8 +64,7 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(i18n.setting),
-        automaticallyImplyLeading: false,
+        title: Text(i18n.uploadAndGenerateExcel),
       ),
       body: Center(
         child: Padding(
@@ -171,11 +170,7 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             BaseBarButton(
-              name: i18n.cancel,
-              onPress: () => Navigator.pop(context),
-            ),
-            BaseBarButton(
-              name: "to xslx",
+              name: i18n.generateExcel,
               onPress: () {
                 if ((_playerNameFormKey.currentState?.validate() ?? false) &&
                     (_pathFormKey.currentState?.validate() ?? false)) {
@@ -187,7 +182,8 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
                         if (isSuccess) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("success"),
+                              content:
+                                  Text(i18n.generateExcelSuccess(fileName)),
                             ),
                           );
                           OpenFile.open(join(folder, "$fileName.xlsx"));
@@ -196,7 +192,7 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("fail"),
+                          content: Text(i18n.errorGenerateExcel),
                         ),
                       );
                     }
@@ -205,7 +201,7 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
               },
             ),
             BaseBarButton(
-              name: "to firestore",
+              name: i18n.upload,
               onPress: () {
                 if (_playerNameFormKey.currentState!.validate()) {
                   gameRepository
@@ -213,13 +209,13 @@ class _FirestoreUploadInputState extends ConsumerState<FirestoreUploadInput> {
                       .then(
                     (_) => ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("success"),
+                        content: Text(i18n.uploadSuccess),
                       ),
                     ),
                     onError: (error) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("fail"),
+                          content: Text(i18n.errorUpload),
                         ),
                       );
                       print(error);

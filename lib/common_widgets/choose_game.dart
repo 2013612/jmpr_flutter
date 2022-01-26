@@ -48,7 +48,9 @@ class _ChooseGameState extends ConsumerState<ChooseGame> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(i18n.history),
+        title: FittedBox(
+          child: Text(i18n.chooseFirstAndLastRecords),
+        ),
       ),
       body: ListView.builder(
         itemCount: reversedPointSettings.length,

@@ -36,6 +36,10 @@
   "@chooseALanguage": {
     "type": "text"
   },
+  "chooseFirstAndLastRecords": "Choose First and Last Record",
+  "@chooseFirstAndLastRecords": {
+    "type": "text"
+  },
   "confirm": "Confirm",
   "@confirm": {
     "type": "text"
@@ -84,12 +88,20 @@
   "@errorDecreasing": {
     "type": "text"
   },
+  "errorDifferentGames": "You need to choose records belong to the same game",
+  "@errorDifferentGames": {
+    "type": "text"
+  },
   "errorDivideByHundred": "Please enter an integer divisible by 100",
   "@errorDivideByHundred": {
     "type": "text"
   },
   "errorExactTwoRecords": "You need to choose exactly two records",
   "@errorExactTwoRecords": {
+    "type": "text"
+  },
+  "errorGenerateExcel": "Generate Excel Failed. Please try again later.",
+  "@errorGenerateExcel": {
     "type": "text"
   },
   "errorInteger": "Please input an integer",
@@ -104,8 +116,8 @@
   "@errorSamePlayer": {
     "type": "text"
   },
-  "errorDifferentGames": "You need to choose records belong to the same game",
-  "@errorDifferentGames": {
+  "errorUpload": "Upload Failed. Please try again later.",
+  "@errorUpload": {
     "type": "text"
   },
   "exportToXlsx": "Export To .xlsx",
@@ -128,8 +140,12 @@
   "@fu": {
     "type": "text"
   },
-  "generateSuccess": "{fileName}.xlsx is generated successfully",
-  "@generateSuccess": {
+  "generateExcel": "Generate Excel",
+  "@generateExcel": {
+    "type": "text"
+  },
+  "generateExcelSuccess": "{fileName}.xlsx is generated successfully",
+  "@generateExcelSuccess": {
     "type": "text",
     "placeholders": {
       "fileName": {}
@@ -284,6 +300,18 @@
   },
   "uma": "Uma",
   "@uma": {
+    "type": "text"
+  },
+  "upload": "Upload",
+  "@upload": {
+    "type": "text"
+  },
+  "uploadAndGenerateExcel": "Upload and Generate Excel",
+  "@uploadAndGenerateExcel": {
+    "type": "text"
+  },
+  "uploadSuccess": "The game is uploaded successfully",
+  "@uploadSuccess": {
     "type": "text"
   },
   "usualSetting": "Usual Setting",
