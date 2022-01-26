@@ -11,13 +11,12 @@ import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../classes/game_repository.dart';
-import '../../classes/user_repository.dart';
 import '../../common_widgets/base_bar_button.dart';
 import '../../common_widgets/row_input.dart';
 import '../../common_widgets/text_input.dart';
+import '../../firestore_repositories/game_repository.dart';
+import '../../firestore_repositories/user_repository.dart';
 import '../../models/game.dart';
-import '../../models/game_player.dart';
 import '../../models/user.dart';
 import '../../utility/constant.dart';
 import '../../utility/enum/position.dart';

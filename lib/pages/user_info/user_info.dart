@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../classes/user_repository.dart';
 import '../../common_widgets/choose_game.dart';
+import '../../firestore_repositories/user_repository.dart';
 import '../../models/user.dart' as fs_user;
 import '../../providers/user_stream.dart';
 import '../../utility/authentication.dart';
