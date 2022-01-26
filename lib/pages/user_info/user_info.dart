@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../common_widgets/choose_game.dart';
 import '../../firestore_repositories/user_repository.dart';
 import '../../models/user.dart' as fs_user;
-import '../../providers/user_stream.dart';
+import '../../providers/user_stream_provider.dart';
 import '../../utility/authentication.dart';
 
 class UserInfoPage extends ConsumerStatefulWidget {
