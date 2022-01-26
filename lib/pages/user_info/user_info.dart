@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../classes/user_repository.dart';
@@ -23,118 +24,114 @@ class _UserInfoPageState extends ConsumerState<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     final userStream = ref.watch(userStreamProvider(widget.user.uid));
-    return userStream.when(
-      data: (snapshot) {
-        if (snapshot.docs.isEmpty) {
-          userRepository.addUser(fs_user.User.fromFireAuth(widget.user));
-        } else {
-          final user = snapshot.docs[0].data();
-
-          return Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              title: Text("User Info"),
-            ),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  bottom: 20.0,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(),
-                    if (user.photoURL != null)
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("User Info"),
+      ),
+      body: Center(
+        child: userStream.when(
+          data: (snapshot) {
+            if (snapshot.docs.isEmpty) {
+              userRepository.addUser(fs_user.User.fromFireAuth(widget.user));
+            } else {
+              final user = snapshot.docs[0].data();
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16.0,
+                    right: 16.0,
+                    bottom: 20.0,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(),
                       ClipOval(
                         child: Material(
                           child: Image.network(
-                            user.photoURL!,
+                            user.photoURL ?? "",
                             fit: BoxFit.fitHeight,
-                          ),
-                        ),
-                      )
-                    else
-                      ClipOval(
-                        child: Material(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Icon(
-                              Icons.person,
-                              size: 60,
+                            errorBuilder: (_, __, ___) => Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Icon(
+                                Icons.person,
+                                size: 60,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Hello',
-                      style: TextStyle(
-                        fontSize: 26,
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Hello',
+                        style: TextStyle(
+                          fontSize: 26,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      user.displayName!,
-                      style: TextStyle(
-                        fontSize: 26,
+                      SizedBox(height: 8.0),
+                      Text(
+                        user.displayName!,
+                        style: TextStyle(
+                          fontSize: 26,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8.0),
-                    ElevatedButton(
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => ChooseGame())),
-                        child: Text("to Firestore")),
-                    if (_isSigningOut)
-                      CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    else
+                      SizedBox(height: 8.0),
                       ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Colors.redAccent,
+                          onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => ChooseGame())),
+                          child: Text("to Firestore")),
+                      if (_isSigningOut)
+                        CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      else
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.redAccent,
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
                           ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          onPressed: () async {
+                            setState(() {
+                              _isSigningOut = true;
+                            });
+                            await Authentication.signOut(context: context);
+                            setState(() {
+                              _isSigningOut = false;
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                            child: Text(
+                              'Sign Out',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
                             ),
                           ),
                         ),
-                        onPressed: () async {
-                          setState(() {
-                            _isSigningOut = true;
-                          });
-                          await Authentication.signOut(context: context);
-                          setState(() {
-                            _isSigningOut = false;
-                          });
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                          child: Text(
-                            'Sign Out',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    //SignOutButton(),
-                  ],
+                      //SignOutButton(),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        }
-        return const CircularProgressIndicator();
-      },
-      error: (err, stack) => Text('Error: $err'),
-      loading: () => const CircularProgressIndicator(),
+              );
+            }
+            return const CircularProgressIndicator();
+          },
+          error: (err, stack) => Text('Error: $err'),
+          loading: () => const CircularProgressIndicator(),
+        ),
+      ),
     );
   }
 }
